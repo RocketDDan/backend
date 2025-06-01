@@ -87,7 +87,7 @@ pipeline {
                     docker-compose up -d $service
                     cd ..
                 }
-                deploy_with_docker_compose "SERVICE_NAME"
+                deploy_with_docker_compose "$SERVICE_NAME"
                 '''
             }
         }
