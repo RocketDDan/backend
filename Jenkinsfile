@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
 //         GITHUB_CREDENTIALS = credentials('RocketDDan-Organization-Access-Token')
-        REPOSITORY_NAME = 'backend'
+        REPOSITORY_NAME = 'runners-hi-backend'
     }
 
     stages {
