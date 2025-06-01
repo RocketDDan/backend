@@ -7,7 +7,6 @@ pipeline {
     }
     environment {
         REPOSITORY_NAME = 'runners-hi-backend'
-        SERVICE_NAME = 'backend'
     }
 
     stages {
@@ -42,9 +41,9 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 sh '''
-                docker-compose down $SERVICE_NAME
-                docker-compose pull $SERVICE_NAME
-                docker-compose up -d $SERVICE_NAME
+                docker-compose down $REPOSITORY_NAME
+                docker-compose pull $REPOSITORY_NAME
+                docker-compose up -d $REPOSITORY_NAME
                 '''
             }
         }

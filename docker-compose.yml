@@ -1,8 +1,8 @@
 services:
-  backend:
+  runners-hi-backend:
     image: hanol98/runners-hi-backend:latest
     #    build: .
-    container_name: backend
+    container_name: runners-hi-backend
     expose:
       - "8080"
     ports:
