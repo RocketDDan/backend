@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+
+spring:
+  application:
+    name: backend
+
+  #  config:
+  #    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:oracle:thin:@me4mcyiciwc0p8sj_high?TNS_ADMIN=${WALLET_DIRECTORY_PATH}
+    username: ADMIN
+    password: Rocketddan98@!
+    driver-class-name: oracle.jdbc.OracleDriver
