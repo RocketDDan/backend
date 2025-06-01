@@ -81,9 +81,11 @@ pipeline {
                 sh '''
                 deploy_with_docker_compose() {
                     local service=$1
+                    cd $service
                     docker-compose down $service
                     docker-compose pull $service
                     docker-compose up -d $service
+                    cd ..
                 }
                 deploy_with_docker_compose "$REPOSITORY_NAME"
                 '''
