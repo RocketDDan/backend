@@ -237,6 +237,10 @@ fabric.properties
 
 # Package Files #
 *.jar
+
+# 예외 처리: Oracle Wallet 관련 jar는 추적
+!libs/*.jar
+
 *.war
 *.nar
 *.ear
