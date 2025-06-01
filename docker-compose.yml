@@ -1,6 +1,7 @@
 services:
   backend:
-    image: runners-hi-backend:latest
+    image: hanol98/runners-hi-backend:latest
+    #    build: .
     container_name: backend
     expose:
       - "8080"

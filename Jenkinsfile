@@ -22,20 +22,15 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'RocketDDan-Organization-Access-Token', usernameVariable: 'ORGANIZATION_NAME', passwordVariable: 'GITHUB_TOKEN')]) {
                     sh '''
-                    clone_or_pull() {
-                        local repo=$1
-                        if [ -d "$repo/.git" ]; then
-                            cd $repo
-                            git reset --hard
-                            git pull origin main
-                            cd ..
-                        else
-                            rm -rf $repo
-                            git clone https://$GITHUB_TOKEN@github.com/$ORGANIZATION_NAME/$repo.git
-                        fi
-                    }
-
-                    clone_or_pull "$REPOSITORY_NAME"
+                    if [ -d "REPOSITORY_NAME/.git" ]; then
+                        cd $REPOSITORY_NAME
+                        git reset --hard
+                        git pull origin main
+                        cd ..
+                    else
+                        rm -rf $REPOSITORY_NAME
+                        git clone https://$GITHUB_TOKEN@github.com/$ORGANIZATION_NAME/$REPOSITORY_NAME.git
+                    fi
                     '''
                 }
             }
@@ -44,14 +39,9 @@ pipeline {
         stage('Build') {
             steps {
 		            sh '''
-                build_service() {
-                    local service=$1
-                    cd $service
-                    ./gradlew build -x test
-                    cd ..
-                }
-
-                build_service "$REPOSITORY_NAME"
+                cd $REPOSITORY_NAME
+                ./gradlew build -x test
+                cd ..
                 '''
             }
         }
@@ -62,15 +52,11 @@ pipeline {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
-                    build_and_push() {
-                        local service=$1
-                        docker rmi -f $DOCKER_USER/$service:latest || true
-                        cd $service
-                        docker build -t $DOCKER_USER/$service:latest .
-                        docker push $DOCKER_USER/$service:latest
-                        cd ..
-                    }
-                    build_and_push "$REPOSITORY_NAME"
+                    docker rmi -f $DOCKER_USER/$REPOSITORY_NAME:latest || true
+                    cd $REPOSITORY_NAME
+                    docker build -t $DOCKER_USER/$REPOSITORY_NAME:latest .
+                    docker push $DOCKER_USER/$REPOSITORY_NAME:latest
+                    cd ..
                     '''
                 }
             }
@@ -79,15 +65,11 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 sh '''
-                deploy_with_docker_compose() {
-                    local service=$1
-                    cd $service
-                    docker-compose down $service
-                    docker-compose pull $service
-                    docker-compose up -d $service
-                    cd ..
-                }
-                deploy_with_docker_compose "$SERVICE_NAME"
+                cd $REPOSITORY_NAME
+                docker-compose down $SERVICE_NAME
+                docker-compose pull $SERVICE_NAME
+                docker-compose up -d $SERVICE_NAME
+                cd ..
                 '''
             }
         }
