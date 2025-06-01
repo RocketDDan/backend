@@ -1,5 +1,5 @@
-# Liberica JRE 21 사용 (운영 환경에 적합)
-FROM openjdk:21-jre-slim
+# Java 21 JRE 기반, 경량 Alpine
+FROM eclipse-temurin:21-jre-alpine
 
 # 작업 디렉토리
 WORKDIR /app
