@@ -6,8 +6,8 @@ pipeline {
         jdk 'jdk-21'
     }
     environment {
-//         GITHUB_CREDENTIALS = credentials('RocketDDan-Organization-Access-Token')
         REPOSITORY_NAME = 'runners-hi-backend'
+        SERVICE_NAME = 'backend'
     }
 
     stages {
@@ -87,7 +87,7 @@ pipeline {
                     docker-compose up -d $service
                     cd ..
                 }
-                deploy_with_docker_compose "$REPOSITORY_NAME"
+                deploy_with_docker_compose "SERVICE_NAME"
                 '''
             }
         }
