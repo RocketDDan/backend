@@ -1,5 +1,5 @@
 # Liberica JRE 21 사용 (운영 환경에 적합)
-FROM bellsoft/liberica-alpine:21-jre
+FROM bellsoft/liberica-openjdk-alpine:21.0.2.13
 
 # 작업 디렉토리
 WORKDIR /app

@@ -11,6 +11,13 @@ pipeline {
     }
 
     stages {
+        stage('Check pwd location') {
+            steps {
+                sh '''
+                which pwd
+                '''
+            }
+        }
         stage('Git Clone or Pull') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'RocketDDan-Organization-Access-Token', usernameVariable: 'ORGANIZATION_NAME', passwordVariable: 'GITHUB_TOKEN')]) {
@@ -36,7 +43,7 @@ pipeline {
 
         stage('Build') {
             steps {
-		        sh '''
+		            sh '''
                 build_service() {
                     local service=$1
                     cd $service
@@ -53,18 +60,13 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'Docker-Hub-Access-Token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                    # docker login -u $DOCKER_USER -p $DOCKER_PASS
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
                     build_and_push() {
                         local service=$1
-
                         docker rmi -f $DOCKER_USER/$service:latest || true
-
                         cd $service
-
                         docker build -t $DOCKER_USER/$service:latest .
-
                         docker push $DOCKER_USER/$service:latest
                         cd ..
                     }
