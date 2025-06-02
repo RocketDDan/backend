@@ -6,7 +6,7 @@ pipeline {
         jdk 'jdk-21'
     }
     environment {
-        REPOSITORY_NAME = 'runners-hi-backend'
+        REPOSITORY_NAME = 'backend'
     }
 
     stages {
