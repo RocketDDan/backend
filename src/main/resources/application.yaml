@@ -5,6 +5,12 @@ logging:
   level:
     root: INFO
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
 spring:
   application:
     name: backend
