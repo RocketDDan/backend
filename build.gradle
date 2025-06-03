@@ -42,6 +42,11 @@ dependencies {
     implementation files('libs/oraclepki-19.11.0.0.jar')
     implementation files('libs/osdt_core-19.3.0.0.jar')
     implementation files('libs/osdt_cert-19.3.0.0.jar')
+    // CloudFront (v1: URL 서명 기능이 없다)
+//    implementation("software.amazon.awssdk:cloudfront:2.31.54") // software.amazon : SDK v2의 그룹 ID
+//    implementation("software.amazon.awscdk:cloudfront:1.204.0") // software.amazon: SDK v2의 그룹 ID
+    implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.12.679'
+    // com.amazonaws는 AWS SDK v1의 그룹 ID
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     // test

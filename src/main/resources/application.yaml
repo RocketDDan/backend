@@ -11,6 +11,11 @@ springdoc:
     operations-sorter: alpha
     tags-sorter: alpha
 
+cloudfront:
+  distribution-domain: d3j62hm9xnqci3.cloudfront.net
+  key-pair-id: K1CXY699RY3FDX
+  private-key-path: ${CLOUDFRONT_PRIVATE_KEY_PATH}
+
 spring:
   application:
     name: backend
