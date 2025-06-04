@@ -41,19 +41,23 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 sh '''
-                echo "1. 새 컨테이너 백그라운드로 실행"
-                echo "현재 위치: $(pwd)"
-                docker-compose -f ../docker-compose.blue.yml up -d backend_new
+                docker-compose down $REPOSITORY_NAME
+                docker-compose pull $REPOSITORY_NAME
+                docker-compose up -d $REPOSITORY_NAME
 
-                echo "2. 헬스체크 or 대기: 새 컨테이너 대기 중"
-                sleep 20  # 혹은 curl localhost:8080/actuator/health 반복 체크
+                # echo "1. 새 컨테이너 백그라운드로 실행"
+                # echo "현재 위치: $(pwd)"
+                # docker-compose -f ../docker-compose.blue.yml up -d backend_new
 
-                echo "3. 기존 컨테이너 종료"
-                docker-compose stop backend
-                docker-compose rm -f backend
+                # echo "2. 헬스체크 or 대기: 새 컨테이너 대기 중"
+                # sleep 20  # 혹은 curl localhost:8080/actuator/health 반복 체크
 
-                echo "4. 새 컨테이너를 backend로 승격: backend_new 태그를 backend로 수정"
-                docker tag backend_new backend
+                # echo "3. 기존 컨테이너 종료"
+                # docker-compose stop backend
+                # docker-compose rm -f backend
+
+                # echo "4. 새 컨테이너를 backend로 승격: backend_new 태그를 backend로 수정"
+                # docker tag backend_new backend
                 '''
             }
         }
