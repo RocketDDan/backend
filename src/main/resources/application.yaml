@@ -11,6 +11,15 @@ springdoc:
     operations-sorter: alpha
     tags-sorter: alpha
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info  # 또는 '*' 로 전체 노출
+  endpoint:
+    health:
+      show-details: always
+
 cloud:
   aws:
     credentials:

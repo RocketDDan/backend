@@ -41,9 +41,21 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 sh '''
-                docker-compose down $REPOSITORY_NAME
-                docker-compose pull $REPOSITORY_NAME
-                docker-compose up -d $REPOSITORY_NAME
+                # 1. 새 컨테이너 백그라운드로 실행 (다른 서비스 이름으로)
+                docker-compose -f docker-compose.blue.yml up -d backend_new
+
+                # 2. 헬스체크 or 대기
+                echo "Waiting for new container to be ready..."
+                sleep 20  # 혹은 curl localhost:8080/actuator/health 반복 체크
+
+                # 3. 기존 컨테이너 종료
+                echo "Stop original container"
+                docker-compose stop backend
+                docker-compose rm -f backend
+
+                # 4. 새 컨테이너를 backend로 승격 (ex. 태그 스왑 or nginx switch)
+                echo "Change backend_new tag to backend"
+                docker tag backend_new backend
                 '''
             }
         }
