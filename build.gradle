@@ -45,6 +45,9 @@ dependencies {
     implementation files('libs/oraclepki-19.11.0.0.jar')
     implementation files('libs/osdt_core-19.3.0.0.jar')
     implementation files('libs/osdt_cert-19.3.0.0.jar')
+    // S3
+    implementation platform("software.amazon.awssdk:bom:2.25.28") // 버전은 최신으로 맞춰주세요
+    implementation 'software.amazon.awssdk:s3'
     // CloudFront (v1: URL 서명 기능이 없다)
 //    implementation("software.amazon.awssdk:cloudfront:2.31.54") // software.amazon: SDK v2의 그룹 ID
 //    implementation("software.amazon.awscdk:cloudfront:1.204.0") // software.amazon: SDK v2의 그룹 ID

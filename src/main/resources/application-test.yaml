@@ -21,10 +21,10 @@ cloud:
 
 s3:
   upload_path:
-    member_profile: release/member-profile/
-    crew_profile: release/crew-profile/
-    feed: release/feed/
-    announcement: release/announcement/
+    member_profile: test/member-profile/
+    crew_profile: test/crew-profile/
+    feed: test/feed/
+    announcement: test/announcement/
   upload_bucket:
     name: "runners-hi-bucket"
 
