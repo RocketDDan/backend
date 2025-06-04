@@ -27,31 +27,38 @@ dependencies {
     // spring starter
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // spring security
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     // devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     // Mybatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
-
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    compileOnly("org.projectlombok:lombok:1.18.38")
     // jdbc
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
     implementation files('libs/oraclepki-19.11.0.0.jar')
     implementation files('libs/osdt_core-19.3.0.0.jar')
     implementation files('libs/osdt_cert-19.3.0.0.jar')
     // CloudFront (v1: URL 서명 기능이 없다)
-//    implementation("software.amazon.awssdk:cloudfront:2.31.54") // software.amazon : SDK v2의 그룹 ID
+//    implementation("software.amazon.awssdk:cloudfront:2.31.54") // software.amazon: SDK v2의 그룹 ID
 //    implementation("software.amazon.awscdk:cloudfront:1.204.0") // software.amazon: SDK v2의 그룹 ID
-    implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.12.679'
-    // com.amazonaws는 AWS SDK v1의 그룹 ID
+    implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.12.679'// com.amazonaws: SDK v1의 그룹 ID
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+    // log
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     // test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
+configurations {
+    all*.exclude module: 'spring-boot-starter-logging' // log4j2 impl -> 자동 적용
 }
 
 tasks.named('test') {
