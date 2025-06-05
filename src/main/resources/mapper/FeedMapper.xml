@@ -24,50 +24,50 @@
 
         <where>
             <choose>
-                <when test="scope == 'ALL_EXCEPT_ME'">
-                    F.CREATED_BY != #{memberId}
+                <when test="feedSearchFilter.scope.name() == 'ALL_EXCEPT_ME'">
+                    F.CREATED_BY != #{loginMemberId}
                 </when>
-                <when test="scope == 'MY_CREW'">
+                <when test="feedSearchFilter.scope.name() == 'MY_CREW'">
                     F.CREATED_BY IN (
                     SELECT MEMBER_ID FROM CREW_MEMBER
                     WHERE CREW_ID IN (
                     SELECT CREW_ID
                     FROM CREW_MEMBER
-                    WHERE MEMBER_ID = #{memberId}
+                    WHERE MEMBER_ID = #{loginMemberId}
                     ))
                 </when>
-                <when test="scope == 'ME'">
-                    F.CREATED_BY = #{memberId}
+                <when test="feedSearchFilter.scope.name() == 'ME'">
+                    F.CREATED_BY = #{loginMemberId}
                 </when>
             </choose>
         </where>
 
         <choose>
-            <when test="order == 'LATEST'">
+            <when test="feedSearchFilter.order.name() == 'LATEST'">
                 ORDER BY F.CREATED_AT DESC
             </when>
-            <when test="order == 'OLDEST'">
+            <when test="feedSearchFilter.order.name() == 'OLDEST'">
                 ORDER BY F.CREATED_AT ASC
             </when>
-            <when test="order == 'NAME_ASC'">
+            <when test="feedSearchFilter.order.name() == 'NAME_ASC'">
                 ORDER BY M.NICKNAME ASC
             </when>
-            <when test="order == 'NAME_DESC'">
+            <when test="feedSearchFilter.order.name() == 'NAME_DESC'">
                 ORDER BY M.NICKNAME DESC
             </when>
-            <when test="order == 'MOST_LIKED'">
+            <when test="feedSearchFilter.order.name() == 'MOST_LIKED'">
                 ORDER BY (
                 SELECT COUNT(*)
                 FROM FEED_LIKE FL
                 WHERE FL.FEED_ID = F.FEED_ID
                 ) DESC
             </when>
-            <when test="order == 'MOST_COMMENTED'">
+            <when test="feedSearchFilter.order.name() == 'MOST_COMMENTED'">
                 ORDER BY COMMENT_COUNT DESC
             </when>
         </choose>
-        OFFSET #{page} * #{perPage}
-        ROWS FETCH NEXT #{perPage}
+        OFFSET #{feedSearchFilter.page} * #{feedSearchFilter.perPage}
+        ROWS FETCH NEXT #{feedSearchFilter.perPage}
         ROWS ONLY
     </select>
 

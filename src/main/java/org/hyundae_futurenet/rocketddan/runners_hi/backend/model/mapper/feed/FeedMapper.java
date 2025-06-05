@@ -9,5 +9,5 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Fee
 @Mapper
 public interface FeedMapper {
 
-	List<FeedListSource> selectFeedsByFilter(FeedSearchFilter feedSearchFilter);
+	List<FeedListSource> selectFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter);
 }

@@ -22,9 +22,9 @@ public class FeedFacadeImpl implements FeedFacade {
 	private final FeedListResponseConverter feedListResponseConverter;
 
 	@Override
-	public List<FeedListResponse> searchFeedsByFilter(FeedSearchFilter feedSearchFilter) {
+	public List<FeedListResponse> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter) {
 		// 1. 정보 가져오기
-		List<FeedListSource> feedListSources = feedService.searchFeedsByFilter(feedSearchFilter);
+		List<FeedListSource> feedListSources = feedService.searchFeedsByFilter(loginMemberId, feedSearchFilter);
 		// 2. filePath -> url 로 변환
 		return feedListSources.stream()
 			.map(feedListResponseConverter::toDto)

@@ -29,7 +29,8 @@ public class FeedController {
 	public ResponseEntity<List<FeedListResponse>> searchFeedList(
 		@Validated @ModelAttribute FeedSearchFilter feedSearchFilter) {
 
-		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(feedSearchFilter));
+		long loginMemberId = 1L;
+		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(loginMemberId, feedSearchFilter));
 	}
 
 }

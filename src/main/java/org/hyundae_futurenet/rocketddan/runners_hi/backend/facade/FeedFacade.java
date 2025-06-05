@@ -7,5 +7,5 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Fe
 
 public interface FeedFacade {
 
-	List<FeedListResponse> searchFeedsByFilter(FeedSearchFilter feedSearchFilter);
+	List<FeedListResponse> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter);
 }

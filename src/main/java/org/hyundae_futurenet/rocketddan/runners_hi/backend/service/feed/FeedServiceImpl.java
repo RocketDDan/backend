@@ -16,8 +16,8 @@ public class FeedServiceImpl implements FeedService {
 	private final FeedMapper feedMapper;
 
 	@Override
-	public List<FeedListSource> searchFeedsByFilter(FeedSearchFilter feedSearchFilter) {
+	public List<FeedListSource> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter) {
 
-		return feedMapper.selectFeedsByFilter(feedSearchFilter);
+		return feedMapper.selectFeedsByFilter(loginMemberId, feedSearchFilter);
 	}
 }
