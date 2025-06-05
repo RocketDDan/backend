@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed.FeedMapper">
+
+    <select id="selectFeedsByFilter"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource">
+        SELECT
+        F.FEED_ID,
+        F.CONTENT,
+        F.CREATED_AT,
+        F.CREATED_BY AS WRITER_ID,
+        M.NICKNAME AS WRITER_NICKNAME,
+        M.PROFILE_PATH AS WRITER_PROFILE_PATH,
+        (
+        SELECT COUNT(*)
+        FROM FEED_COMMENT FC
+        WHERE FC.FEED_ID = F.FEED_ID
+        ) AS COMMENT_COUNT
+        FROM FEED F
+        JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
+
+        <where>
+            <choose>
+                <when test="scope == 'ALL_EXCEPT_ME'">
+                    F.CREATED_BY != #{memberId}
+                </when>
+                <when test="scope == 'MY_CREW'">
+                    F.CREATED_BY IN (
+                    SELECT MEMBER_ID FROM CREW_MEMBER
+                    WHERE CREW_ID IN (
+                    SELECT CREW_ID
+                    FROM CREW_MEMBER
+                    WHERE MEMBER_ID = #{memberId}
+                    ))
+                </when>
+                <when test="scope == 'ME'">
+                    F.CREATED_BY = #{memberId}
+                </when>
+            </choose>
+        </where>
+
+        <choose>
+            <when test="order == 'LATEST'">
+                ORDER BY F.CREATED_AT DESC
+            </when>
+            <when test="order == 'OLDEST'">
+                ORDER BY F.CREATED_AT ASC
+            </when>
+            <when test="order == 'NAME_ASC'">
+                ORDER BY M.NICKNAME ASC
+            </when>
+            <when test="order == 'NAME_DESC'">
+                ORDER BY M.NICKNAME DESC
+            </when>
+            <when test="order == 'MOST_LIKED'">
+                ORDER BY (
+                SELECT COUNT(*)
+                FROM FEED_LIKE FL
+                WHERE FL.FEED_ID = F.FEED_ID
+                ) DESC
+            </when>
+            <when test="order == 'MOST_COMMENTED'">
+                ORDER BY COMMENT_COUNT DESC
+            </when>
+        </choose>
+        OFFSET #{page} * #{perPage}
+        ROWS FETCH NEXT #{perPage}
+        ROWS ONLY
+    </select>
+
+</mapper>
