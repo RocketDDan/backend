@@ -25,6 +25,10 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	@Override
 	public void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role) {
 
+		if ("COMPANY".equals(role)) {
+			throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
+		}
+
 		if ("USER".equals(role)) {
 			// 크루 멤버의 리더임을 확인
 			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
@@ -33,7 +37,7 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 			}
 		}
 
-		String type = ("ADMIN".equals(role) || "COMPANY".equals(role)) ? "ALL" : "CREW";
+		String type = "ADMIN".equals(role) ? "ALL" : "CREW";
 
 		AnnouncementCreate create = new AnnouncementCreate(
 			null,
