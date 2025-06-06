@@ -61,4 +61,37 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		}
 
 	}
+
+	@Override
+	public void updateAnnouncement(Long announcementId, AnnouncementCreateRequest request, Long memberId, String role) {
+
+		AnnouncementCreate announcement = announcementService.findById(announcementId);
+
+		if (announcement == null) {
+			throw new IllegalArgumentException("해당 공지사항이 없습니다.");
+		}
+		if ("ADMIN".equals(role)) {
+			// 전체 수정
+		} else if ("USER".equals(role)) {
+			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
+			if (!isLeader || !announcement.getCreatedBy().equals(memberId)) {
+				throw new IllegalStateException("공지사항 수정 권한이 없습니다.");
+			}
+		} else {
+			throw new IllegalStateException("공지사항 수정 권한이 없습니다.");
+		}
+
+		AnnouncementCreate updated = new AnnouncementCreate(
+			announcementId,
+			announcement.getAnnouncementType(),
+			request.getTitle(),
+			request.getContent(),
+			memberId
+		);
+
+		announcementService.updateAnnouncement(updated);
+		if (request.getAttachPath() != null) {
+			announcementFileService.updateOrInsertFile(announcementId, request.getAttachPath(), memberId);
+		}
+	}
 }

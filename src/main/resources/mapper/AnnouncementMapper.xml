@@ -33,5 +33,31 @@
         )
     </insert>
 
+    <!--  공지 수정 / updated_by 에는 수정한 member_id를 삽입 -->
+    <update id="updateAnnouncement"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+        UPDATE announcement
+        SET title = #{title},
+        content = #{content},
+        updated_at = SYSDATE,
+        updated_by = #{createdBy}
+        WHERE announcement_id = #{announcementId}
+    </update>
+
+    <!-- 공지 조회 -->
+    <select id="findById"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+        SELECT
+        announcement_id,
+        announcement_type,
+        title,
+        content,
+        created_by
+        FROM
+        announcement
+        WHERE
+        announcement_id = #{announcementId}
+    </select>
+
 
 </mapper>

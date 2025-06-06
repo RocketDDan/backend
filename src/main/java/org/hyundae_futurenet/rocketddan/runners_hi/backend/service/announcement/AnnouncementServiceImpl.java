@@ -17,4 +17,16 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 		announcementMapper.insertAnnouncement(announcementCreate);
 	}
+
+	@Override
+	public void updateAnnouncement(AnnouncementCreate announcementCreate) {
+
+		announcementMapper.updateAnnouncement(announcementCreate);
+	}
+
+	@Override
+	public AnnouncementCreate findById(Long announcementId) {
+
+		return announcementMapper.findById(announcementId);
+	}
 }

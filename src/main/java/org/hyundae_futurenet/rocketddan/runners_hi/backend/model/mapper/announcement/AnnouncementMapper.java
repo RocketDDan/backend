@@ -7,4 +7,8 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.A
 public interface AnnouncementMapper {
 
 	void insertAnnouncement(AnnouncementCreate announcementCreate);
+
+	void updateAnnouncement(AnnouncementCreate announcementCreate);
+
+	AnnouncementCreate findById(Long announcementId);
 }

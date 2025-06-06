@@ -30,4 +30,30 @@
         )
     </insert>
 
+    <!-- 첨부파일 존재하는지 확인   -->
+    <select id="existsByAnnouncementId" resultType="boolean" parameterType="long">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </select>
+
+    <!-- 첨부파일 수정 (filePath 있을 때만 수정) -->
+    <update id="updateAnnouncementFile"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+        UPDATE ANNOUNCEMENT_FILE
+        <set>
+            <if test="filePath != null and filePath != ''">
+                FILE_PATH = #{filePath},
+            </if>
+            UPDATED_AT = SYSDATE,
+            UPDATED_BY = #{createdBy}
+        </set>
+        WHERE ANNOUNCEMENT_ID = #{announcementId}
+    </update>
+
+    <!--  첨부파일 삭제  -->
+    <delete id="deleteByAnnouncementId" parameterType="long">
+        DELETE FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </delete>
 </mapper>

@@ -17,4 +17,27 @@ public class AnnouncementFileServiceImpl implements AnnouncementFileService {
 
 		announcementFileMapper.insertAnnouncementFile(file);
 	}
+
+	@Override
+	public void updateOrInsertFile(Long announcementId, String attachPath, Long memberId) {
+
+		if (attachPath == null || attachPath.isBlank()) {
+			announcementFileMapper.deleteByAnnouncementId(announcementId);
+			return;
+		}
+
+		boolean exists = announcementFileMapper.existsByAnnouncementId(announcementId);
+		AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+			null,
+			announcementId,
+			attachPath,
+			memberId
+		);
+
+		if (exists) {
+			announcementFileMapper.updateAnnouncementFile(fileCreate);
+		} else {
+			announcementFileMapper.insertAnnouncementFile(fileCreate);
+		}
+	}
 }

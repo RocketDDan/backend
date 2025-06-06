@@ -5,4 +5,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Ann
 public interface AnnouncementFacade {
 
 	void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role);
+
+	void updateAnnouncement(Long announcementId, AnnouncementCreateRequest request, Long memberId, String role);
 }

@@ -7,4 +7,10 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.A
 public interface AnnouncementFileMapper {
 
 	void insertAnnouncementFile(AnnouncementFileCreate file);
+
+	void updateAnnouncementFile(AnnouncementFileCreate file);
+
+	boolean existsByAnnouncementId(Long announcementId);
+
+	void deleteByAnnouncementId(Long announcementId);
 }
