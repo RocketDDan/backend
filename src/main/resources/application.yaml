@@ -5,6 +5,10 @@ logging:
   level:
     root: INFO
 
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml   # XML 매퍼 파일 위치
+  type-aliases-package: org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
