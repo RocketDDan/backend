@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementMapper">
+
+    <!--  공지 등록  -->
+    <insert id="insertAnnouncement"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate">
+        <selectKey keyProperty="announcementId" resultType="long" order="BEFORE">
+            SELECT SEQ_ANNOUNCEMENT.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO announcement(
+        announcement_id,
+        announcement_type,
+        title,
+        content,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by
+        ) VALUES (
+        #{announcementId},
+        #{announcementType},
+        #{title},
+        #{content},
+        SYSDATE,
+        #{createdBy},
+        SYSDATE,
+        #{createdBy}
+        )
+    </insert>
+
+</mapper>
