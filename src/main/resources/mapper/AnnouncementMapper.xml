@@ -7,7 +7,7 @@
 
     <!--  공지 등록  -->
     <insert id="insertAnnouncement"
-            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate">
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
         <selectKey keyProperty="announcementId" resultType="long" order="BEFORE">
             SELECT SEQ_ANNOUNCEMENT.NEXTVAL FROM DUAL
         </selectKey>
