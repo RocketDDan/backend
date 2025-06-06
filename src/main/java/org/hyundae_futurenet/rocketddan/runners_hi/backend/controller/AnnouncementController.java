@@ -3,6 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AnnouncementFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,10 +37,19 @@ public class AnnouncementController {
 		@Valid @RequestBody AnnouncementCreateRequest request
 	) {
 
-		Long memberId = 6L; //
-		String role = "ADMIN"; //
+		Long memberId = 6L;
+		String role = "ADMIN";
 
 		announcementFacade.updateAnnouncement(announcementId, request, memberId, role);
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{announcementId}")
+	public ResponseEntity<Void> deleteAnnouncement(@PathVariable Long announcementId) {
+
+		Long memberId = 1L;
+		String role = "USER";
+		announcementFacade.deleteAnnouncement(announcementId, memberId, role);
 		return ResponseEntity.ok().build();
 	}
 

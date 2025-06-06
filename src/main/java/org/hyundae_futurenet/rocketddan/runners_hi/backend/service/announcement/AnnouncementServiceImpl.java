@@ -29,4 +29,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 		return announcementMapper.findById(announcementId);
 	}
+
+	@Override
+	public void deleteAnnouncement(Long announcementId) {
+
+		announcementMapper.deleteAnnouncement(announcementId);
+	}
 }

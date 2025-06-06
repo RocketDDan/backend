@@ -40,4 +40,10 @@ public class AnnouncementFileServiceImpl implements AnnouncementFileService {
 			announcementFileMapper.insertAnnouncementFile(fileCreate);
 		}
 	}
+
+	@Override
+	public void deleteFilesByAnnouncementId(Long announcementId) {
+
+		announcementFileMapper.deleteByAnnouncementId(announcementId);
+	}
 }

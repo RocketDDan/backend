@@ -7,4 +7,6 @@ public interface AnnouncementFacade {
 	void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role);
 
 	void updateAnnouncement(Long announcementId, AnnouncementCreateRequest request, Long memberId, String role);
+
+	void deleteAnnouncement(Long announcementId, Long memberId, String role);
 }

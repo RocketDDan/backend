@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * JWT TOKEN에 role 확인하고 수정 예정
+ * */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -93,5 +96,27 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		if (request.getAttachPath() != null) {
 			announcementFileService.updateOrInsertFile(announcementId, request.getAttachPath(), memberId);
 		}
+	}
+
+	@Override
+	public void deleteAnnouncement(Long announcementId, Long memberId, String role) {
+
+		AnnouncementCreate announcement = announcementService.findById(announcementId);
+		if (announcement == null) {
+			throw new IllegalArgumentException("해당 공지사항이 존재하지 않습니다.");
+		}
+		if ("ADMIN".equals(role)) {
+			// 전체 삭제 가능
+		} else if ("USER".equals(role)) {
+			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
+			if (!isLeader || !announcement.getCreatedBy().equals(memberId)) {
+				throw new IllegalStateException("공지사항 삭제 권한이 없습니다.");
+			}
+		} else {
+			throw new IllegalStateException("공지사항 삭제 권한이 없습니다.");
+		}
+
+		announcementFileService.deleteFilesByAnnouncementId(announcementId);
+		announcementService.deleteAnnouncement(announcementId);
 	}
 }

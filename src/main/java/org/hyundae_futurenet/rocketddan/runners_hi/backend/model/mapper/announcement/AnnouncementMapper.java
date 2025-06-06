@@ -11,4 +11,6 @@ public interface AnnouncementMapper {
 	void updateAnnouncement(AnnouncementCreate announcementCreate);
 
 	AnnouncementCreate findById(Long announcementId);
+
+	void deleteAnnouncement(Long announcementId);
 }

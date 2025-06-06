@@ -7,4 +7,6 @@ public interface AnnouncementFileService {
 	void insertFile(AnnouncementFileCreate file);
 
 	void updateOrInsertFile(Long announcementId, String attachPath, Long memberId);
+
+	void deleteFilesByAnnouncementId(Long announcementId);
 }

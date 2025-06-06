@@ -9,4 +9,6 @@ public interface AnnouncementService {
 	void updateAnnouncement(AnnouncementCreate announcementCreate);
 
 	AnnouncementCreate findById(Long announcementId);
+
+	void deleteAnnouncement(Long announcementId);
 }

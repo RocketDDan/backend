@@ -59,5 +59,11 @@
         announcement_id = #{announcementId}
     </select>
 
+    <!--  공지사항 삭제  -->
+    <delete id="deleteAnnouncement" parameterType="long">
+        DELETE FROM announcement
+        WHERE announcement_id = #{announcementId}
+    </delete>
+
 
 </mapper>
