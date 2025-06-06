@@ -1,8 +1,10 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementService;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AnnouncementFacadeImpl implements AnnouncementFacade {
 
 	private final AnnouncementService announcementService;
+
+	private final AnnouncementFileService announcementFileService;
 
 	private final CrewMemberMapper crewMemberMapper;
 
@@ -40,5 +44,17 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		);
 
 		announcementService.insertAnnouncement(create);
+
+		// 첨부 파일이 있을 경우에만
+		if (request.getAttachPath() != null && !request.getAttachPath().isBlank()) {
+			AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+				null,
+				create.getAnnouncementId(),
+				request.getAttachPath(),
+				memberId
+			);
+			announcementFileService.insertFile(fileCreate);
+		}
+
 	}
 }

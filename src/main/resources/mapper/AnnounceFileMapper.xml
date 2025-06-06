@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementFileMapper">
+
+    <insert id="insertAnnouncementFile"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+        <selectKey keyProperty="announcementFileId" resultType="long" order="BEFORE">
+            SELECT SEQ_ANNOUNCEMENT_FILE.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO ANNOUNCEMENT_FILE (
+        ANNOUNCEMENT_FILE_ID,
+        FILE_PATH,
+        ANNOUNCEMENT_ID,
+        CREATED_AT,
+        CREATED_BY,
+        UPDATED_AT,
+        UPDATED_BY
+        ) VALUES (
+        #{announcementFileId},
+        #{filePath},
+        #{announcementId},
+        SYSDATE,
+        #{createdBy},
+        SYSDATE,
+        #{createdBy}
+        )
+    </insert>
+
+</mapper>
