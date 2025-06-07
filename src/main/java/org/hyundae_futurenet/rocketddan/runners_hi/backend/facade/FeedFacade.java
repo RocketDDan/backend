@@ -20,5 +20,5 @@ public interface FeedFacade {
 
 	void registerComment(long loginMemberId, long feedId, String comment);
 
-	void updateCommit(long loginMemberId, long feedId, String commentId, String newComment);
+	void updateComment(long loginMemberId, long feedId, String commentId, String newComment);
 }

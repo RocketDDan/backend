@@ -41,7 +41,7 @@ public class FeedCommentController {
 	) {
 
 		long loginMemberId = 1L;
-		feedFacade.updateCommit(loginMemberId, feedId, commentId, newComment);
+		feedFacade.updateComment(loginMemberId, feedId, commentId, newComment);
 		return ResponseEntity.ok().build();
 	}
 }

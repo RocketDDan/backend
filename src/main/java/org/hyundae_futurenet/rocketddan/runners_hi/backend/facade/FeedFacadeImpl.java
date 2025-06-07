@@ -92,7 +92,7 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
-	public void updateCommit(long loginMemberId, long feedId, String commentId, String newComment) {
+	public void updateComment(long loginMemberId, long feedId, String commentId, String newComment) {
 		// 해당하는 댓글 없으면 예외 던지기
 		feedCommentService.assertCommentExists(loginMemberId, feedId, commentId);
 		// 댓글 수정
