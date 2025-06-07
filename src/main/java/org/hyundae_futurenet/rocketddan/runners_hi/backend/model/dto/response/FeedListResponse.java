@@ -36,6 +36,12 @@ public class FeedListResponse {
 	@Schema(description = "댓글 수", example = "5")
 	private int commentCount;
 
+	@Schema(description = "위도", example = "37.55")
+	private double lat;
+
+	@Schema(description = "경도", example = "127.05")
+	private double lng;
+
 	@Schema(description = "피드 생성 시각 (YYYY-MM-DD HH:MM:SS 형식)", example = "2025-06-04 12:34:56")
 	private String createdAt;
 

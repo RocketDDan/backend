@@ -27,6 +27,8 @@
         <result property="writerProfilePath" column="writerProfilePath"/>
         <result javaType="boolean" property="isMine" column="isMine"/>
         <result property="commentCount" column="commentCount"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
         <result property="createdAt" column="createdAt"/>
 
         <!-- 연관된 리스트들 -->

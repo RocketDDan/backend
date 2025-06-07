@@ -43,6 +43,8 @@ public class FeedListResponseConverter {
 			writerProfileUrl,
 			source.isMine(),
 			source.getCommentCount(),
+			source.getLat(),
+			source.getLng(),
 			source.getCreatedAt(),
 			feedFileUrls,
 			commentThumbnails

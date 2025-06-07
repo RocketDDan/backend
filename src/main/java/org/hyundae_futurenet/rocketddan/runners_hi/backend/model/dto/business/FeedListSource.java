@@ -27,6 +27,10 @@ public class FeedListSource {
 
 	private int commentCount;
 
+	private double lat;
+
+	private double lng;
+
 	private String createdAt;
 
 	private List<FeedFilePath> feedFilePathList;
