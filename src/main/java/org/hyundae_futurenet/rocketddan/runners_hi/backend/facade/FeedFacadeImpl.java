@@ -74,13 +74,13 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
-	public void like(long loginMemberId, long feedId) {
+	public void likeFeed(long loginMemberId, long feedId) {
 
 		feedLikeService.like(loginMemberId, feedId);
 	}
 
 	@Override
-	public void unlike(long loginMemberId, long feedId) {
+	public void unlikeFeed(long loginMemberId, long feedId) {
 
 		feedLikeService.unlike(loginMemberId, feedId);
 	}

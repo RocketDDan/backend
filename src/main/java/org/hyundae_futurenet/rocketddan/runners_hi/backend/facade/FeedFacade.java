@@ -14,7 +14,7 @@ public interface FeedFacade {
 
 	void deleteFeed(long loginMemberId, long feedId);
 
-	void like(long loginMemberId, long feedId);
+	void likeFeed(long loginMemberId, long feedId);
 
-	void unlike(long loginMemberId, long feedId);
+	void unlikeFeed(long loginMemberId, long feedId);
 }
