@@ -22,4 +22,18 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
 		feedCommentMapper.insert(loginMemberId, feedId, comment);
 	}
+
+	@Override
+	public void assertCommentExists(long loginMemberId, long feedId, String commentId) {
+
+		if (!feedCommentMapper.validateCommentExistence(loginMemberId, feedId, commentId)) {
+			throw new IllegalArgumentException("해당 로그인한 유저와 피드 id에 해당하는 댓글이 없습니다.");
+		}
+	}
+
+	@Override
+	public void update(String commentId, String newComment) {
+
+		feedCommentMapper.update(commentId, newComment);
+	}
 }

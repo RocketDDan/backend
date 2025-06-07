@@ -4,6 +4,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,19 @@ public class FeedCommentController {
 
 		long loginMemberId = 1L;
 		feedFacade.registerComment(loginMemberId, feedId, comment);
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "Feed 댓글 수정", description = "Feed 댓글을 수정합니다.")
+	@PutMapping("/{comment-id}")
+	public ResponseEntity<Void> updateComment(
+		@PathVariable("feed-id") long feedId,
+		@PathVariable("comment-id") String commentId,
+		@RequestParam String newComment
+	) {
+
+		long loginMemberId = 1L;
+		feedFacade.updateCommit(loginMemberId, feedId, commentId, newComment);
 		return ResponseEntity.ok().build();
 	}
 }

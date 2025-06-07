@@ -19,4 +19,6 @@ public interface FeedFacade {
 	void unlikeFeed(long loginMemberId, long feedId);
 
 	void registerComment(long loginMemberId, long feedId, String comment);
+
+	void updateCommit(long loginMemberId, long feedId, String commentId, String newComment);
 }

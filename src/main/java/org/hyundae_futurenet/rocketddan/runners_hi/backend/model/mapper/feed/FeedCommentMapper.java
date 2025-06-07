@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface FeedCommentMapper {
@@ -21,4 +23,32 @@ public interface FeedCommentMapper {
 	void insert(@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
 		@Param("comment") String comment);
+
+	@Select("""
+		SELECT CASE
+			WHEN EXISTS (
+			  SELECT 1
+			  FROM FEED_COMMENT
+			  WHERE CREATED_BY = #{loginMemberId}
+				AND FEED_ID = #{feedId}
+			  	AND COMMENT_ID = #{commentId}
+			)
+			THEN 1
+			ELSE 0
+			END
+			FROM DUAL
+		""")
+	boolean validateCommentExistence(
+		@Param("loginMemberId") long loginMemberId,
+		@Param("feedId") long feedId,
+		@Param("commentId") String commentId);
+
+	@Update("""
+		
+		UPDATE FEED_COMMENT
+		SET CONTENT = #{newContent}
+		WHERE COMMENT_ID = #{commentId}
+		""")
+	void update(@Param("commentId") String commentId,
+		@Param("newComment") String newComment);
 }
