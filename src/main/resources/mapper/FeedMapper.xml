@@ -44,21 +44,72 @@
 
     <!-- 메인 피드 쿼리 -->
     <select id="selectFeedsByFilter" resultMap="FeedListSourceMap">
-        SELECT F.FEED_ID                                      AS feedId,
-               F.CONTENT                                      AS content,
-               F.CREATED_BY                                   AS writerId,
-               M.NICKNAME                                     AS writerNickname,
-               M.PROFILE_PATH                                 AS writerProfilePath,
-               CASE
-                   WHEN F.CREATED_BY = #{loginMemberId} THEN 1
-                   ELSE 0
-                   END                                        AS isMine,
-               (SELECT COUNT(*)
-                FROM FEED_COMMENT FC
-                WHERE FC.FEED_ID = F.FEED_ID)                 AS commentCount,
-               TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"
+        SELECT F.FEED_ID AS feedId,
+        F.CONTENT AS content,
+        F.CREATED_BY AS writerId,
+        M.NICKNAME AS writerNickname,
+        M.PROFILE_PATH AS writerProfilePath,
+        CASE
+        WHEN F.CREATED_BY = #{loginMemberId} THEN 1
+        ELSE 0
+        END AS isMine,
+        (SELECT COUNT(*)
+        FROM FEED_COMMENT FC
+        WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
+        F.LAT AS lat,
+        F.LNG AS lng,
+        TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"
         FROM FEED F
-                 JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
+        JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
+
+        <where>
+            <choose>
+                <when test="feedSearchFilter.scope.name() == 'ALL_EXCEPT_ME'">
+                    F.CREATED_BY != #{loginMemberId}
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'MY_CREW'">
+                    F.CREATED_BY IN (
+                    SELECT MEMBER_ID
+                    FROM CREW_MEMBER
+                    WHERE CREW_ID IN (
+                    SELECT CREW_ID FROM CREW_MEMBER WHERE MEMBER_ID = #{loginMemberId}
+                    )
+                    )
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'ME'">
+                    F.CREATED_BY = #{loginMemberId}
+                </when>
+            </choose>
+        </where>
+
+        <choose>
+            <when test="feedSearchFilter.order.name() == 'LATEST'">
+                ORDER BY F.CREATED_AT DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'OLDEST'">
+                ORDER BY F.CREATED_AT ASC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'NAME_ASC'">
+                ORDER BY M.NICKNAME ASC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'NAME_DESC'">
+                ORDER BY M.NICKNAME DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'MOST_LIKED'">
+                ORDER BY (
+                SELECT COUNT(*) FROM FEED_LIKE FL WHERE FL.FEED_ID = F.FEED_ID
+                ) DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'MOST_COMMENTED'">
+                ORDER BY commentCount DESC
+            </when>
+            <otherwise>
+                ORDER BY F.CREATED_AT DESC
+            </otherwise>
+        </choose>
+
+        OFFSET (${feedSearchFilter.page} - 1) * #{feedSearchFilter.perPage} ROWS
+        FETCH NEXT #{feedSearchFilter.perPage} ROWS ONLY
 
     </select>
 
