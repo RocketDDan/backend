@@ -6,10 +6,12 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.FeedL
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class FeedFacadeImpl implements FeedFacade {
 	private final FeedService feedService;
 
 	private final FeedFileService feedFileService;
+
+	private final FeedCommentService feedCommentService;
 
 	private final FeedListResponseConverter feedListResponseConverter;
 
@@ -39,10 +43,10 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
+	@Transactional
 	public void uploadFeed(long loginMemberId, String content, Double lat, Double lng, List<MultipartFile> fileList) {
 		// feed 테이블에 피드 정보 저장
 		long feedId = feedService.save(loginMemberId, content, lat, lng);
-		log.info("feedId: {}", feedId);
 		// s3 파일 저장소에 피드 파일 저장
 		List<String> uploadedfilePathList = s3FileUtil.uploadFeedFile(fileList, feedId);
 		// feed_file 테이블에 피드 파일 정보 저장
