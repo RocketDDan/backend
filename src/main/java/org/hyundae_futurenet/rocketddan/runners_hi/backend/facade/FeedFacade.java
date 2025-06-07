@@ -13,4 +13,8 @@ public interface FeedFacade {
 	void uploadFeed(long loginMemberId, String content, Double lat, Double lng, List<MultipartFile> fileList);
 
 	void deleteFeed(long loginMemberId, long feedId);
+
+	void like(long loginMemberId, long feedId);
+
+	void unlike(long loginMemberId, long feedId);
 }

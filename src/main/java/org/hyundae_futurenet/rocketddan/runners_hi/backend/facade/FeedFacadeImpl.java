@@ -8,6 +8,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Fee
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedLikeService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class FeedFacadeImpl implements FeedFacade {
 	private final FeedFileService feedFileService;
 
 	private final FeedCommentService feedCommentService;
+
+	private final FeedLikeService feedLikeService;
 
 	private final FeedListResponseConverter feedListResponseConverter;
 
@@ -68,5 +71,17 @@ public class FeedFacadeImpl implements FeedFacade {
 		feedService.delete(feedId);
 		// S3에 저징된 피드와 관련된 파일들 삭제하기
 		s3FileUtil.removeFiles(filePathList);
+	}
+
+	@Override
+	public void like(long loginMemberId, long feedId) {
+
+		feedLikeService.like(loginMemberId, feedId);
+	}
+
+	@Override
+	public void unlike(long loginMemberId, long feedId) {
+
+		feedLikeService.unlike(loginMemberId, feedId);
 	}
 }
