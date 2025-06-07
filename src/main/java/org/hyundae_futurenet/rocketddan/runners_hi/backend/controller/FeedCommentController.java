@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,6 +43,18 @@ public class FeedCommentController {
 
 		long loginMemberId = 1L;
 		feedFacade.updateComment(loginMemberId, feedId, commentId, newComment);
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "Feed 댓글 삭제", description = "Feed 댓글을 삭제합니다.")
+	@DeleteMapping("/{comment-id}")
+	public ResponseEntity<Void> deleteComment(
+		@PathVariable("feed-id") long feedId,
+		@PathVariable("comment-id") String commentId
+	) {
+
+		long loginMemberId = 1L;
+		feedFacade.deleteCommit(loginMemberId, feedId, commentId);
 		return ResponseEntity.ok().build();
 	}
 }

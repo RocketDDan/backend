@@ -36,4 +36,10 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
 		feedCommentMapper.update(commentId, newComment);
 	}
+
+	@Override
+	public void delete(String commentId) {
+
+		feedCommentMapper.delete(commentId);
+	}
 }

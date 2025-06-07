@@ -9,4 +9,6 @@ public interface FeedCommentService {
 	void assertCommentExists(long loginMemberId, long feedId, String commentId);
 
 	void update(String commentId, String newComment);
+
+	void delete(String commentId);
 }

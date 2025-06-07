@@ -51,4 +51,10 @@ public interface FeedCommentMapper {
 		""")
 	void update(@Param("commentId") String commentId,
 		@Param("newComment") String newComment);
+
+	@Delete("""
+		DELETE FROM FEED_COMMENT
+		WHERE COMMENT_ID = #{commentId}
+		""")
+	void delete(@Param("commentId") String commentId);
 }

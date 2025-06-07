@@ -98,4 +98,12 @@ public class FeedFacadeImpl implements FeedFacade {
 		// 댓글 수정
 		feedCommentService.update(commentId, newComment);
 	}
+
+	@Override
+	public void deleteCommit(long loginMemberId, long feedId, String commentId) {
+		// 해당하는 댓글 없으면 예외 던지기
+		feedCommentService.assertCommentExists(loginMemberId, feedId, commentId);
+		// 댓글 삭제
+		feedCommentService.delete(commentId);
+	}
 }
