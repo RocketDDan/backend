@@ -84,4 +84,10 @@ public class FeedFacadeImpl implements FeedFacade {
 
 		feedLikeService.unlike(loginMemberId, feedId);
 	}
+
+	@Override
+	public void registerComment(long loginMemberId, long feedId, String comment) {
+
+		feedCommentService.register(loginMemberId, feedId, comment);
+	}
 }

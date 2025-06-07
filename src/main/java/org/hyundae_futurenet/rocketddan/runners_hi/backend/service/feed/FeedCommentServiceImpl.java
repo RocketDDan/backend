@@ -16,4 +16,10 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
 		feedCommentMapper.deleteAll(feedId);
 	}
+
+	@Override
+	public void register(long loginMemberId, long feedId, String comment) {
+
+		feedCommentMapper.insert(loginMemberId, feedId, comment);
+	}
 }
