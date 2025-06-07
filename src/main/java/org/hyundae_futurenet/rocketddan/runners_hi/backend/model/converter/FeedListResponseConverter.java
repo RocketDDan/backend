@@ -38,14 +38,14 @@ public class FeedListResponseConverter {
 		return new FeedListResponse(
 			source.getFeedId(),
 			source.getContent(),
-			feedFileUrls,
 			source.getWriterId(),
 			source.getWriterNickname(),
 			writerProfileUrl,
 			source.isMine(),
 			source.getCommentCount(),
-			commentThumbnails,
-			source.getCreatedAt()
+			source.getCreatedAt(),
+			feedFileUrls,
+			commentThumbnails
 		);
 	}
 }

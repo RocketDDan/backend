@@ -21,9 +21,6 @@ public class FeedListResponse {
 	@Schema(description = "피드 본문 내용", example = "오늘도 열심히 달렸습니다!")
 	private String content;
 
-	@Schema(description = "피드에 첨부된 파일 URL 목록")
-	private List<FeedFileUrl> feedFileUrlList;
-
 	@Schema(description = "피드 작성자의 ID", example = "42")
 	private long writerId;
 
@@ -39,11 +36,14 @@ public class FeedListResponse {
 	@Schema(description = "댓글 수", example = "5")
 	private int commentCount;
 
-	@Schema(description = "댓글 썸네일 목록 (최대 3개)")
-	private List<CommentThumbnail> commentList;
-
 	@Schema(description = "피드 생성 시각 (YYYY-MM-DD HH:MM:SS 형식)", example = "2025-06-04 12:34:56")
 	private String createdAt;
+
+	@Schema(description = "피드에 첨부된 파일 URL 목록")
+	private List<FeedFileUrl> feedFileUrlList;
+
+	@Schema(description = "댓글 썸네일 목록 (최대 3개)")
+	private List<CommentThumbnail> commentList;
 
 	@Getter
 	@Setter

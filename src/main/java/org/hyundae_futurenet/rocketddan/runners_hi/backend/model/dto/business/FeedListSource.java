@@ -17,21 +17,21 @@ public class FeedListSource {
 
 	private String content;
 
-	private List<FeedFilePath> feedFilePathList;
-
 	private long writerId;
 
 	private String writerNickname;
 
-	private String writerProfilePath; // S3의 경로로 저장됨
+	private String writerProfilePath;
 
 	private boolean isMine;
 
 	private int commentCount;
 
-	private List<CommentThumbnailRaw> commentList;
-
 	private String createdAt;
+
+	private List<FeedFilePath> feedFilePathList;
+
+	private List<CommentThumbnailRaw> commentList;
 
 	@Getter
 	@Setter
