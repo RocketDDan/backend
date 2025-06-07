@@ -9,7 +9,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
+// @AllArgsConstructor // -> 이게 있으면 MyBatis가 생성자 자동 매핑을 시도
 @ToString
 public class FeedListSource {
 
