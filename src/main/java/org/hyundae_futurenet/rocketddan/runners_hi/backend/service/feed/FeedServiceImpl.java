@@ -20,4 +20,12 @@ public class FeedServiceImpl implements FeedService {
 
 		return feedMapper.selectFeedsByFilter(loginMemberId, feedSearchFilter);
 	}
+
+	@Override
+	public long save(long loginMemberId, String content, Double lat, Double lng) {
+
+		long feedId = feedMapper.getNextFeedId();
+		feedMapper.insertFeed(feedId, loginMemberId, content, lat, lng);
+		return feedId;
+	}
 }

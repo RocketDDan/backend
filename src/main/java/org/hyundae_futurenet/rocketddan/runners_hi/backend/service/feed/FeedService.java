@@ -8,4 +8,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Fee
 public interface FeedService {
 
 	List<FeedListSource> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter);
+
+	long save(long loginMemberId, String content, Double lat, Double lng);
 }
