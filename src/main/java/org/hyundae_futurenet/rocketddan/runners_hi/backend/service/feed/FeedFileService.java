@@ -5,4 +5,8 @@ import java.util.List;
 public interface FeedFileService {
 
 	void save(long loginMemberId, long feedId, List<String> uploadedfilePathList);
+
+	List<String> searchFilePathList(long feedId);
+
+	void deleteAll(long loginMemberId, long feedId);
 }

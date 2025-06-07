@@ -8,8 +8,10 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Fe
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -52,4 +54,13 @@ public class FeedController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "Feed 삭제", description = "Feed를 삭제합니다.")
+	@DeleteMapping("/{feed-id}")
+	public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") Long feedId) {
+
+		long loginMemberId = 1L;
+		feedFacade.deleteFeed(loginMemberId, feedId);
+
+		return ResponseEntity.ok().build();
+	}
 }

@@ -48,4 +48,21 @@ public class FeedFacadeImpl implements FeedFacade {
 		// feed_file 테이블에 피드 파일 정보 저장
 		feedFileService.save(loginMemberId, feedId, uploadedfilePathList);
 	}
+
+	@Override
+	@Transactional
+	public void deleteFeed(long loginMemberId, long feedId) {
+		// 피드 데이터 있는지 확인 후 없으면 예외 던짐 (관리자도 삭제 가능)
+		feedService.assertFeedExists(loginMemberId, feedId);
+		// 피드 파일 데이터 가져오기
+		List<String> filePathList = feedFileService.searchFilePathList(feedId);
+		// 피드 파일 데이터 삭제하기
+		feedFileService.deleteAll(loginMemberId, feedId);
+		// 피드 댓글 데이터 삭제하기
+		feedCommentService.deleteAll(feedId);
+		// 피드 데이터 삭제
+		feedService.delete(feedId);
+		// S3에 저징된 피드와 관련된 파일들 삭제하기
+		s3FileUtil.removeFiles(filePathList);
+	}
 }

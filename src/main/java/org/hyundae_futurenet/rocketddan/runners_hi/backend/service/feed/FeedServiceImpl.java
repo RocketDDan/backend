@@ -28,4 +28,18 @@ public class FeedServiceImpl implements FeedService {
 		feedMapper.insertFeed(feedId, loginMemberId, content, lat, lng);
 		return feedId;
 	}
+
+	@Override
+	public void delete(long feedId) {
+
+		feedMapper.delete(feedId);
+	}
+
+	@Override
+	public void assertFeedExists(long loginMemberId, long feedId) {
+
+		if (!feedMapper.validateFeedExistence(loginMemberId, feedId)) {
+			throw new IllegalArgumentException("해당 로그인한 유저와 피드 id에 해당하는 피드 데이터가 없습니다.");
+		}
+	}
 }

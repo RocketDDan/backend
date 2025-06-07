@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,25 @@ public interface FeedMapper {
 		@Param("content") String content,
 		@Param("lat") Double lat,
 		@Param("lng") Double lng);
+
+	@Delete("""
+		DELETE FROM FEED
+		WHERE FEED_ID = #{feedId}
+		""")
+	void delete(@Param("feedId") Long feedId);
+
+	@Select("""
+		SELECT CASE
+			WHEN EXISTS (
+			  SELECT 1
+			  FROM FEED
+			  WHERE CREATED_BY = #{loginMemberId}
+				AND FEED_ID = #{feedId}
+			)
+			THEN 1
+			ELSE 0
+			END
+			FROM DUAL
+		""")
+	boolean validateFeedExistence(long loginMemberId, Long feedId);
 }
