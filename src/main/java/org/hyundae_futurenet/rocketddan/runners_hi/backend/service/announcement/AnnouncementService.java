@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 
 public interface AnnouncementService {
@@ -18,4 +19,5 @@ public interface AnnouncementService {
 
 	List<AnnouncementListResponse> findAnnouncements(Map<String, Object> params);
 
+	AnnouncementDetailResponse findDetailById(Long announcementId);
 }

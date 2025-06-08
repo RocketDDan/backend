@@ -7,6 +7,7 @@ import java.util.Map;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementFileService;
@@ -150,6 +151,12 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		}
 
 		return announcementService.findAnnouncements(params);
+	}
+
+	@Override
+	public AnnouncementDetailResponse getAnnouncementDetail(Long announcementId) {
+
+		return announcementService.findDetailById(announcementId);
 	}
 
 }

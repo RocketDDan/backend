@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AnnouncementFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -88,6 +89,13 @@ public class AnnouncementController {
 		params.put("order", order);
 
 		List<AnnouncementListResponse> response = announcementFacade.getAnnouncementList(params, memberId, role);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{announcementId}")
+	public ResponseEntity<AnnouncementDetailResponse> getAnnouncementDetail(@PathVariable Long announcementId) {
+
+		AnnouncementDetailResponse response = announcementFacade.getAnnouncementDetail(announcementId);
 		return ResponseEntity.ok(response);
 	}
 

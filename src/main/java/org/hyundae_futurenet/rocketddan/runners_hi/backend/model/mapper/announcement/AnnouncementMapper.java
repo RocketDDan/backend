@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 
 @Mapper
@@ -20,4 +21,6 @@ public interface AnnouncementMapper {
 	void deleteAnnouncement(Long announcementId);
 
 	List<AnnouncementListResponse> findAnnouncements(@Param("params") Map<String, Object> params);
+
+	AnnouncementDetailResponse findDetailById(@Param("announcementId") Long announcementId);
 }
