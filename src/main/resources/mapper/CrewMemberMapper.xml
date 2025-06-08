@@ -13,4 +13,15 @@
         AND is_leader = 'Y'
     </select>
 
+    <!--  자신이 속한 크루의 리더 조회  -->
+    <select id="findCrewLeaderIdByMemberId" parameterType="long" resultType="long">
+        SELECT CM.member_id
+        FROM crew_member CM
+        JOIN crew C ON CM.crew_id = C.crew_id
+        WHERE CM.is_leader = 'Y'
+        AND C.crew_id = (
+        SELECT crew_id FROM crew_member WHERE member_id = #{memberId}
+        )
+    </select>
+
 </mapper>
