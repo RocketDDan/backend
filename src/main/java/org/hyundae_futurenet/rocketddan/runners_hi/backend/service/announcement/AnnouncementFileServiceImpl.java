@@ -1,5 +1,7 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement;
 
+import java.util.List;
+
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementFileMapper;
 import org.springframework.stereotype.Service;
@@ -19,31 +21,20 @@ public class AnnouncementFileServiceImpl implements AnnouncementFileService {
 	}
 
 	@Override
-	public void updateOrInsertFile(Long announcementId, String attachPath, Long memberId) {
-
-		if (attachPath == null || attachPath.isBlank()) {
-			announcementFileMapper.deleteByAnnouncementId(announcementId);
-			return;
-		}
-
-		boolean exists = announcementFileMapper.existsByAnnouncementId(announcementId);
-		AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
-			null,
-			announcementId,
-			attachPath,
-			memberId
-		);
-
-		if (exists) {
-			announcementFileMapper.updateAnnouncementFile(fileCreate);
-		} else {
-			announcementFileMapper.insertAnnouncementFile(fileCreate);
-		}
-	}
-
-	@Override
 	public void deleteFilesByAnnouncementId(Long announcementId) {
 
 		announcementFileMapper.deleteByAnnouncementId(announcementId);
+	}
+
+	@Override
+	public List<String> findFilePathsByAnnouncementId(Long announcementId) {
+
+		return announcementFileMapper.findFilePathsByAnnouncementId(announcementId);
+	}
+
+	@Override
+	public void deleteFileByPath(Long announcementId, String filePath) {
+
+		announcementFileMapper.deleteFileByPath(announcementId, filePath);
 	}
 }

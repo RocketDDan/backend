@@ -1,12 +1,15 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
@@ -59,28 +62,39 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		announcementService.insertAnnouncement(create);
 
 		// 첨부 파일이 있을 경우에만
-		if (request.getAttachPath() != null && !request.getAttachPath().isBlank()) {
-			AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
-				null,
-				create.getAnnouncementId(),
-				request.getAttachPath(),
-				memberId
-			);
-			announcementFileService.insertFile(fileCreate);
+		List<String> attachPaths = request.getAttachPaths();
+		if (attachPaths != null && !attachPaths.isEmpty()) {
+			if (attachPaths.size() > 3) {
+				throw new IllegalArgumentException("첨부파일은 최대 3개까지 가능합니다.");
+			}
+
+			for (String filePath : attachPaths) {
+				if (!isValidFileType(filePath)) {
+					throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
+				}
+
+				AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+					null,
+					create.getAnnouncementId(),
+					filePath,
+					memberId
+				);
+				announcementFileService.insertFile(fileCreate);
+			}
 		}
 
 	}
 
 	@Override
-	public void updateAnnouncement(Long announcementId, AnnouncementCreateRequest request, Long memberId, String role) {
+	public void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest request, Long memberId, String role) {
 
 		AnnouncementCreate announcement = announcementService.findById(announcementId);
-
 		if (announcement == null) {
 			throw new IllegalArgumentException("해당 공지사항이 없습니다.");
 		}
+
 		if ("ADMIN".equals(role)) {
-			// 전체 수정
+			// OK
 		} else if ("USER".equals(role)) {
 			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
 			if (!isLeader || !announcement.getCreatedBy().equals(memberId)) {
@@ -97,11 +111,44 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 			request.getContent(),
 			memberId
 		);
-
 		announcementService.updateAnnouncement(updated);
-		if (request.getAttachPath() != null) {
-			announcementFileService.updateOrInsertFile(announcementId, request.getAttachPath(), memberId);
+
+		// 첨부파일 처리
+		if (request.getAttachPaths() != null) {
+			List<String> newPaths = request.getAttachPaths();
+
+			if (newPaths.size() > 3) {
+				throw new IllegalArgumentException("첨부파일은 최대 3개까지 등록할 수 있습니다.");
+			}
+			for (String path : newPaths) {
+				if (!isValidFileType(path)) {
+					throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
+				}
+			}
+
+			List<String> existingPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
+			Set<String> existingSet = new HashSet<>(existingPaths);
+			Set<String> newSet = new HashSet<>(newPaths);
+
+			// 삭제된 파일 제거
+			existingSet.stream()
+				.filter(path -> !newSet.contains(path))
+				.forEach(path -> announcementFileService.deleteFileByPath(announcementId, path));
+
+			// 새로 추가된 파일 등록
+			newSet.stream()
+				.filter(path -> !existingSet.contains(path))
+				.forEach(path -> {
+					AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+						null,
+						announcementId,
+						path,
+						memberId
+					);
+					announcementFileService.insertFile(fileCreate);
+				});
 		}
+
 	}
 
 	@Override
@@ -156,7 +203,16 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	@Override
 	public AnnouncementDetailResponse getAnnouncementDetail(Long announcementId) {
 
-		return announcementService.findDetailById(announcementId);
+		AnnouncementDetailResponse detail = announcementService.findDetailById(announcementId);
+		List<String> attachPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
+		detail.setAttachPaths(attachPaths);
+		return detail;
+	}
+
+	private boolean isValidFileType(String filePath) {
+
+		String lower = filePath.toLowerCase();
+		return lower.endsWith(".jpg") || lower.endsWith(".png") || lower.endsWith(".pdf");
 	}
 
 }

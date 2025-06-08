@@ -1,5 +1,7 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
 
@@ -13,4 +15,9 @@ public interface AnnouncementFileMapper {
 	boolean existsByAnnouncementId(Long announcementId);
 
 	void deleteByAnnouncementId(Long announcementId);
+
+	List<String> findFilePathsByAnnouncementId(Long announcementId);
+
+	void deleteFileByPath(Long announcementId, String filePath);
+
 }

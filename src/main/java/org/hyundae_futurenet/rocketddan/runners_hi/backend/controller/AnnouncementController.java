@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AnnouncementFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +46,11 @@ public class AnnouncementController {
 	@PutMapping("/{announcementId}")
 	public ResponseEntity<Void> updateAnnouncement(
 		@PathVariable Long announcementId,
-		@Valid @RequestBody AnnouncementCreateRequest request
+		@Valid @RequestBody AnnouncementUpdateRequest request
 	) {
 
 		Long memberId = 6L;
 		String role = "ADMIN";
-
 		announcementFacade.updateAnnouncement(announcementId, request, memberId, role);
 		return ResponseEntity.ok().build();
 	}

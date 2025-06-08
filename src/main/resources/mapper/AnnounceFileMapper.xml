@@ -56,4 +56,20 @@
         DELETE FROM announcement_file
         WHERE announcement_id = #{announcementId}
     </delete>
+
+    <!-- 파일 경로 리스트 조회 -->
+    <select id="findFilePathsByAnnouncementId" resultType="string" parameterType="long">
+        SELECT file_path
+        FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </select>
+
+    <!-- 파일 개별 삭제 -->
+    <delete id="deleteFileByPath" parameterType="map">
+        DELETE FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+        AND file_path = #{filePath}
+    </delete>
+
+
 </mapper>
