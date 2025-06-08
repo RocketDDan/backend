@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 /*
- * 역할 : ADMIN, USER
- * */
+ * 역할 : ADMIN, USER, COMPANY
+ */
 
 @RestController
 @RequestMapping("/announcements")
@@ -35,10 +35,10 @@ public class AnnouncementController {
 
 	@PostMapping
 	public ResponseEntity<Void> createAnnouncement(@Valid @RequestBody AnnouncementCreateRequest request) {
-		// 임시 member_id와 role을 1과 USER로 지정 - JWT 토큰에서 member_id와 role를 받아올 예정
+		// 임시 member_id와 role 지정
 		Long memberId = 6L;
-		// 테스트
 		String role = "ADMIN";
+
 		announcementFacade.createAnnouncement(request, memberId, role);
 		return ResponseEntity.ok().build();
 	}
@@ -73,8 +73,8 @@ public class AnnouncementController {
 		@RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
-		Long memberId = 1L; // JWT에서 추출 예정
-		String role = "USER"; // JWT에서 추출 예정
+		Long memberId = 1L;
+		String role = "USER";
 
 		Map<String, Object> params = new HashMap<>();
 		if (scope != null) {
