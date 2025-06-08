@@ -120,5 +120,23 @@
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
     </select>
 
+    <!-- 공지사항 세부 조회 -->
+    <select id="findDetailById"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse">
+        SELECT
+        A.announcement_id,
+        A.title,
+        A.content,
+        A.attach_path AS attachPath,
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+        TO_CHAR(A.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+        M.nickname
+        FROM
+        announcement A
+        JOIN member M ON A.created_by = M.member_id
+        WHERE
+        A.announcement_id = #{announcementId}
+    </select>
+
 
 </mapper>
