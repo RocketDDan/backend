@@ -20,9 +20,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/*
- * JWT TOKEN에 role 확인하고 수정 예정
- * */
 @Slf4j
 @Service
 @RequiredArgsConstructor
