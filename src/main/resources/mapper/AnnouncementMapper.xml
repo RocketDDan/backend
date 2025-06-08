@@ -65,5 +65,45 @@
         WHERE announcement_id = #{announcementId}
     </delete>
 
+    <!--  공지사항 목록 조회 및 키워드 검색  -->
+    <select id="findAnnouncements"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse">
+        SELECT
+        A.title,
+        A.content,
+        M.email,
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        FROM
+        announcement A
+        JOIN member M ON A.created_by = M.member_id
+        <where>
+            <if test="params.scope != null">
+                AND A.announcement_type = #{params.scope}
+            </if>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND (A.title LIKE CONCAT('%', #{params.keyword}, '%')
+                OR A.content LIKE CONCAT('%', #{params.keyword}, '%'))
+            </if>
+        </where>
+        <choose>
+            <when test="params.order == 'LATEST'">
+                ORDER BY A.created_at DESC
+            </when>
+            <when test="params.order == 'OLDEST'">
+                ORDER BY A.created_at ASC
+            </when>
+            <when test="params.order == 'NAME_ASCENDING'">
+                ORDER BY A.title ASC
+            </when>
+            <when test="params.order == 'NAME_DESCENDING'">
+                ORDER BY A.title DESC
+            </when>
+            <otherwise>
+                ORDER BY A.created_at DESC
+            </otherwise>
+        </choose>
+        OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
+    </select>
+
 
 </mapper>
