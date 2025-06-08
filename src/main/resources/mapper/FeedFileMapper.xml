@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed.FeedFileMapper">
+
+    <insert id="insertAll">
+        INSERT INTO FEED_FILE (
+        FEED_FILE_ID,
+        FILE_PATH,
+        FILE_ORDER,
+        FEED_ID,
+        CREATED_BY
+        )
+        VALUES
+        <foreach collection="uploadedFilePathList" item="filePath" index="idx" separator=",">
+            <bind name="fileOrder" value="@java.lang.Integer@valueOf(idx + 1)"/>
+            (SEQ_FEED_FILE.NEXTVAL,
+            #{filePath},
+            #{fileOrder},
+            #{feedId},
+            #{loginMemberId})
+        </foreach>
+    </insert>
+
+</mapper>
