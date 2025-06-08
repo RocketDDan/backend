@@ -77,8 +77,24 @@
         announcement A
         JOIN member M ON A.created_by = M.member_id
         <where>
-            <if test="params.scope != null">
-                AND A.announcement_type = #{params.scope}
+            <if test="params.scope == 'ALL'">
+                AND A.announcement_type = 'ALL'
+            </if>
+            <if test="params.scope == 'CREW'">
+                AND A.announcement_type = 'CREW'
+            </if>
+            <if test="params.scope == 'CREW_OR_ALL'">
+                AND (
+                A.announcement_type = 'ALL'
+                OR (A.announcement_type = 'CREW' AND A.created_by IN
+                <foreach item="id" collection="params.leaderIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+                )
+                )
+            </if>
+            <if test="params.scope == 'ALL_AND_CREW'">
+                AND A.announcement_type IN ('ALL', 'CREW')
             </if>
             <if test="params.keyword != null and params.keyword != ''">
                 AND (A.title LIKE CONCAT('%', #{params.keyword}, '%')
