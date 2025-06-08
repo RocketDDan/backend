@@ -1,5 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,5 +128,28 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	@Override
 	public List<AnnouncementListResponse> getAnnouncementList(Map<String, Object> params, Long memberId, String role) {
 
+		if (params == null) {
+			params = new HashMap<>();
+		}
+
+		if (!params.containsKey("scope")) {
+			if ("ADMIN".equals(role) || "COMPANY".equals(role)) {
+				params.put("scope", "ALL_AND_CREW");
+			} else if ("USER".equals(role)) {
+				boolean isCrewMember = crewMemberMapper.isCrewMember(memberId);
+				if (isCrewMember) {
+					Long leaderId = crewMemberMapper.findCrewLeaderIdByMemberId(memberId);
+					params.put("scope", "CREW_OR_ALL");
+					params.put("leaderId", leaderId);
+				} else {
+					params.put("scope", "ALL");
+				}
+			} else {
+				params.put("scope", "ALL");
+			}
+		}
+
+		return announcementService.findAnnouncements(params);
 	}
+
 }

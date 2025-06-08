@@ -7,4 +7,8 @@ import org.apache.ibatis.annotations.Param;
 public interface CrewMemberMapper {
 
 	public boolean existsLeaderByMemberId(@Param("memberId") Long memberId);
+
+	Long findCrewLeaderIdByMemberId(@Param("memberId") Long memberId);
+
+	boolean isCrewMember(@Param("memberId") Long memberId);
 }

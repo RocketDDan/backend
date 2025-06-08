@@ -24,4 +24,12 @@
         )
     </select>
 
+    <!-- 자신이 크루에 속해있는지 확인 -->
+    <select id="isCrewMember" parameterType="long" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew_member
+        WHERE member_id = #{memberId}
+    </select>
+
+
 </mapper>

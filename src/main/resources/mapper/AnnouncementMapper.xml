@@ -86,9 +86,10 @@
             <if test="params.scope == 'CREW_OR_ALL'">
                 AND (
                 A.announcement_type = 'ALL'
-                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId})
+                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId, jdbcType=BIGINT})
                 )
             </if>
+
             <if test="params.scope == 'ALL_AND_CREW'">
                 AND A.announcement_type IN ('ALL', 'CREW')
             </if>
