@@ -19,4 +19,11 @@ public interface CrewMemberMapper {
 	Optional<CrewMemberDetailResponse> selectCrewMemberByCrewIdAndMemberId(
 		@Param("crewId") long crewId,
 		@Param("memberId") long memberId);
+
+	boolean existsLeaderByMemberId(@Param("memberId") Long memberId);
+
+	Long findCrewLeaderIdByMemberId(@Param("memberId") Long memberId);
+
+	boolean isCrewMember(@Param("memberId") Long memberId);
 }
+

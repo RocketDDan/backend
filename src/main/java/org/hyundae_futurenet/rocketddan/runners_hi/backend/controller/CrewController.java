@@ -39,7 +39,7 @@ public class CrewController {
 	@Operation(summary = "Crew 생성", description = "새로운 Crew를 생성합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Long> createCrew(
-		@RequestPart(value = "crew") CrewCreateRequest crewCreateRequest,
+		@Valid @RequestPart(value = "crew") CrewCreateRequest crewCreateRequest,
 		@RequestPart(value = "profile", required = false) MultipartFile profile
 	) {
 
@@ -51,7 +51,7 @@ public class CrewController {
 	@PutMapping(value = "/{crew-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Void> updateCrew(
 		@PathVariable("crew-id") Long crewId,
-		@RequestPart(value = "crew") CrewUpdateRequest crewUpdateRequest,
+		@Valid @RequestPart(value = "crew") CrewUpdateRequest crewUpdateRequest,
 		@RequestPart(value = "profile", required = false) MultipartFile profile
 	) {
 

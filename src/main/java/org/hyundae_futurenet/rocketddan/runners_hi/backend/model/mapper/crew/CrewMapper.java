@@ -50,7 +50,4 @@ public interface CrewMapper {
 
 	// 크루 멤버 삭제
 	void deleteCrewMembers(@Param("crewId") long crewId);
-
-	// 다음 크루 ID 조회
-	long getNextCrewId();
 }
