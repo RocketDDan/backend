@@ -210,6 +210,9 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	public AnnouncementDetailResponse getAnnouncementDetail(Long announcementId) {
 		// 공지사항 세부 조회
 		AnnouncementDetailResponse detail = announcementService.findDetailById(announcementId);
+		if (detail == null) {
+			throw new IllegalArgumentException("해당 공지사항이 존재하지 않습니다.");
+		}
 		// 첨부파일 조회는 따로 처리
 		List<String> attachPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
 		detail.setAttachPaths(attachPaths);
