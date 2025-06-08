@@ -42,4 +42,10 @@ public class FeedServiceImpl implements FeedService {
 			throw new IllegalArgumentException("해당 로그인한 유저와 피드 id에 해당하는 피드 데이터가 없습니다.");
 		}
 	}
+
+	@Override
+	public void update(long feedId, String newContent, Double newLat, Double newLng) {
+
+		feedMapper.update(feedId, newContent, newLat, newLng);
+	}
 }

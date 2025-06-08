@@ -14,4 +14,6 @@ public interface FeedService {
 	void delete(long feedId);
 
 	void assertFeedExists(long loginMemberId, long feedId);
+
+	void update(long feedId, String newContent, Double newLat, Double newLng);
 }

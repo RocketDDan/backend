@@ -26,4 +26,7 @@ public interface FeedFacade {
 	void deleteCommit(long loginMemberId, long feedId, String commentId);
 
 	List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId);
+
+	void updateFeed(long loginMemberId, long feedId, String newContent, Double newLat, Double newLng,
+		List<MultipartFile> newfileList);
 }

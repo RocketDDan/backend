@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
 
@@ -59,4 +60,15 @@ public interface FeedMapper {
 			FROM DUAL
 		""")
 	boolean validateFeedExistence(long loginMemberId, Long feedId);
+
+	@Update("""
+		UPDATE FEED SET CONTENT = #{newContent},
+		                LAT = #{newLat},
+		                LNG = #{newLng}
+		WHERE FEED_ID = #{feedId}
+		""")
+	void update(@Param("feedId") long feedId,
+		@Param("newContent") String newContent,
+		@Param("newLat") Double newLat,
+		@Param("newLng") Double newLng);
 }

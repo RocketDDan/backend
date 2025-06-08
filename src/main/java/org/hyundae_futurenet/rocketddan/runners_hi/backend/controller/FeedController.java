@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,11 +57,26 @@ public class FeedController {
 
 	@Operation(summary = "Feed 삭제", description = "Feed를 삭제합니다.")
 	@DeleteMapping("/{feed-id}")
-	public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") Long feedId) {
+	public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") long feedId) {
 
 		long loginMemberId = 1L;
 		feedFacade.deleteFeed(loginMemberId, feedId);
 
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "Feed 수정", description = "Feed를 수정합니다.")
+	@PutMapping("/{feed-id}")
+	public ResponseEntity<Void> updateFeed(
+		@PathVariable("feed-id") long feedId,
+		@RequestPart("content") String newContent,
+		@RequestPart(value = "lat", required = false) Double newLat,
+		@RequestPart(value = "lng", required = false) Double newLng,
+		@RequestPart("fileList") List<MultipartFile> newfileList
+	) {
+
+		long loginMemberId = 1L;
+		feedFacade.updateFeed(loginMemberId, feedId, newContent, newLat, newLng, newfileList);
 		return ResponseEntity.ok().build();
 	}
 }
