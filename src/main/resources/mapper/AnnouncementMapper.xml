@@ -86,11 +86,7 @@
             <if test="params.scope == 'CREW_OR_ALL'">
                 AND (
                 A.announcement_type = 'ALL'
-                OR (A.announcement_type = 'CREW' AND A.created_by IN
-                <foreach item="id" collection="params.leaderIds" open="(" separator="," close=")">
-                    #{id}
-                </foreach>
-                )
+                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId})
                 )
             </if>
             <if test="params.scope == 'ALL_AND_CREW'">

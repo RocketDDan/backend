@@ -1,6 +1,10 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
+import java.util.List;
+import java.util.Map;
+
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 
 public interface AnnouncementFacade {
 
@@ -9,4 +13,6 @@ public interface AnnouncementFacade {
 	void updateAnnouncement(Long announcementId, AnnouncementCreateRequest request, Long memberId, String role);
 
 	void deleteAnnouncement(Long announcementId, Long memberId, String role);
+
+	List<AnnouncementListResponse> getAnnouncementList(Map<String, Object> params, Long memberId, String role);
 }
