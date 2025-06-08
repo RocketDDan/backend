@@ -71,4 +71,5 @@ public interface FeedMapper {
 		@Param("newContent") String newContent,
 		@Param("newLat") Double newLat,
 		@Param("newLng") Double newLng);
+
 }

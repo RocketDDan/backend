@@ -1,5 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
@@ -79,4 +80,5 @@ public interface FeedCommentMapper {
 		""")
 	List<CommentDetailSource> searchAll(@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId);
+
 }

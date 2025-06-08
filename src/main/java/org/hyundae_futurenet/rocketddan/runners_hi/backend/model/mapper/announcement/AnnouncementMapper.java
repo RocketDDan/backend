@@ -1,17 +1,26 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 
 @Mapper
 public interface AnnouncementMapper {
 
-	// TODO : 임시 메서드 (삭제하고 사용하세요.)
-	@Select("""
-		    SELECT *
-		    FROM ANNOUNCEMENT
-		""")
-	List<Object> findAll();
+	void insertAnnouncement(AnnouncementCreate announcementCreate);
+
+	void updateAnnouncement(AnnouncementCreate announcementCreate);
+
+	AnnouncementCreate findById(Long announcementId);
+
+	void deleteAnnouncement(Long announcementId);
+
+	List<AnnouncementListResponse> findAnnouncements(@Param("params") Map<String, Object> params);
+
+	AnnouncementDetailResponse findDetailById(@Param("announcementId") Long announcementId);
 }

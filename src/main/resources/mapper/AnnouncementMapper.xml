@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementMapper">
+
+    <!--  공지 등록  -->
+    <insert id="insertAnnouncement"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+        <selectKey keyProperty="announcementId" resultType="long" order="BEFORE">
+            SELECT SEQ_ANNOUNCEMENT.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO announcement(
+        announcement_id,
+        announcement_type,
+        title,
+        content,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by
+        ) VALUES (
+        #{announcementId},
+        #{announcementType},
+        #{title},
+        #{content},
+        SYSDATE,
+        #{createdBy},
+        SYSDATE,
+        #{createdBy}
+        )
+    </insert>
+
+    <!--  공지 수정 / updated_by 에는 수정한 member_id를 삽입 -->
+    <update id="updateAnnouncement"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+        UPDATE announcement
+        SET title = #{title},
+        content = #{content},
+        updated_at = SYSDATE,
+        updated_by = #{createdBy}
+        WHERE announcement_id = #{announcementId}
+    </update>
+
+    <!-- 공지 조회 -->
+    <select id="findById"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+        SELECT
+        announcement_id,
+        announcement_type,
+        title,
+        content,
+        created_by as createdBy
+        FROM
+        announcement
+        WHERE
+        announcement_id = #{announcementId}
+    </select>
+
+    <!--  공지사항 삭제  -->
+    <delete id="deleteAnnouncement" parameterType="long">
+        DELETE FROM announcement
+        WHERE announcement_id = #{announcementId}
+    </delete>
+
+    <!--  공지사항 목록 조회 및 키워드 검색  -->
+    <select id="findAnnouncements"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse">
+        SELECT
+        A.title,
+        A.content,
+        M.email,
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        FROM
+        announcement A
+        JOIN member M ON A.created_by = M.member_id
+        <where>
+            <if test="params.scope == 'ALL'">
+                AND A.announcement_type = 'ALL'
+            </if>
+            <if test="params.scope == 'CREW'">
+                AND A.announcement_type = 'CREW'
+            </if>
+            <if test="params.scope == 'CREW_OR_ALL'">
+                AND (
+                A.announcement_type = 'ALL'
+                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId, jdbcType=BIGINT})
+                )
+            </if>
+
+            <if test="params.scope == 'ALL_AND_CREW'">
+                AND A.announcement_type IN ('ALL', 'CREW')
+            </if>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND (
+                A.title LIKE '%' || #{params.keyword} || '%'
+                OR A.content LIKE '%' || #{params.keyword} || '%'
+                )
+            </if>
+        </where>
+        <choose>
+            <when test="params.order == 'LATEST'">
+                ORDER BY A.created_at DESC
+            </when>
+            <when test="params.order == 'OLDEST'">
+                ORDER BY A.created_at ASC
+            </when>
+            <when test="params.order == 'NAME_ASCENDING'">
+                ORDER BY A.title ASC
+            </when>
+            <when test="params.order == 'NAME_DESCENDING'">
+                ORDER BY A.title DESC
+            </when>
+            <otherwise>
+                ORDER BY A.created_at DESC
+            </otherwise>
+        </choose>
+        OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
+    </select>
+
+    <!-- 공지사항 세부 조회 -->
+    <resultMap id="AnnouncementDetailMap"
+               type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse">
+        <result property="announcementId" column="announcement_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="nickname" column="nickname"/>
+    </resultMap>
+
+    <select id="findDetailById"
+            resultMap="AnnouncementDetailMap">
+        SELECT
+        A.announcement_id,
+        A.title,
+        A.content,
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+        TO_CHAR(A.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+        M.nickname
+        FROM
+        announcement A
+        JOIN member M ON A.created_by = M.member_id
+        WHERE
+        A.announcement_id = #{announcementId}
+    </select>
+
+
+</mapper>

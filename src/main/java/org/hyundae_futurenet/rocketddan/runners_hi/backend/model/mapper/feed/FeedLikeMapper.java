@@ -22,4 +22,5 @@ public interface FeedLikeMapper {
 		""")
 	void delete(@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId);
+
 }
