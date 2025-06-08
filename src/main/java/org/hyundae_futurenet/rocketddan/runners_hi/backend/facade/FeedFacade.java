@@ -3,6 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,4 +24,6 @@ public interface FeedFacade {
 	void updateComment(long loginMemberId, long feedId, String commentId, String newComment);
 
 	void deleteCommit(long loginMemberId, long feedId, String commentId);
+
+	List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId);
 }

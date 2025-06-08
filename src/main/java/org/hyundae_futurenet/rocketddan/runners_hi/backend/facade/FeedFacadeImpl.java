@@ -2,9 +2,12 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import java.util.List;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.CommentDetailResponseConverter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.FeedListResponseConverter;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
@@ -32,6 +35,8 @@ public class FeedFacadeImpl implements FeedFacade {
 	private final FeedLikeService feedLikeService;
 
 	private final FeedListResponseConverter feedListResponseConverter;
+
+	private final CommentDetailResponseConverter commentDetailResponseConverter;
 
 	private final S3FileUtil s3FileUtil;
 
@@ -105,5 +110,15 @@ public class FeedFacadeImpl implements FeedFacade {
 		feedCommentService.assertCommentExists(loginMemberId, feedId, commentId);
 		// 댓글 삭제
 		feedCommentService.delete(commentId);
+	}
+
+	@Override
+	public List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId) {
+		// 댓글 목록 가져오기
+		List<CommentDetailSource> commentDetailSources = feedCommentService.searchCommentList(loginMemberId, feedId);
+		// 프로필 파일 path를 url로 변환
+		return commentDetailSources.stream()
+			.map(commentDetailResponseConverter::toDto)
+			.toList();
 	}
 }

@@ -1,11 +1,14 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
 
 @Mapper
 public interface FeedCommentMapper {
@@ -57,4 +60,23 @@ public interface FeedCommentMapper {
 		WHERE COMMENT_ID = #{commentId}
 		""")
 	void delete(@Param("commentId") String commentId);
+
+	@Select("""
+			SELECT
+				FC.COMMENT_ID AS commentId,
+				FC.CONTENT AS content,
+				FC.CREATED_BY AS writerId,
+				M.NICKNAME AS writerNickname,
+				M.PROFILE_PATH AS writerProfilePath,
+				TO_CHAR(FC.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt",
+				TO_CHAR(FC.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "updatedAt",
+				CASE WHEN FC.UPDATED_AT IS NOT NULL 		THEN 1 ELSE 0 END AS isUpdated,
+				CASE WHEN FC.CREATED_BY = #{loginMemberId}  THEN 1 ELSE 0 END AS	isMine
+		
+			FROM FEED_COMMENT FC
+			JOIN MEMBER M ON FC.CREATED_BY = M.MEMBER_ID
+			WHERE FC.FEED_ID = #{feedId}
+		""")
+	List<CommentDetailSource> searchAll(@Param("loginMemberId") long loginMemberId,
+		@Param("feedId") long feedId);
 }

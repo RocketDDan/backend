@@ -1,5 +1,9 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed;
 
+import java.util.List;
+
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
+
 public interface FeedCommentService {
 
 	void deleteAll(long feedId);
@@ -11,4 +15,6 @@ public interface FeedCommentService {
 	void update(String commentId, String newComment);
 
 	void delete(String commentId);
+
+	List<CommentDetailSource> searchCommentList(long loginMemberId, long feedId);
 }

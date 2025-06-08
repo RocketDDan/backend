@@ -1,8 +1,12 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
+import java.util.List;
+
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,5 +60,15 @@ public class FeedCommentController {
 		long loginMemberId = 1L;
 		feedFacade.deleteCommit(loginMemberId, feedId, commentId);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "Feed 댓글 가져오기", description = "Feed 댓글 목록을 가져옵니다.")
+	@GetMapping
+	public ResponseEntity<List<CommentDetailResponse>> getCommentList(
+		@PathVariable("feed-id") long feedId
+	) {
+
+		long loginMemberId = 1L;
+		return ResponseEntity.ok(feedFacade.searchCommentList(loginMemberId, feedId));
 	}
 }

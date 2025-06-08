@@ -1,5 +1,8 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed;
 
+import java.util.List;
+
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed.FeedCommentMapper;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +44,11 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 	public void delete(String commentId) {
 
 		feedCommentMapper.delete(commentId);
+	}
+
+	@Override
+	public List<CommentDetailSource> searchCommentList(long loginMemberId, long feedId) {
+
+		return feedCommentMapper.searchAll(loginMemberId, feedId);
 	}
 }
