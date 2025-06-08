@@ -94,8 +94,10 @@
                 AND A.announcement_type IN ('ALL', 'CREW')
             </if>
             <if test="params.keyword != null and params.keyword != ''">
-                AND (A.title LIKE CONCAT('%', #{params.keyword}, '%')
-                OR A.content LIKE CONCAT('%', #{params.keyword}, '%'))
+                AND (
+                A.title LIKE '%' || #{params.keyword} || '%'
+                OR A.content LIKE '%' || #{params.keyword} || '%'
+                )
             </if>
         </where>
         <choose>

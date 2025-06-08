@@ -79,6 +79,9 @@ public class AnnouncementController {
 		if (scope != null) {
 			params.put("scope", scope);
 		}
+		if (keyword != null) {
+			params.put("keyword", keyword);
+		}
 		params.put("keyword", keyword);
 		params.put("offset", (page - 1) * perPage);
 		params.put("perPage", perPage);
