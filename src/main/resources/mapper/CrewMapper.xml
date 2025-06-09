@@ -62,6 +62,20 @@
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
+    <!-- 크루 지역별 조회-->
+    <select id="selectCrewsByRegion"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse">
+        SELECT c.crew_id                                                          as crewId,
+               c.crew_name                                                        as crewName,
+               c.crew_address                                                     as crewAddress,
+               c.crew_region                                                      as crewRegion,
+               c.profile_path                                                     as profilePath,
+               (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt
+        FROM crew c
+        WHERE c.crew_region = #{region}
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+
+    </select>
 
     <!-- 크루 생성 -->
     <insert id="insertCrew" useGeneratedKeys="true" keyProperty="crewId">
@@ -69,25 +83,25 @@
             SELECT seq_crew.nextval FROM dual
         </selectKey>
         INSERT INTO crew (
-            crew_id,
-            crew_name,
-            introduce,
-            crew_address,
-            crew_region,
-            created_at,
-            created_by,
-            updated_at,
-            updated_by
+        crew_id,
+        crew_name,
+        introduce,
+        crew_address,
+        crew_region,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by
         ) VALUES (
-            #{crewId},
-            #{req.crewName},
-            #{req.crewIntroduce},
-            #{req.crewAddress},
-            #{req.crewRegion},
-            sysdate,
-            #{loginMemberId},
-            sysdate,
-            #{loginMemberId}
+        #{crewId},
+        #{req.crewName},
+        #{req.crewIntroduce},
+        #{req.crewAddress},
+        #{req.crewRegion},
+        sysdate,
+        #{loginMemberId},
+        sysdate,
+        #{loginMemberId}
         )
     </insert>
 
