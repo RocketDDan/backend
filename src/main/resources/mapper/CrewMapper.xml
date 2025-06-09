@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMapper">
+
+    <!-- 크루 존재 여부 확인 -->
+    <select id="existsByCrewId" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew
+        WHERE crew_id = #{crewId}
+    </select>
+
+    <select id="existsByName" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew
+        WHERE crew_name = #{name}
+    </select>
+
+    <!-- 크루 프로필 조회 -->
+    <select id="selectCrewByCrewId"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewDetailResponse">
+        SELECT c.crew_id                                                          as crewId,
+               c.crew_name                                                        as crewName,
+               c.crew_address                                                     as crewAddress,
+               c.crew_region                                                      as crewRegion,
+               c.profile_path                                                     as profilePath,
+               c.introduce                                                        as introduce,
+               (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt
+        FROM crew c
+        WHERE c.crew_id = #{crewId}
+    </select>
+
+    <!-- 크루 목록 조회 -->
+    <select id="selectCrewsByFilter"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse">
+        SELECT
+        c.crew_id as crewId,
+        c.crew_name as crewName,
+        c.crew_address as crewAddress,
+        c.crew_region as crewRegion,
+        c.profile_path as profilePath,
+        (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt
+        FROM crew c
+        <where>
+            <if test="req.crewName != null and req.crewName != ''">
+                AND replace(c.crew_name, ' ', '') LIKE '%' || replace(#{req.crewName}, ' ', '') || '%'
+            </if>
+        </where>
+        <choose>
+            <when test="req.order.name() == 'LATEST'">
+                ORDER BY c.created_at DESC
+            </when>
+            <when test="req.order.name() == 'OLDEST'">
+                ORDER BY c.created_at ASC
+            </when>
+            <when test="req.order.name() == 'MEMBER_CNT'">
+                ORDER BY totalMemberCnt DESC, c.created_at DESC
+            </when>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+
+    <!-- 크루 생성 -->
+    <insert id="insertCrew" useGeneratedKeys="true" keyProperty="crewId">
+        <selectKey keyProperty="crewId" resultType="long" order="BEFORE">
+            SELECT seq_crew.nextval FROM dual
+        </selectKey>
+        INSERT INTO crew (
+            crew_id,
+            crew_name,
+            introduce,
+            crew_address,
+            crew_region,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        ) VALUES (
+            #{crewId},
+            #{req.crewName},
+            #{req.crewIntroduce},
+            #{req.crewAddress},
+            #{req.crewRegion},
+            sysdate,
+            #{loginMemberId},
+            sysdate,
+            #{loginMemberId}
+        )
+    </insert>
+
+    <!-- 크루 정보 변경 -->
+    <update id="updateCrew">
+        UPDATE crew
+        <set>
+            <if test="req.crewName != null">
+                crew_name = #{req.crewName},
+            </if>
+            <if test="req.crewIntroduce != null">
+                introduce = #{req.crewIntroduce},
+            </if>
+            <if test="req.crewAddress != null">
+                crew_address = #{req.crewAddress},
+            </if>
+            <if test="req.crewRegion != null">
+                crew_region = #{req.crewRegion},
+            </if>
+            <if test="profilePath != null">
+                profile_path = #{profilePath},
+            </if>
+            updated_at = sysdate,
+            updated_by = #{loginMemberId}
+        </set>
+        WHERE crew_id = #{crewId}
+    </update>
+
+
+    <update id="updateCrewProfilePath">
+        UPDATE crew
+        SET profile_path = #{profilePath}
+        WHERE crew_id = #{crewId}
+    </update>
+
+    <!-- 크루 삭제 -->
+    <delete id="deleteCrew">
+        DELETE
+        FROM crew
+        WHERE crew_id = #{crewId}
+    </delete>
+
+    <!-- 다음 크루 ID 조회 -->
+    <select id="getNextCrewId" resultType="long">
+        SELECT seq_crew.nextval
+        FROM dual
+    </select>
+
+</mapper>

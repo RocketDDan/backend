@@ -6,22 +6,51 @@
 <mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper">
 
     <!--  크루장인지 확인  -->
+    <select id="isLeaderByMemberIdAndCrewId" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew_member
+        WHERE member_id = #{memberId}
+          AND crew_id = #{crewId}
+          AND is_leader = 'Y'
+    </select>
+
+    <!--  크루 멤버인지 확인  -->
+    <select id="isCrewMemberByMemberIdAndCrewId" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew_member
+        WHERE member_id = #{memberId}
+          AND crew_id = #{crewId}
+    </select>
+
+
+    <!--  멤버 정보 확인  -->
+    <select id="selectCrewMemberByCrewIdAndMemberId"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse">
+        SELECT crew_member_id                               as crewMemberId,
+               member_id                                    as memberId,
+               is_leader                                    as isLeader,
+               TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        FROM crew_member
+        WHERE member_id = #{memberId}
+          AND crew_id = #{crewId}
+    </select>
+
     <select id="existsLeaderByMemberId" parameterType="long" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_member
         WHERE member_id = #{memberId}
-        AND is_leader = 'Y'
+          AND is_leader = 'Y'
     </select>
 
     <!--  자신이 속한 크루의 리더 조회  -->
     <select id="findCrewLeaderIdByMemberId" parameterType="long" resultType="long">
         SELECT CM.member_id
         FROM crew_member CM
-        JOIN crew C ON CM.crew_id = C.crew_id
+                 JOIN crew C ON CM.crew_id = C.crew_id
         WHERE CM.is_leader = 'Y'
-        AND C.crew_id = (
-        SELECT crew_id FROM crew_member WHERE member_id = #{memberId}
-        )
+          AND C.crew_id = (SELECT crew_id
+                           FROM crew_member
+                           WHERE member_id = #{memberId})
     </select>
 
     <!-- 자신이 크루에 속해있는지 확인 -->

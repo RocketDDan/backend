@@ -6,10 +6,8 @@ logging:
     root: INFO
 
 mybatis:
-
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: org.hyundae_futurenet.rocketddan.runners_hi.backend.model
-
 
 springdoc:
   swagger-ui:
