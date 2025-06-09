@@ -88,6 +88,10 @@ public class CrewController {
 	private ResponseEntity<List<CrewListResponse>> selectCrews(
 		@Valid @ModelAttribute CrewSearchFilter crewSearchFilter) {
 
+		if (crewSearchFilter == null) {
+			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
+		}
+
 		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(loginMemberId, crewSearchFilter);
 		return ResponseEntity.ok(result);
 	}
@@ -132,6 +136,10 @@ public class CrewController {
 		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter
 	) {
 
+		if (crewJoinRequestSearchFilter == null) {
+			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
+		}
+		
 		List<CrewJoinRequestListResponse> result = crewFacade
 			.selectCrewJoinRequestsByStatus(loginMemberId, crewId, crewJoinRequestSearchFilter);
 		return ResponseEntity.ok(result);
