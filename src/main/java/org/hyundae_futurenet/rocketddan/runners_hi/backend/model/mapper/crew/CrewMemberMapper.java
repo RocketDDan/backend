@@ -1,10 +1,13 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewMemberSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse;
 
 @Mapper
 public interface CrewMemberMapper {
@@ -19,10 +22,36 @@ public interface CrewMemberMapper {
 	Optional<CrewMemberDetailResponse> selectCrewMemberByCrewIdAndMemberId(
 		@Param("crewId") long crewId,
 		@Param("memberId") long memberId);
-	
-	boolean existsLeaderByMemberId(@Param("memberId") Long memberId);
+
+	boolean existsLeaderByMemberId(@Param("memberId") long memberId);
 
 	Long findCrewLeaderIdByMemberId(@Param("memberId") Long memberId);
 
 	boolean isCrewMember(@Param("memberId") Long memberId);
+
+	void insertCrewMember(
+		@Param("loginMemberId") long loginMemberId,
+		@Param("memberId") long memberId,
+		@Param("crewId") long crewId);
+
+	void deleteCrewMember(@Param("crewMemberId") long crewMemberId);
+
+	// 크루원 목록 조회
+	List<CrewMemberListResponse> selectCrewMembers(
+		@Param("crewId") long crewId,
+		@Param("req") CrewMemberSearchFilter crewMemberSearchFilter,
+		@Param("limit") int limit,
+		@Param("offset") int offset);
+
+	// 크루장 여부 변경
+	void updateCrewMemberIsLeader(
+		@Param("crewMemberId") long crewMemberId,
+		@Param("isLeader") char isLeader,
+		@Param("loginMemberId") long loginMemberId
+	);
+
+	// 일반 크루원 여부 조회
+	boolean isCrewMemberByCrewMemberIdAndCrewId(
+		@Param("crewMemberId") long crewMemberId,
+		@Param("crewId") long crewId);
 }

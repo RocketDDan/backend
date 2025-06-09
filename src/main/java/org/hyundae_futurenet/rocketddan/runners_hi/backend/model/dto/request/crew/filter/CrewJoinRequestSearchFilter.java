@@ -1,4 +1,7 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter;
+
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewOrder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
@@ -28,7 +31,7 @@ public class CrewJoinRequestSearchFilter {
 	@NotNull(message = "정렬은 필수입니다.")
 	private CrewOrder order = CrewOrder.LATEST;
 
-	@Schema(description = "크루 가입 요청 상태(기본 : REQUEST)", example = "ACCEPTED | DENIED | REQUEST")
+	@Schema(description = "크루 가입 요청 상태(기본 : REQUEST)", example = "ACCEPT | DENY | REQUEST")
 	@NotNull(message = "가입 요청 상태는 필수입니다.")
 	private CrewJoinRequestStatus status = CrewJoinRequestStatus.REQUEST;
 

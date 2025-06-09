@@ -1,4 +1,6 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter;
+
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewOrder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
