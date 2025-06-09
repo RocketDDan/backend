@@ -59,6 +59,7 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루 프로필 이미지 설정
 		String profilePath = null;
+		// 업로드한 프로필 사진이 존재하면
 		if (multipartFile != null && !multipartFile.isEmpty()) {
 			profilePath = s3FileUtil.uploadCrewProfile(multipartFile, crewId);
 			crewService.updateCrewProfilePath(crewId, profilePath);
@@ -78,7 +79,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		checkCrewExisted(crewId);
 
 		// 크루 이름 중복 검사
-		if (crewUpdateRequest.crewName() != null && crewMapper.existsByName(crewUpdateRequest.crewName())) {
+		if (crewMapper.existsByName(crewUpdateRequest.crewName())) {
 			throw new AlreadyExistsException("이미 존재하는 크루명입니다.");
 		}
 
@@ -127,9 +128,6 @@ public class CrewFacadeImpl implements CrewFacade {
 	@Transactional
 	public List<CrewListResponse> selectCrewsByFilter(long loginMemberId, CrewSearchFilter crewSearchFilter) {
 
-		if (crewSearchFilter == null) {
-			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
-		}
 		return crewService.selectCrewsByFilter(loginMemberId, crewSearchFilter);
 	}
 
@@ -249,6 +247,19 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 일반 멤버 -> 크루장
 		crewMemberService.updateCrewMemberIsLeader(loginMemberId, crewMemberId, true);
 
+	}
+
+	@Override
+	@Transactional
+	public List<CrewListResponse> selectCrewsByRegion(String region) {
+
+		int perPage = 10;
+		int page = 1;
+		if (region == null || region.isEmpty()) {
+			throw new IllegalArgumentException("지역이 빈 값입니다.");
+		}
+
+		return crewService.selectCrewsByRegion(perPage, page, region);
 	}
 
 	// 크루장이 아닌 경우 예외 처리

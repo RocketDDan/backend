@@ -61,5 +61,8 @@ public interface CrewFacade {
 
 	// 크루장 여부 변경
 	void updateCrewMemberIsLeader(long loginMemberId, long crewId, long crewMemberId);
+
+	// 크루 지역별 추천
+	List<CrewListResponse> selectCrewsByRegion(String region);
 }
 

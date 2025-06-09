@@ -70,4 +70,12 @@ public class CrewServiceImpl implements CrewService {
 
 		return crewMapper.selectCrewsByFilter(crewSearchFilter, limit, offset);
 	}
+
+	@Override
+	public List<CrewListResponse> selectCrewsByRegion(int perPage, int page, String region) {
+
+		int offset = (page - 1) * perPage;
+		log.info("CrewService :: selectCrewsByRegion, crewRegion = {}", region);
+		return crewMapper.selectCrewsByRegion(region, offset, perPage);
+	}
 }
