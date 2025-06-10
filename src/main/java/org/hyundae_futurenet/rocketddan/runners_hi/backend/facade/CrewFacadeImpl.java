@@ -222,7 +222,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		long loginMemberId,
 		long crewId,
 		CrewMemberSearchFilter crewMemberSearchFilter) {
-		
+
 		return crewMemberService.selectCrewMembers(loginMemberId, crewId, crewMemberSearchFilter);
 	}
 
@@ -249,15 +249,9 @@ public class CrewFacadeImpl implements CrewFacade {
 
 	@Override
 	@Transactional
-	public List<CrewListResponse> selectCrewsByRegion(String region) {
+	public List<CrewListResponse> recommendCrewsByRegion(int perPage, String region) {
 
-		int perPage = 10;
-		int page = 1;
-		if (region == null || region.isEmpty()) {
-			throw new IllegalArgumentException("지역이 빈 값입니다.");
-		}
-
-		return crewService.selectCrewsByRegion(perPage, page, region);
+		return crewService.recommendCrewsByRegion(perPage, region);
 	}
 
 	// 크루장이 아닌 경우 예외 처리

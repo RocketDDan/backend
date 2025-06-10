@@ -63,6 +63,6 @@ public interface CrewFacade {
 	void updateCrewMemberIsLeader(long loginMemberId, long crewId, long crewMemberId);
 
 	// 크루 지역별 추천
-	List<CrewListResponse> selectCrewsByRegion(String region);
+	List<CrewListResponse> recommendCrewsByRegion(int perPage, String region);
 }
 
