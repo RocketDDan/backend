@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.member.MemberMapper">
+    
+    <resultMap id="MemberResult" type="Member">
+        <id column="MEMBER_ID" property="memberId"/>
+        <result column="EMAIL" property="email"/>
+        <result column="NICKNAME" property="nickname"/>
+        <result column="PHONE" property="phone"/>
+        <result column="PWD_HASH" property="pwdHash"/>
+        <result column="ROLE" property="role"/>
+        <result column="PROFILE_PATH" property="profilePath"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="UPDATED_AT" property="updatedAt"/>
+        <result column="UPDATED_BY" property="updatedBy"/>
+        <result column="DELETED_AT" property="deletedAt"/>
+        <result column="DELETED_BY" property="deletedBy"/>
+    </resultMap>
+
+    <insert id="insertMember">
+        <selectKey keyProperty="memberId" resultType="long" order="BEFORE">
+            SELECT SEQ_MEMBER.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO MEMBER (
+        MEMBER_ID,
+        EMAIL,
+        NICKNAME,
+        PHONE,
+        PWD_HASH,
+        ROLE,
+        CREATED_AT,
+        UPDATED_BY,
+        UPDATED_AT
+        ) VALUES (
+        #{memberId},
+        #{email},
+        #{nickname},
+        #{phone},
+        #{pwdHash},
+        #{role},
+        SYSDATE,
+        #{memberId},
+        SYSDATE
+        )
+    </insert>
+
+    <select id="findByEmail" resultMap="MemberResult">
+        SELECT MEMBER_ID,
+               EMAIL,
+               NICKNAME,
+               PHONE,
+               PWD_HASH,
+               ROLE,
+               PROFILE_PATH,
+               CREATED_AT,
+               UPDATED_BY,
+               UPDATED_AT,
+               DELETED_AT,
+               DELETED_BY
+        FROM MEMBER
+        WHERE EMAIL = #{email}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <select id="findByNickname" resultMap="MemberResult">
+        SELECT MEMBER_ID,
+               EMAIL,
+               NICKNAME,
+               PHONE,
+               PWD_HASH,
+               ROLE,
+               PROFILE_PATH,
+               CREATED_AT,
+               UPDATED_BY,
+               UPDATED_AT,
+               DELETED_AT,
+               DELETED_BY
+        FROM MEMBER
+        WHERE NICKNAME = #{nickname}
+    </select>
+
+    <select id="findById" resultMap="MemberResult">
+        SELECT MEMBER_ID,
+               EMAIL,
+               NICKNAME,
+               PHONE,
+               PWD_HASH,
+               ROLE,
+               PROFILE_PATH,
+               CREATED_AT,
+               UPDATED_BY,
+               UPDATED_AT,
+               DELETED_AT,
+               DELETED_BY
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <update id="updateProfileImage">
+        UPDATE MEMBER
+        SET PROFILE_PATH = #{uploadedFilePath},
+            UPDATED_AT   = SYSDATE,
+            UPDATED_BY   = #{memberId}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+</mapper>
