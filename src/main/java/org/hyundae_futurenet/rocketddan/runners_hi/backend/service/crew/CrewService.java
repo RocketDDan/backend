@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewUpdateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse;
 
@@ -28,4 +28,7 @@ public interface CrewService {
 
 	// 크루 목록 조회
 	List<CrewListResponse> selectCrewsByFilter(long loginMemberId, CrewSearchFilter crewSearchFilter);
+
+	// 크루 지역별 조회
+	List<CrewListResponse> selectCrewsByRegion(int perPage, int page, String region);
 }

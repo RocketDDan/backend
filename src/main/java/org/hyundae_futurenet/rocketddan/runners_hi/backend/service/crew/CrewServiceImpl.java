@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewUpdateRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMapper;
@@ -25,6 +25,7 @@ public class CrewServiceImpl implements CrewService {
 
 	@Override
 	public long insertCrew(long loginMemberId, CrewCreateRequest crewCreateRequest) {
+
 		long crewId = crewMapper.insertCrew(loginMemberId, crewCreateRequest);
 		log.info("CrewService :: insertCrew, crewId = {}", crewId);
 		return crewId;
@@ -68,5 +69,13 @@ public class CrewServiceImpl implements CrewService {
 		log.info("CrewService :: selectCrewsByFilter, crewName = {}, option = {}", name, order);
 
 		return crewMapper.selectCrewsByFilter(crewSearchFilter, limit, offset);
+	}
+
+	@Override
+	public List<CrewListResponse> selectCrewsByRegion(int perPage, int page, String region) {
+
+		int offset = (page - 1) * perPage;
+		log.info("CrewService :: selectCrewsByRegion, crewRegion = {}", region);
+		return crewMapper.selectCrewsByRegion(region, offset, perPage);
 	}
 }
