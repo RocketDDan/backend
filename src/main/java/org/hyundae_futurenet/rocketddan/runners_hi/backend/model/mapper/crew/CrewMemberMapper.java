@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewMemberSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse;
 
@@ -39,7 +38,7 @@ public interface CrewMemberMapper {
 	// 크루원 목록 조회
 	List<CrewMemberListResponse> selectCrewMembers(
 		@Param("crewId") long crewId,
-		@Param("req") CrewMemberSearchFilter crewMemberSearchFilter,
+		@Param("nickname") String nickname,
 		@Param("limit") int limit,
 		@Param("offset") int offset);
 

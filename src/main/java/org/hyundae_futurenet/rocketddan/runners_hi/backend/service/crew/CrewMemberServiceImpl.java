@@ -64,12 +64,12 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 		long crewId,
 		CrewMemberSearchFilter crewMemberSearchFilter) {
 
-		String order = crewMemberSearchFilter.getOrder().name();
+		String nickname = crewMemberSearchFilter.getNickname();
 		int limit = crewMemberSearchFilter.getPerPage();
 		int offset = (crewMemberSearchFilter.getPage() - 1) * limit;
-		log.info("CrewMemberService :: selectCrewMembers, crewId = {}, option = {}", crewId, order);
+		log.info("CrewMemberService :: selectCrewMembers, crewId = {}, nickname = {}", crewId, nickname);
 
-		return crewMemberMapper.selectCrewMembers(crewId, crewMemberSearchFilter, limit, offset);
+		return crewMemberMapper.selectCrewMembers(crewId, nickname, limit, offset);
 	}
 
 	@Override

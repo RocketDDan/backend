@@ -222,9 +222,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		long loginMemberId,
 		long crewId,
 		CrewMemberSearchFilter crewMemberSearchFilter) {
-
-		checkCrewLeader(loginMemberId, crewId);
-
+		
 		return crewMemberService.selectCrewMembers(loginMemberId, crewId, crewMemberSearchFilter);
 	}
 
