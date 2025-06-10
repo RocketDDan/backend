@@ -52,4 +52,8 @@ public interface CrewMapper {
 	List<CrewListResponse> recommendCrewsByRegion(
 		@Param("region") String region,
 		@Param("limit") int limit);
+
+	// 내 크루 조회
+	Long selectMyCrew(@Param("loginMemberId") long loginMemberId);
+
 }

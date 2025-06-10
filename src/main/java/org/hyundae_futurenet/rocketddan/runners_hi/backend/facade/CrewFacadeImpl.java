@@ -50,6 +50,10 @@ public class CrewFacadeImpl implements CrewFacade {
 	@Override
 	@Transactional
 	public long insertCrew(long loginMemberId, CrewCreateRequest crewCreateRequest, MultipartFile multipartFile) {
+		// 이미 크루 멤버인 경우 생성 불가
+		if (crewMemberMapper.isCrewMember(loginMemberId)) {
+			throw new AlreadyExistsException("이미 크루에 가입되어 있습니다.");
+		}
 		// 크루 이름 중복 검사
 		if (crewMapper.existsByName(crewCreateRequest.crewName())) {
 			throw new AlreadyExistsException("이미 존재하는 크루명입니다.");
@@ -134,15 +138,14 @@ public class CrewFacadeImpl implements CrewFacade {
 	@Override
 	@Transactional
 	public void insertCrewJoinRequest(long loginMemberId, long crewId, CrewJoinRequest crewJoinRequest) {
-
 		// 크루 존재 여부 검증
 		checkCrewExisted(crewId);
 
-		// 이미 크루 멤버인 경우 불가
-		if (crewMemberService.isCrewMember(loginMemberId, crewId)) {
-			throw new AlreadyExistsException("이미 크루 멤버입니다.");
+		// 이미 크루 멤버인 경우 생성 불가
+		if (crewMemberMapper.isCrewMember(loginMemberId)) {
+			throw new AlreadyExistsException("이미 크루에 가입되어 있습니다.");
 		}
-
+		
 		crewJoinRequestService.insertCrewJoinRequest(loginMemberId, crewId, crewJoinRequest);
 	}
 
@@ -252,6 +255,12 @@ public class CrewFacadeImpl implements CrewFacade {
 	public List<CrewListResponse> recommendCrewsByRegion(int perPage, String region) {
 
 		return crewService.recommendCrewsByRegion(perPage, region);
+	}
+
+	@Override
+	public Long selectMyCrew(long loginMemberId) {
+
+		return crewService.selectMyCrew(loginMemberId);
 	}
 
 	// 크루장이 아닌 경우 예외 처리

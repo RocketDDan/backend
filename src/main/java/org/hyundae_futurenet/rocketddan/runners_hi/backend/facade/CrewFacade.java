@@ -64,5 +64,8 @@ public interface CrewFacade {
 
 	// 크루 지역별 추천
 	List<CrewListResponse> recommendCrewsByRegion(int perPage, String region);
+
+	// 내 크루 조회
+	Long selectMyCrew(long loginMemberId);
 }
 

@@ -155,10 +155,12 @@
         WHERE crew_id = #{crewId}
     </delete>
 
-    <!-- 다음 크루 ID 조회 -->
-    <select id="getNextCrewId" resultType="long">
-        SELECT seq_crew.nextval
-        FROM dual
+    <!-- 내 크루 조회-->
+    <select id="selectMyCrew" resultType="long">
+        SELECT cm.member_id
+        FROM crew c
+                 LEFT JOIN crew_member cm ON c.CREW_ID = cm.CREW_ID
+        WHERE cm.member_id = #{loginMemberId}
+          AND ROWNUM = 1
     </select>
-
 </mapper>
