@@ -1,0 +1,6 @@
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
+
+public interface AuthFacade {
+
+	String reissueAccessToken(String refreshToken);
+}
