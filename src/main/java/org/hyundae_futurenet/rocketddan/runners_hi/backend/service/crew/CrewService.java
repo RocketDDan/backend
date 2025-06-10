@@ -30,5 +30,5 @@ public interface CrewService {
 	List<CrewListResponse> selectCrewsByFilter(long loginMemberId, CrewSearchFilter crewSearchFilter);
 
 	// 크루 지역별 조회
-	List<CrewListResponse> selectCrewsByRegion(int perPage, int page, String region);
+	List<CrewListResponse> recommendCrewsByRegion(int perPage, String region);
 }

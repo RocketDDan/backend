@@ -49,8 +49,7 @@ public interface CrewMapper {
 	void deleteCrew(@Param("crewId") long crewId);
 
 	// 크루 지역별 조회
-	List<CrewListResponse> selectCrewsByRegion(
+	List<CrewListResponse> recommendCrewsByRegion(
 		@Param("region") String region,
-		@Param("offset") int offset,
 		@Param("limit") int limit);
 }
