@@ -139,7 +139,7 @@ public class CrewController {
 		if (crewJoinRequestSearchFilter == null) {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
-		
+
 		List<CrewJoinRequestListResponse> result = crewFacade
 			.selectCrewJoinRequestsByStatus(loginMemberId, crewId, crewJoinRequestSearchFilter);
 		return ResponseEntity.ok(result);
@@ -168,7 +168,7 @@ public class CrewController {
 		return ResponseEntity.ok().build();
 	}
 
-	@Operation(summary = "크루원 목록 조회", description = "크루원 목록을 조회합니다.")
+	@Operation(summary = "크루원 목록 조회", description = "닉네임 검색 가능합니다. 크루장은 첫번째 고정입니다.")
 	@GetMapping("/{crew-id}/members")
 	private ResponseEntity<List<CrewMemberListResponse>> selectCrewMembers(
 		@PathVariable("crew-id") Long crewId,

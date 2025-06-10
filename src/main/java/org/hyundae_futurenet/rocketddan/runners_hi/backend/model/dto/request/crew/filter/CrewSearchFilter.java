@@ -17,7 +17,7 @@ public class CrewSearchFilter {
 	@Schema(description = "검색할 크루 이름", example = "러닝크루")
 	private String crewName = "";
 
-	@Schema(description = "검색할 지역", example = "서울시 동작구")
+	@Schema(description = "검색할 지역", example = "서울특별시 강남구")
 	private String region = "";
 
 	@Schema(description = "페이지 번호 (1 이상)", example = "1")

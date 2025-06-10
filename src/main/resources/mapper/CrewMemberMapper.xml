@@ -107,15 +107,15 @@
         cm.is_leader as isLeader
         FROM crew_member cm
         JOIN member m ON cm.member_id = m.member_id
-        WHERE cm.crew_id = #{crewId}
-        <choose>
-            <when test="req.order.name() == 'LATEST'">
-                ORDER BY cm.created_at DESC
-            </when>
-            <when test="req.order.name() == 'OLDEST'">
-                ORDER BY cm.created_at ASC
-            </when>
-        </choose>
+        <where>
+            <if test="nickname != null and nickname != ''">
+                AND replace(m.nickname, ' ', '') LIKE '%' || replace(#{nickname}, ' ', '') || '%'
+            </if>
+            AND cm.crew_id = #{crewId}
+        </where>
+        ORDER BY
+        CASE WHEN cm.IS_LEADER = 'Y' THEN 0 ELSE 1 END, -- 리더를 먼저
+        CASE WHEN cm.IS_LEADER = 'N' THEN cm.created_by END DESC -- 리더가 아닌 경우에만 생성일 기준 정렬
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
