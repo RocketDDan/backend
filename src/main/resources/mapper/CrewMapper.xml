@@ -47,6 +47,9 @@
             <if test="req.crewName != null and req.crewName != ''">
                 AND replace(c.crew_name, ' ', '') LIKE '%' || replace(#{req.crewName}, ' ', '') || '%'
             </if>
+            <if test="req.region != null and req.region != ''">
+                AND replace(c.crew_region, ' ', '') LIKE '%' || replace(#{req.region}, ' ', '') || '%'
+            </if>
         </where>
         <choose>
             <when test="req.order.name() == 'LATEST'">
@@ -62,7 +65,7 @@
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
-    <!-- 크루 지역별 조회-->
+    <!-- 크루 지역별 랜덤 조회(추천)-->
     <select id="selectCrewsByRegion"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse">
         SELECT c.crew_id                                                          as crewId,
