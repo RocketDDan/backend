@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementFileMapper">
+
+    <insert id="insertAnnouncementFile"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+        <selectKey keyProperty="announcementFileId" resultType="long" order="BEFORE">
+            SELECT SEQ_ANNOUNCEMENT_FILE.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO ANNOUNCEMENT_FILE (
+        ANNOUNCEMENT_FILE_ID,
+        FILE_PATH,
+        ANNOUNCEMENT_ID,
+        CREATED_AT,
+        CREATED_BY,
+        UPDATED_AT,
+        UPDATED_BY
+        ) VALUES (
+        #{announcementFileId},
+        #{filePath},
+        #{announcementId},
+        SYSDATE,
+        #{createdBy},
+        SYSDATE,
+        #{createdBy}
+        )
+    </insert>
+
+    <!-- 첨부파일 존재하는지 확인   -->
+    <select id="existsByAnnouncementId" resultType="boolean" parameterType="long">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </select>
+
+    <!-- 첨부파일 수정 (filePath 있을 때만 수정) -->
+    <update id="updateAnnouncementFile"
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+        UPDATE ANNOUNCEMENT_FILE
+        <set>
+            <if test="filePath != null and filePath != ''">
+                FILE_PATH = #{filePath},
+            </if>
+            UPDATED_AT = SYSDATE,
+            UPDATED_BY = #{createdBy}
+        </set>
+        WHERE ANNOUNCEMENT_ID = #{announcementId}
+    </update>
+
+    <!--  첨부파일 삭제  -->
+    <delete id="deleteByAnnouncementId" parameterType="long">
+        DELETE FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </delete>
+
+    <!-- 파일 경로 리스트 조회 -->
+    <select id="findFilePathsByAnnouncementId" resultType="string" parameterType="long">
+        SELECT file_path
+        FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+    </select>
+
+    <!-- 파일 개별 삭제 -->
+    <delete id="deleteFileByPath" parameterType="map">
+        DELETE FROM announcement_file
+        WHERE announcement_id = #{announcementId}
+        AND file_path = #{filePath}
+    </delete>
+
+
+</mapper>

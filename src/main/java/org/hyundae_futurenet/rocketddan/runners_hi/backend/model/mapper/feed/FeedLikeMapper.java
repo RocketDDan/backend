@@ -1,17 +1,26 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
-import java.util.List;
-
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface FeedLikeMapper {
 
-	// TODO : 임시 메서드 (삭제하고 사용하세요.)
-	@Select("""
-		    SELECT *
-		    FROM FEED_LIKE
+	@Insert("""
+		INSERT INTO FEED_LIKE (FEED_LIKE_ID, FEED_ID, CREATED_BY)
+		VALUES (SEQ_FEED_LIKE.nextval, #{feedId}, #{loginMemberId})
 		""")
-	List<Object> findAll();
+	void insert(@Param("loginMemberId") long loginMemberId,
+		@Param("feedId") long feedId);
+
+	@Delete("""
+		DELETE FROM FEED_LIKE
+		WHERE FEED_ID = #{feedId}
+		AND CREATED_BY = #{loginMemberId}
+		""")
+	void delete(@Param("loginMemberId") long loginMemberId,
+		@Param("feedId") long feedId);
+
 }

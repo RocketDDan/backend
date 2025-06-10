@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed.FeedMapper">
+
+    <!-- FeedFilePath 매핑 -->
+    <resultMap id="FeedFilePathMap"
+               type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$FeedFilePath">
+        <result property="order" column="fileOrder"/>
+        <result property="filePath" column="filePath"/>
+    </resultMap>
+
+    <!-- CommentThumbnailRaw 매핑 -->
+    <resultMap id="CommentThumbnailMap"
+               type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$CommentThumbnailRaw">
+        <result property="content" column="content"/>
+        <result property="writerNickname" column="nickname"/>
+        <result property="writerProfilePath" column="profilePath"/>
+    </resultMap>
+
+    <!-- FeedListSource 메인 매핑 -->
+    <resultMap id="FeedListSourceMap"
+               type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource">
+        <id property="feedId" column="feedId"/>
+        <result property="content" column="content"/>
+        <result property="writerId" column="writerId"/>
+        <result property="writerNickname" column="writerNickname"/>
+        <result property="writerProfilePath" column="writerProfilePath"/>
+        <result javaType="boolean" property="isMine" column="isMine"/>
+        <result property="commentCount" column="commentCount"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+        <result property="createdAt" column="createdAt"/>
+
+        <!-- 연관된 리스트들 -->
+        <collection property="feedFilePathList"
+                    ofType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$FeedFilePath"
+                    select="selectFeedFilesByFeedId"
+                    column="feedId"/>
+        <collection property="commentList"
+                    ofType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$CommentThumbnailRaw"
+                    select="selectCommentThumbnailsByFeedId"
+                    column="feedId"/>
+    </resultMap>
+
+    <!-- 메인 피드 쿼리 -->
+    <select id="selectFeedsByFilter" resultMap="FeedListSourceMap">
+        SELECT F.FEED_ID AS feedId,
+        F.CONTENT AS content,
+        F.CREATED_BY AS writerId,
+        M.NICKNAME AS writerNickname,
+        M.PROFILE_PATH AS writerProfilePath,
+        CASE
+        WHEN F.CREATED_BY = #{loginMemberId} THEN 1
+        ELSE 0
+        END AS isMine,
+        (SELECT COUNT(*)
+        FROM FEED_COMMENT FC
+        WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
+        F.LAT AS lat,
+        F.LNG AS lng,
+        TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"
+        FROM FEED F
+        JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
+
+        <where>
+            <choose>
+                <when test="feedSearchFilter.scope.name() == 'ALL_EXCEPT_ME'">
+                    F.CREATED_BY != #{loginMemberId}
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'MY_CREW'">
+                    F.CREATED_BY IN (
+                    SELECT MEMBER_ID
+                    FROM CREW_MEMBER
+                    WHERE CREW_ID IN (
+                    SELECT CREW_ID FROM CREW_MEMBER WHERE MEMBER_ID = #{loginMemberId}
+                    )
+                    )
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'ME'">
+                    F.CREATED_BY = #{loginMemberId}
+                </when>
+            </choose>
+        </where>
+
+        <choose>
+            <when test="feedSearchFilter.order.name() == 'LATEST'">
+                ORDER BY F.CREATED_AT DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'OLDEST'">
+                ORDER BY F.CREATED_AT ASC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'NAME_ASC'">
+                ORDER BY M.NICKNAME ASC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'NAME_DESC'">
+                ORDER BY M.NICKNAME DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'MOST_LIKED'">
+                ORDER BY (
+                SELECT COUNT(*) FROM FEED_LIKE FL WHERE FL.FEED_ID = F.FEED_ID
+                ) DESC
+            </when>
+            <when test="feedSearchFilter.order.name() == 'MOST_COMMENTED'">
+                ORDER BY commentCount DESC
+            </when>
+            <otherwise>
+                ORDER BY F.CREATED_AT DESC
+            </otherwise>
+        </choose>
+
+        OFFSET (${feedSearchFilter.page} - 1) * #{feedSearchFilter.perPage} ROWS
+        FETCH NEXT #{feedSearchFilter.perPage} ROWS ONLY
+
+    </select>
+
+    <!-- FeedFilePath 목록 조회 -->
+    <select id="selectFeedFilesByFeedId" resultMap="FeedFilePathMap">
+        SELECT FILE_ORDER AS fileOrder,
+               FILE_PATH  AS filePath
+        FROM FEED_FILE
+        WHERE FEED_ID = #{feedId}
+        ORDER BY FILE_ORDER
+    </select>
+
+    <!-- CommentThumbnailRaw 목록 조회 -->
+    <select id="selectCommentThumbnailsByFeedId" resultMap="CommentThumbnailMap">
+        SELECT M.PROFILE_PATH AS profilePath,
+               M.NICKNAME     AS nickname,
+               FC.CONTENT     AS content
+        FROM FEED_COMMENT FC
+                 JOIN MEMBER M ON FC.CREATED_BY = M.MEMBER_ID
+        WHERE FC.FEED_ID = #{feedId}
+        ORDER BY FC.CREATED_AT DESC FETCH FIRST 3 ROWS ONLY
+    </select>
+
+</mapper>
