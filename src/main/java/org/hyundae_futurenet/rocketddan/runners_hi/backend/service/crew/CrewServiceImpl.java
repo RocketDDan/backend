@@ -74,7 +74,14 @@ public class CrewServiceImpl implements CrewService {
 	@Override
 	public List<CrewListResponse> recommendCrewsByRegion(int perPage, String region) {
 
-		log.info("CrewService :: selectCrewsByRegion, crewRegion = {}", region);
+		log.info("CrewService :: recommendCrewsByRegion, region = {}, perPage = {}", region, perPage);
 		return crewMapper.recommendCrewsByRegion(region, perPage);
+	}
+
+	@Override
+	public Long selectMyCrew(long loginMemberId) {
+
+		log.info("CrewService :: selectMyCrew");
+		return crewMapper.selectMyCrew(loginMemberId);
 	}
 }
