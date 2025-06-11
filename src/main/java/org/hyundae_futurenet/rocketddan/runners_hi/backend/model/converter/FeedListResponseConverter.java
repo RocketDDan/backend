@@ -25,7 +25,7 @@ public class FeedListResponseConverter {
 		List<FeedFileUrl> feedFileUrls = source.getFeedFilePathList().stream()
 			.map(file -> {
 				String feedFileUrl = cloudFrontFileUtil.generateSignedUrl(file.getFilePath(), 60 * 10);
-				log.info("feed file path: {} \nfeed file url: {}", file.getFilePath(), feedFileUrl);
+				// log.info("feed file path: {} \nfeed file url: {}", file.getFilePath(), feedFileUrl);
 				return new FeedFileUrl(
 					file.getOrder(),
 					feedFileUrl
