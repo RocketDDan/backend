@@ -36,6 +36,9 @@ public class FeedListResponse {
 	@Schema(description = "현재 로그인한 사용자의 피드인지 여부", example = "true")
 	private boolean isMine;
 
+	@Schema(description = "현재 로그인한 사용자가 좋아요 누른 피드인지 여부", example = "true")
+	private boolean isLike;
+
 	@Schema(description = "댓글 수", example = "5")
 	private int commentCount;
 

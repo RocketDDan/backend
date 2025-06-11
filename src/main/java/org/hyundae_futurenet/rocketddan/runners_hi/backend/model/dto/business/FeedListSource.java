@@ -27,6 +27,8 @@ public class FeedListSource {
 
 	private boolean isMine;
 
+	private boolean isLike;
+
 	private int commentCount;
 
 	private Double lat;
