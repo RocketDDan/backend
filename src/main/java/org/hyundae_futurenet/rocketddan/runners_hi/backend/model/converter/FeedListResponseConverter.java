@@ -41,6 +41,7 @@ public class FeedListResponseConverter {
 			source.getWriterId(),
 			source.getWriterNickname(),
 			writerProfileUrl,
+			source.getViewCount(),
 			source.isMine(),
 			source.getCommentCount(),
 			source.getLat(),

@@ -25,6 +25,7 @@
         <result property="writerId" column="writerId"/>
         <result property="writerNickname" column="writerNickname"/>
         <result property="writerProfilePath" column="writerProfilePath"/>
+        <result property="viewCount" column="viewCount"/>
         <result javaType="boolean" property="isMine" column="isMine"/>
         <result property="commentCount" column="commentCount"/>
         <result property="lat" column="lat"/>
@@ -49,6 +50,7 @@
         F.CREATED_BY AS writerId,
         M.NICKNAME AS writerNickname,
         M.PROFILE_PATH AS writerProfilePath,
+        F.VIEW_COUNT AS viewCount,
         CASE
         WHEN F.CREATED_BY = #{loginMemberId} THEN 1
         ELSE 0

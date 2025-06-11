@@ -23,6 +23,8 @@ public class FeedListSource {
 
 	private String writerProfilePath;
 
+	private long viewCount;
+
 	private boolean isMine;
 
 	private int commentCount;

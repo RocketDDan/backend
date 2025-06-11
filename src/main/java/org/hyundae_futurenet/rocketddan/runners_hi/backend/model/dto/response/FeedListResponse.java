@@ -30,6 +30,9 @@ public class FeedListResponse {
 	@Schema(description = "피드 작성자의 프로필 이미지 URL", example = "https://cdn.example.com/profile.jpg")
 	private String writerProfileUrl;
 
+	@Schema(description = "조회수", example = "123")
+	private long viewCount;
+
 	@Schema(description = "현재 로그인한 사용자의 피드인지 여부", example = "true")
 	private boolean isMine;
 
