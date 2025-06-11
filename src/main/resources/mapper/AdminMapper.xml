@@ -57,4 +57,46 @@
         </where>
     </select>
 
+
+    <select id="findAdminMembers"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
+        SELECT
+        M.NICKNAME,
+        M.EMAIL,
+        NVL(C.CREW_NAME, '없음') AS crewName,
+        CASE
+        WHEN M.ROLE = 'COMPANY' THEN 'COMPANY'
+        WHEN CM.MEMBER_ID IS NULL THEN 'ALL'
+        WHEN CM.IS_LEADER = 'Y' THEN 'LEADER'
+        ELSE 'CREW'
+        END AS crewRole
+        FROM MEMBER M
+        LEFT JOIN CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
+        LEFT JOIN CREW C ON CM.CREW_ID = C.CREW_ID
+        WHERE M.ROLE != 'ADMIN'
+        <if test="params.keyword != null and params.keyword != ''">
+            AND (
+            M.nickname LIKE '%' || #{params.keyword} || '%'
+            OR C.crew_name LIKE '%' || #{params.keyword} || '%'
+            )
+        </if>
+        ORDER BY M.CREATED_AT DESC
+        OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
+    </select>
+
+    <select id="countAdminMembers" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER M
+        LEFT JOIN CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
+        LEFT JOIN CREW C ON CM.CREW_ID = C.CREW_ID
+        WHERE M.ROLE != 'ADMIN'
+        <if test="params.keyword != null and params.keyword != ''">
+            AND (
+            M.nickname LIKE '%' || #{params.keyword} || '%'
+            OR C.crew_name LIKE '%' || #{params.keyword} || '%'
+            )
+        </if>
+    </select>
+
+
 </mapper>

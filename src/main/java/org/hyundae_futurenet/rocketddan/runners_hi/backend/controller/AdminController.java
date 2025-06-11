@@ -8,7 +8,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AdminFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +24,23 @@ public class AdminController {
 	private final AdminFacade adminFacade;
 
 	@GetMapping("/members")
-	public ResponseEntity<List<AdminMemberResponse>> getAdminMembers() {
+	public ResponseEntity<AdminMemberListResponse> getAdminMembers(
+		@RequestParam(required = false) String keyword,
+		@RequestParam(required = false, defaultValue = "1") int page,
+		@RequestParam(required = false, defaultValue = "6") int perPage
+	) {
 
-		List<AdminMemberResponse> members = adminFacade.getAdminMembers();
-		return new ResponseEntity<>(members, HttpStatus.OK);
+		Map<String, Object> params = new HashMap<>();
+		if (keyword != null && !keyword.isEmpty()) {
+			params.put("keyword", keyword);
+		}
+		params.put("offset", (page - 1) * perPage);
+		params.put("perPage", perPage);
+
+		List<AdminMemberResponse> members = adminFacade.getAdminMemberList(params);
+		int totalCount = adminFacade.getAdminMemberTotalCount(params);
+
+		return ResponseEntity.ok(new AdminMemberListResponse(members, totalCount));
 	}
 
 	@GetMapping("/rewards")
