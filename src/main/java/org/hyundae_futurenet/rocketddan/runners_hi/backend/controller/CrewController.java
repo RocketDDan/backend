@@ -218,7 +218,7 @@ public class CrewController {
 
 	@Operation(summary = "내 크루 조회", description = "내가 속한 크루 반환")
 	@PutMapping("/me")
-	private ResponseEntity<Long> changeCrewLeader() {
+	private ResponseEntity<Long> selectMyCrew() {
 
 		Long result = crewFacade.selectMyCrew(loginMemberId);
 		return ResponseEntity.ok(result);
