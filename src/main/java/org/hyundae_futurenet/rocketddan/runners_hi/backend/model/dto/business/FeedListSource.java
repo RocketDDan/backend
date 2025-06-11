@@ -56,6 +56,8 @@ public class FeedListSource {
 	@ToString
 	public static class CommentThumbnailRaw {
 
+		private long commentId;
+
 		private String writerProfilePath;
 
 		private String writerNickname;

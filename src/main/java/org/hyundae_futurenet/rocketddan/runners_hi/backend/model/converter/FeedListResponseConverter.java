@@ -30,6 +30,7 @@ public class FeedListResponseConverter {
 		// 댓글 작성자 프로필 url
 		List<CommentThumbnail> commentThumbnails = source.getCommentList().stream()
 			.map(comment -> new CommentThumbnail(
+				comment.getCommentId(),
 				cloudFrontFileUtil.generateSignedUrl(comment.getWriterProfilePath(), 60 * 10),
 				comment.getWriterNickname(),
 				comment.getContent()))

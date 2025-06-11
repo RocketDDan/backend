@@ -75,6 +75,9 @@ public class FeedListResponse {
 	@Schema(description = "댓글 썸네일 정보")
 	public static class CommentThumbnail {
 
+		@Schema(description = "댓글 id", example = "1")
+		private long commentId;
+
 		@Schema(description = "댓글 작성자 프로필 이미지 URL", example = "https://cdn.example.com/profile.jpg")
 		private String writerProfileUrl;
 

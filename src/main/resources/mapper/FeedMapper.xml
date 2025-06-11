@@ -12,6 +12,7 @@
     <!-- CommentThumbnailRaw 매핑 -->
     <resultMap id="CommentThumbnailMap"
                type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$CommentThumbnailRaw">
+        <result property="commentId" column="commentId"/>
         <result property="content" column="content"/>
         <result property="writerNickname" column="nickname"/>
         <result property="writerProfilePath" column="profilePath"/>
@@ -126,7 +127,8 @@
 
     <!-- CommentThumbnailRaw 목록 조회 -->
     <select id="selectCommentThumbnailsByFeedId" resultMap="CommentThumbnailMap">
-        SELECT M.PROFILE_PATH AS profilePath,
+        SELECT FC.COMMENT_ID  AS commentId,
+               M.PROFILE_PATH AS profilePath,
                M.NICKNAME     AS nickname,
                FC.CONTENT     AS content
         FROM FEED_COMMENT FC
