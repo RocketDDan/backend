@@ -27,9 +27,9 @@ public class FeedListSource {
 
 	private int commentCount;
 
-	private double lat;
+	private Double lat;
 
-	private double lng;
+	private Double lng;
 
 	private String createdAt;
 
