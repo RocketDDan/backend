@@ -73,7 +73,7 @@ public class AnnouncementController {
 		@RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
-		Long memberId = 1L;
+		Long memberId = 3L;
 		String role = "USER";
 
 		Map<String, Object> params = new HashMap<>();

@@ -69,13 +69,18 @@
     <select id="findAnnouncements"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse">
         SELECT
+        A.announcement_id AS announcementId,
         A.title,
-        A.content,
-        M.email,
-        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        CASE
+        WHEN M.role = 'ADMIN' THEN '관리자'
+        ELSE C.crew_name
+        END AS crewName
         FROM
         announcement A
         JOIN member M ON A.created_by = M.member_id
+        LEFT JOIN crew_member CM ON M.member_id = CM.member_id AND CM.is_leader = 'Y'
+        LEFT JOIN crew C ON CM.crew_id = C.crew_id
         <where>
             <if test="params.scope == 'ALL'">
                 AND A.announcement_type = 'ALL'
