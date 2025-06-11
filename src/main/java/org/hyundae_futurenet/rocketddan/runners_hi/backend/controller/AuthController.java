@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nimbusds.oauth2.sdk.AccessTokenResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +53,7 @@ public class AuthController {
 
 	@Operation(summary = "엑세스토큰 재발급", description = "리프레시토큰으로 만료한 엑세스토큰을 재발급한다.")
 	@PostMapping("/token/reissue")
-	public ResponseEntity<AccessTokenResponse> extendLogin(
+	public ResponseEntity<Void> extendLogin(
 		@CookieValue(REFRESH_TOKEN_COOKIE_NAME) final String refreshToken,
 		HttpServletRequest request,
 		HttpServletResponse response
@@ -65,7 +63,7 @@ public class AuthController {
 		ResponseCookie accessCookie = buildCookie(
 			ACCESS_TOKEN_COOKIE_NAME,
 			newAccessToken,
-			jwtProperties.getAccessTokenExpirationMinutes() * 60,
+			jwtProperties.getAccessTokenExpirationMinutes(),
 			"/",
 			appProperties.getClientDomain()
 		);
