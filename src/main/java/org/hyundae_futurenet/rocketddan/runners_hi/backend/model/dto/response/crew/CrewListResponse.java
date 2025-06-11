@@ -20,7 +20,10 @@ public record CrewListResponse(
 	String profilePath,
 
 	@Schema(description = "전체 멤버 수", example = "10")
-	int totalMemberCnt
+	int totalMemberCnt,
+
+	@Schema(description = "크루 소개 미리보기", example = "시대의 주인공은 우리들! 우리는 천하무적! 로켓단! 누구냐고 물으....")
+	String introduce
 ) {
 
 }
