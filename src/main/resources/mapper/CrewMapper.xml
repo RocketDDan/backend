@@ -27,7 +27,8 @@
                c.crew_region                                                      as crewRegion,
                c.profile_path                                                     as profilePath,
                c.introduce                                                        as introduce,
-               (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt
+               (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt,
+               TO_CHAR(c.created_at, 'YYYY-MM-dd')                                as createdAt
         FROM crew c
         WHERE c.crew_id = #{crewId}
     </select>
@@ -42,7 +43,8 @@
         c.crew_region as crewRegion,
         c.profile_path as profilePath,
         (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt,
-        SUBSTR(c.introduce, 1, 40) as introduce
+        SUBSTR(c.introduce, 1, 40) as introduce,
+        TO_CHAR(c.created_at, 'YYYY-MM-dd') as createdAt
         FROM crew c
         <where>
             <if test="req.crewName != null and req.crewName != ''">
@@ -78,7 +80,8 @@
         (SELECT COUNT(*)
         FROM crew_member cm
         WHERE cm.crew_id = c.crew_id) AS totalMemberCnt,
-        SUBSTR(c.introduce, 1, 40) as introduce
+        SUBSTR(c.introduce, 1, 40) as introduce,
+        TO_CHAR(c.created_at, 'YYYY-MM-dd') as createdAt
         FROM crew c
         <where>
             <if test="region != null and region != ''">

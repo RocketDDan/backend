@@ -23,7 +23,10 @@ public record CrewListResponse(
 	int totalMemberCnt,
 
 	@Schema(description = "크루 소개 미리보기", example = "시대의 주인공은 우리들! 우리는 천하무적! 로켓단! 누구냐고 물으....")
-	String introduce
+	String introduce,
+
+	@Schema(description = "크루 생성일", example = "2025-06-05")
+	String createdAt
 ) {
 
 }

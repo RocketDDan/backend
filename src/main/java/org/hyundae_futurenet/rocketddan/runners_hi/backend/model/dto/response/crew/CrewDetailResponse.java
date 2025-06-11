@@ -35,4 +35,7 @@ public class CrewDetailResponse {
 
 	@Schema(description = "전체 멤버 수", example = "10")
 	private int totalMemberCnt;
+
+	@Schema(description = "크루 생성일", example = "2025-06-05")
+	private String createdAt;
 }
