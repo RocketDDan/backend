@@ -219,6 +219,33 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		return detail;
 	}
 
+	@Override
+	public int getAnnouncementTotalCount(Map<String, Object> params, Long memberId, String role) {
+
+		if (params == null) {
+			params = new HashMap<>();
+		}
+
+		if (!params.containsKey("scope")) {
+			if ("ADMIN".equals(role) || "COMPANY".equals(role)) {
+				params.put("scope", "ALL_AND_CREW");
+			} else if ("USER".equals(role)) {
+				boolean isCrewMember = crewMemberMapper.isCrewMember(memberId);
+				if (isCrewMember) {
+					Long leaderId = crewMemberMapper.findCrewLeaderIdByMemberId(memberId);
+					params.put("scope", "CREW_OR_ALL");
+					params.put("leaderId", leaderId);
+				} else {
+					params.put("scope", "ALL");
+				}
+			} else {
+				params.put("scope", "ALL");
+			}
+		}
+
+		return announcementService.countAnnouncements(params);
+	}
+
 	// 파일 확장자 유효성 검사 - 파일 위치 확인 필요
 	private boolean isValidFileType(String filePath) {
 
