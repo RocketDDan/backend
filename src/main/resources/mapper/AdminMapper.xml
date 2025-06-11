@@ -26,4 +26,35 @@
         ORDER BY
         M.CREATED_AT DESC
     </select>
+
+    <select id="findAdminFeeds"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse">
+        SELECT
+        M.nickname,
+        F.feed_id as feedId,
+        F.created_at as createdAt,
+        F.balance,
+        F.charge_amount as chargeAmount
+        FROM member_wallet F
+        JOIN member M ON F.member_id = M.member_id
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                M.nickname LIKE '%' || #{params.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY F.created_at DESC
+        OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
+    </select>
+
+    <select id="countAdminFeeds" resultType="int">
+        SELECT COUNT(*)
+        FROM member_wallet F
+        JOIN member M ON F.member_id = M.member_id
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                M.nickname LIKE '%' || #{params.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
 </mapper>
