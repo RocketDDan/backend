@@ -4,13 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.member.MemberMapper">
-    
+
     <resultMap id="MemberResult" type="Member">
         <id column="MEMBER_ID" property="memberId"/>
         <result column="EMAIL" property="email"/>
         <result column="NICKNAME" property="nickname"/>
         <result column="PHONE" property="phone"/>
-        <result column="PWD_HASH" property="pwdHash"/>
         <result column="ROLE" property="role"/>
         <result column="PROFILE_PATH" property="profilePath"/>
         <result column="CREATED_AT" property="createdAt"/>
@@ -53,7 +52,6 @@
                EMAIL,
                NICKNAME,
                PHONE,
-               PWD_HASH,
                ROLE,
                PROFILE_PATH,
                CREATED_AT,
@@ -63,7 +61,6 @@
                DELETED_BY
         FROM MEMBER
         WHERE EMAIL = #{email}
-          AND DELETED_AT IS NULL
     </select>
 
     <select id="findByNickname" resultMap="MemberResult">
@@ -71,7 +68,6 @@
                EMAIL,
                NICKNAME,
                PHONE,
-               PWD_HASH,
                ROLE,
                PROFILE_PATH,
                CREATED_AT,
@@ -88,7 +84,6 @@
                EMAIL,
                NICKNAME,
                PHONE,
-               PWD_HASH,
                ROLE,
                PROFILE_PATH,
                CREATED_AT,
