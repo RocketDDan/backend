@@ -72,9 +72,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			SIGNUP_TOKEN_COOKIE_NAME,
 			signupToken,
 			jwtProperties.getSignupTokenExpirationMinutes(),
-			"/oauth2/signup",
-			appProperties.getClientDomain()
-		);
+			"/oauth2/signup");
 		CookieUtils.deleteCookie(request, response, SIGNUP_TOKEN_COOKIE_NAME);
 		response.addHeader(HttpHeaders.SET_COOKIE, signupCookie.toString());
 
@@ -103,9 +101,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			ACCESS_TOKEN_COOKIE_NAME,
 			accessToken,
 			jwtProperties.getAccessTokenExpirationMinutes(),
-			"/",
-			appProperties.getClientDomain()
-		);
+			"/");
 		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME);
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 
@@ -115,9 +111,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			REFRESH_TOKEN_COOKIE_NAME,
 			refreshToken,
 			jwtProperties.getRefreshTokenExpirationMinutes(),
-			"/auth",
-			appProperties.getClientDomain()
-		);
+			"/auth");
 		CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
 		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
