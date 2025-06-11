@@ -100,7 +100,7 @@ public class CrewController {
 
 	@Operation(summary = "크루 지역 추천", description = "지역 기반 크루 랜덤 추천")
 	@GetMapping("/recommend")
-	private ResponseEntity<List<CrewListResponse>> selectCrews(
+	private ResponseEntity<List<CrewListResponse>> recommendCrews(
 		@Parameter(
 			name = "perPage",
 			description = "한 페이지에 보여줄 크루의 개수 (기본값 9)",
