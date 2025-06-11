@@ -106,20 +106,31 @@
             </if>
         </where>
         <choose>
+            <!-- 우선 crewName = '관리자' 먼저 정렬 -->
             <when test="params.order == 'LATEST'">
-                ORDER BY A.created_at DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at DESC
             </when>
             <when test="params.order == 'OLDEST'">
-                ORDER BY A.created_at ASC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at ASC
             </when>
             <when test="params.order == 'NAME_ASCENDING'">
-                ORDER BY A.title ASC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.title ASC
             </when>
             <when test="params.order == 'NAME_DESCENDING'">
-                ORDER BY A.title DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.title DESC
             </when>
             <otherwise>
-                ORDER BY A.created_at DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at DESC
             </otherwise>
         </choose>
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
