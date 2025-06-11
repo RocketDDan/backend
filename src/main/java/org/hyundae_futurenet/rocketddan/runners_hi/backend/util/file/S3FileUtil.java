@@ -103,4 +103,18 @@ public class S3FileUtil {
 		return filenameList;
 	}
 
+	/**
+	 * 다중 파일 삭제
+	 * @param filePathList: 파일 경로 목록
+	 */
+	public void removeFiles(List<String> filePathList) {
+
+		filePathList.forEach(filePath ->
+			s3Client.deleteObject(builder -> builder
+				.bucket(BUCKET_NAME)
+				.key(filePath)
+				.build()
+			)
+		);
+	}
 }

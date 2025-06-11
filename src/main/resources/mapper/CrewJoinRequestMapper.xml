@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewJoinRequestMapper">
+    <!-- 가입 요청 존재 여부-->
+    <select id="existsCrewJoinRequestByMemberIdAndCrewId" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew_join_request
+        WHERE member_id = #{memberId}
+          AND crew_id = #{crewId}
+          AND status = 'REQUEST'
+    </select>
+
+    <select id="existsCrewJoinRequest" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM crew_join_request
+        WHERE crew_join_request_id = #{crewJoinRequestId}
+    </select>
+
+    <select id="selectCrewJoinRequestByCrewJoinRequestId"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource">
+        SELECT crew_join_request_id as crewMemberId,
+               member_id            as memberId,
+               crew_id              as crewId
+        FROM crew_join_request
+        WHERE crew_join_request_id = #{crewJoinRequestId}
+    </select>
+
+    <!-- 가입 요청 생성 -->
+    <insert id="insertCrewJoinRequest">
+        INSERT INTO crew_join_request
+        (crew_join_request_id,
+         crew_id,
+         member_id,
+         request_message,
+         status,
+         created_at,
+         created_by,
+         updated_at,
+         updated_by)
+        VALUES (seq_crew_join_request.nextval,
+                #{crewId},
+                #{loginMemberId},
+                #{message},
+                'REQUEST',
+                sysdate,
+                #{loginMemberId},
+                sysdate,
+                #{loginMemberId})
+    </insert>
+
+    <!-- 가입 요청 상태 변경 -->
+    <update id="updateCrewJoinRequest">
+        UPDATE crew_join_request
+        SET status     = #{status},
+            updated_at = sysdate,
+            updated_by = #{loginMemberId}
+        WHERE crew_join_request_id = #{crewJoinRequestId}
+    </update>
+
+    <select id="selectCrewJoinRequestsByStatus"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewJoinRequestListResponse">
+        SELECT cjr.crew_join_request_id as crewJoinRequestId,
+        m.member_id as memberId,
+        m.nickname as nickname,
+        m.email as email,
+        m.profile_path as profilePath,
+        TO_CHAR(cjr.created_at, 'YYYY-MM-DD HH24:MI:SS') as requestDate,
+        cjr.request_message as requestMessage,
+        cjr.status as status
+        FROM crew_join_request cjr
+        JOIN member m ON cjr.member_id = m.member_id
+        WHERE cjr.status = #{status}
+
+        <if test="req.nickname != null and req.nickname.trim() != ''">
+            AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
+        </if>
+        <choose>
+            <when test="req.order.name() == 'LATEST'">
+                ORDER BY cjr.created_at DESC
+            </when>
+            <when test="req.order.name() == 'OLDEST'">
+                ORDER BY cjr.created_at ASC
+            </when>
+        </choose>
+    </select>
+
+</mapper>
