@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /*
  * 역할 : ADMIN, USER, COMPANY
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/announcements")
 @RequiredArgsConstructor
@@ -74,7 +76,7 @@ public class AnnouncementController {
 		@RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
-		Long memberId = 3L;
+		Long memberId = 1L;
 		String role = "USER";
 
 		Map<String, Object> params = new HashMap<>();
@@ -99,6 +101,7 @@ public class AnnouncementController {
 	public ResponseEntity<AnnouncementDetailResponse> getAnnouncementDetail(@PathVariable Long announcementId) {
 
 		AnnouncementDetailResponse response = announcementFacade.getAnnouncementDetail(announcementId);
+		log.info("AnnouncementDetail::Controller={}", response);
 		return ResponseEntity.ok(response);
 	}
 
