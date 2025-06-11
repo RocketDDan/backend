@@ -5,7 +5,7 @@ import static org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtT
 import static org.springframework.http.HttpStatus.*;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.AppProperties;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.JwtProperties;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AuthFacade;
@@ -39,8 +39,8 @@ public class AuthController {
 	private final AppProperties appProperties;
 
 	@Operation(summary = "로그아웃", description = "로그아웃을 수행한다. 쿠키에 저장된 엑세스토큰과 리프레시토큰을 삭제한다.")
+	@NotGuest
 	@DeleteMapping("/logout")
-	@MemberOnly
 	public ResponseEntity<Void> logout(
 		@Auth final Accessor accessor,
 		HttpServletRequest request,
