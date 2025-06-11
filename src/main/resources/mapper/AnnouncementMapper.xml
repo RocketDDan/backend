@@ -152,5 +152,36 @@
         A.announcement_id = #{announcementId}
     </select>
 
+    <select id="countAnnouncements" resultType="int">
+        SELECT COUNT(*)
+        FROM announcement A
+        JOIN member M ON A.created_by = M.member_id
+        LEFT JOIN crew_member CM ON M.member_id = CM.member_id AND CM.is_leader = 'Y'
+        LEFT JOIN crew C ON CM.crew_id = C.crew_id
+        <where>
+            <if test="params.scope == 'ALL'">
+                AND A.announcement_type = 'ALL'
+            </if>
+            <if test="params.scope == 'CREW'">
+                AND A.announcement_type = 'CREW'
+            </if>
+            <if test="params.scope == 'CREW_OR_ALL'">
+                AND (
+                A.announcement_type = 'ALL'
+                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId, jdbcType=BIGINT})
+                )
+            </if>
+            <if test="params.scope == 'ALL_AND_CREW'">
+                AND A.announcement_type IN ('ALL', 'CREW')
+            </if>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND (
+                A.title LIKE '%' || #{params.keyword} || '%'
+                OR A.content LIKE '%' || #{params.keyword} || '%'
+                )
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
