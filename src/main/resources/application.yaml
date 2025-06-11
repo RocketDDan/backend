@@ -95,3 +95,4 @@ jwt:
 
 app:
   client-domain: ${CLIENT_DOMAIN}
+  server-domain: ${SERVER_DOMAIN}
