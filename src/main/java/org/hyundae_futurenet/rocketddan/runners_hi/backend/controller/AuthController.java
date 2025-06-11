@@ -5,7 +5,7 @@ import static org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtT
 import static org.springframework.http.HttpStatus.*;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.AppProperties;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.JwtProperties;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AuthFacade;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,8 +39,8 @@ public class AuthController {
 	private final AppProperties appProperties;
 
 	@Operation(summary = "로그아웃", description = "로그아웃을 수행한다. 쿠키에 저장된 엑세스토큰과 리프레시토큰을 삭제한다.")
+	@NotGuest
 	@DeleteMapping("/logout")
-	@MemberOnly
 	public ResponseEntity<Void> logout(
 		@Auth final Accessor accessor,
 		HttpServletRequest request,
@@ -55,7 +53,7 @@ public class AuthController {
 
 	@Operation(summary = "엑세스토큰 재발급", description = "리프레시토큰으로 만료한 엑세스토큰을 재발급한다.")
 	@PostMapping("/token/reissue")
-	public ResponseEntity<AccessTokenResponse> extendLogin(
+	public ResponseEntity<Void> extendLogin(
 		@CookieValue(REFRESH_TOKEN_COOKIE_NAME) final String refreshToken,
 		HttpServletRequest request,
 		HttpServletResponse response
@@ -65,10 +63,8 @@ public class AuthController {
 		ResponseCookie accessCookie = buildCookie(
 			ACCESS_TOKEN_COOKIE_NAME,
 			newAccessToken,
-			jwtProperties.getAccessTokenExpirationMinutes() * 60,
-			"/",
-			appProperties.getClientDomain()
-		);
+			jwtProperties.getAccessTokenExpirationMinutes(),
+			"/");
 		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME);
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 

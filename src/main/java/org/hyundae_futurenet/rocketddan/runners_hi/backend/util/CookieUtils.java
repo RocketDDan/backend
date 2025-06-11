@@ -23,15 +23,14 @@ public class CookieUtils {
 	public static ResponseCookie buildCookie(
 		String name,
 		String value,
-		long maxAgeSeconds,
-		String path,
-		String serverDomain) {
+		long maxAgeMinutes,
+		String path) {
 
 		return ResponseCookie.from(name, value)
-			.maxAge(Duration.ofMinutes(maxAgeSeconds))
+			.maxAge(Duration.ofMinutes(maxAgeMinutes))
 			.path(path)
 			.httpOnly(true)
-			.secure(!serverDomain.contains("localhost"))
+			.secure(true)
 			.sameSite(SameSite.NONE.attributeValue())
 			.build();
 	}
