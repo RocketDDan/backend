@@ -62,7 +62,7 @@
         SELECT 1
         FROM FEED_LIKE FL
         WHERE FL.FEED_ID = F.FEED_ID
-        AND FL.MEMBER_ID = #{loginMemberId}
+        AND FL.CREATED_BY = #{loginMemberId}
         )
         THEN 1
         ELSE 0
