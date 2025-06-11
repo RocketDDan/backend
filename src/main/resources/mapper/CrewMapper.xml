@@ -41,7 +41,8 @@
         c.crew_address as crewAddress,
         c.crew_region as crewRegion,
         c.profile_path as profilePath,
-        (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt
+        (SELECT COUNT(*) FROM crew_member cm WHERE cm.crew_id = c.crew_id) as totalMemberCnt,
+        SUBSTR(c.introduce, 1, 40) as introduce
         FROM crew c
         <where>
             <if test="req.crewName != null and req.crewName != ''">
@@ -76,7 +77,8 @@
         c.profile_path AS profilePath,
         (SELECT COUNT(*)
         FROM crew_member cm
-        WHERE cm.crew_id = c.crew_id) AS totalMemberCnt
+        WHERE cm.crew_id = c.crew_id) AS totalMemberCnt,
+        SUBSTR(c.introduce, 1, 40) as introduce
         FROM crew c
         <where>
             <if test="region != null and region != ''">
