@@ -1,7 +1,7 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.MemberFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberInfoResponse;
@@ -23,7 +23,7 @@ public class MemberController {
 	private final MemberFacade memberFacade;
 
 	@Operation(summary = "회원 정보 조회", description = "로그인한 회원의 정보를 조회한다.")
-	@MemberOnly
+	@NotGuest
 	@GetMapping("/personal-info")
 	public ResponseEntity<MemberInfoResponse> getPersonalInfo(@Auth final Accessor accessor) {
 
