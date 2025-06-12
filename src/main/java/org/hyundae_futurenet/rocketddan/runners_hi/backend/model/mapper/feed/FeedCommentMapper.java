@@ -76,6 +76,7 @@ public interface FeedCommentMapper {
 			FROM FEED_COMMENT FC
 			JOIN MEMBER M ON FC.CREATED_BY = M.MEMBER_ID
 			WHERE FC.FEED_ID = #{feedId}
+			ORDER BY FC.CREATED_AT
 		""")
 	List<CommentDetailSource> searchAll(@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId);
