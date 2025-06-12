@@ -33,4 +33,16 @@ public class AdminServicelmpl implements AdminService {
 
 		return adminMapper.countAdminFeeds(params);
 	}
+
+	@Override
+	public List<AdminMemberResponse> getAdminMemberList(Map<String, Object> params) {
+
+		return adminMapper.findAdminMembers(params);
+	}
+
+	@Override
+	public int getAdminMemberTotalCount(Map<String, Object> params) {
+
+		return adminMapper.countAdminMembers(params);
+	}
 }

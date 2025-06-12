@@ -35,4 +35,16 @@ public class AdminFacadelmpl implements AdminFacade {
 
 		return adminService.getAdminFeedTotalCount(params);
 	}
+
+	@Override
+	public List<AdminMemberResponse> getAdminMemberList(Map<String, Object> params) {
+
+		return adminService.getAdminMemberList(params);
+	}
+
+	@Override
+	public int getAdminMemberTotalCount(Map<String, Object> params) {
+
+		return adminService.getAdminMemberTotalCount(params);
+	}
 }

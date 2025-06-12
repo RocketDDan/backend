@@ -16,4 +16,9 @@ public interface AdminMapper {
 	List<AdminFeedResponse> findAdminFeeds(@Param("params") Map<String, Object> params);
 
 	int countAdminFeeds(@Param("params") Map<String, Object> params);
+
+	List<AdminMemberResponse> findAdminMembers(@Param("params") Map<String, Object> parms);
+
+	int countAdminMembers(@Param("params") Map<String, Object> params);
+
 }

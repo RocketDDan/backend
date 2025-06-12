@@ -13,4 +13,8 @@ public interface AdminFacade {
 	List<AdminFeedResponse> getAdminFeedList(Map<String, Object> params);
 
 	int getAdminFeedTotalCount(Map<String, Object> params);
+
+	List<AdminMemberResponse> getAdminMemberList(Map<String, Object> params);
+
+	int getAdminMemberTotalCount(Map<String, Object> params);
 }

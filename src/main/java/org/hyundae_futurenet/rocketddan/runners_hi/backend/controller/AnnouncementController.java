@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /*
  * 역할 : ADMIN, USER, COMPANY
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/announcements")
 @RequiredArgsConstructor
@@ -35,6 +37,8 @@ public class AnnouncementController {
 
 	@PostMapping
 	public ResponseEntity<Void> createAnnouncement(@Valid @RequestBody AnnouncementCreateRequest request) {
+
+		log.info("post announcement 호출");
 		// 임시 member_id와 role 지정
 		Long memberId = 6L;
 		String role = "ADMIN";
