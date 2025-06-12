@@ -9,6 +9,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Ann
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /*
  * 역할 : ADMIN, USER, COMPANY
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/announcements")
 @RequiredArgsConstructor
@@ -65,11 +68,11 @@ public class AnnouncementController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<AnnouncementListResponse>> getAnnouncementList(
+	public ResponseEntity<AnnouncementListResult> getAnnouncementList(
 		@RequestParam(required = false) String scope,
 		@RequestParam(required = false) String keyword,
 		@RequestParam(required = false, defaultValue = "1") int page,
-		@RequestParam(required = false, defaultValue = "10") int perPage,
+		@RequestParam(required = false, defaultValue = "6") int perPage,
 		@RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
@@ -88,14 +91,17 @@ public class AnnouncementController {
 		params.put("perPage", perPage);
 		params.put("order", order);
 
-		List<AnnouncementListResponse> response = announcementFacade.getAnnouncementList(params, memberId, role);
-		return ResponseEntity.ok(response);
+		List<AnnouncementListResponse> list = announcementFacade.getAnnouncementList(params, memberId, role);
+		int totalCount = announcementFacade.getAnnouncementTotalCount(params, memberId, role);
+		AnnouncementListResult result = new AnnouncementListResult(list, totalCount);
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{announcementId}")
 	public ResponseEntity<AnnouncementDetailResponse> getAnnouncementDetail(@PathVariable Long announcementId) {
 
 		AnnouncementDetailResponse response = announcementFacade.getAnnouncementDetail(announcementId);
+		log.info("AnnouncementDetail::Controller={}", response);
 		return ResponseEntity.ok(response);
 	}
 

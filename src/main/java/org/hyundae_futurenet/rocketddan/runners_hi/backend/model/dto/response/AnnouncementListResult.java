@@ -1,23 +1,19 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class AnnouncementListResponse {
+public class AnnouncementListResult {
 
-	private String title;
+	private List<AnnouncementListResponse> announcements;
 
-	private String crewName;
-
-	private Long announcementId;
-
-	private String createdAt;
+	private int totalCount;
 }

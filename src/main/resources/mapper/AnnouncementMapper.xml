@@ -69,13 +69,18 @@
     <select id="findAnnouncements"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse">
         SELECT
+        A.announcement_id AS announcementId,
         A.title,
-        A.content,
-        M.email,
-        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        CASE
+        WHEN M.role = 'ADMIN' THEN '관리자'
+        ELSE C.crew_name
+        END AS crewName
         FROM
         announcement A
         JOIN member M ON A.created_by = M.member_id
+        LEFT JOIN crew_member CM ON M.member_id = CM.member_id AND CM.is_leader = 'Y'
+        LEFT JOIN crew C ON CM.crew_id = C.crew_id
         <where>
             <if test="params.scope == 'ALL'">
                 AND A.announcement_type = 'ALL'
@@ -101,20 +106,31 @@
             </if>
         </where>
         <choose>
+            <!-- 우선 crewName = '관리자' 먼저 정렬 -->
             <when test="params.order == 'LATEST'">
-                ORDER BY A.created_at DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at DESC
             </when>
             <when test="params.order == 'OLDEST'">
-                ORDER BY A.created_at ASC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at ASC
             </when>
             <when test="params.order == 'NAME_ASCENDING'">
-                ORDER BY A.title ASC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.title ASC
             </when>
             <when test="params.order == 'NAME_DESCENDING'">
-                ORDER BY A.title DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.title DESC
             </when>
             <otherwise>
-                ORDER BY A.created_at DESC
+                ORDER BY
+                CASE WHEN M.role = 'ADMIN' THEN 0 ELSE 1 END,
+                A.created_at DESC
             </otherwise>
         </choose>
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
@@ -145,6 +161,37 @@
         JOIN member M ON A.created_by = M.member_id
         WHERE
         A.announcement_id = #{announcementId}
+    </select>
+
+    <select id="countAnnouncements" resultType="int">
+        SELECT COUNT(*)
+        FROM announcement A
+        JOIN member M ON A.created_by = M.member_id
+        LEFT JOIN crew_member CM ON M.member_id = CM.member_id AND CM.is_leader = 'Y'
+        LEFT JOIN crew C ON CM.crew_id = C.crew_id
+        <where>
+            <if test="params.scope == 'ALL'">
+                AND A.announcement_type = 'ALL'
+            </if>
+            <if test="params.scope == 'CREW'">
+                AND A.announcement_type = 'CREW'
+            </if>
+            <if test="params.scope == 'CREW_OR_ALL'">
+                AND (
+                A.announcement_type = 'ALL'
+                OR (A.announcement_type = 'CREW' AND A.created_by = #{params.leaderId, jdbcType=BIGINT})
+                )
+            </if>
+            <if test="params.scope == 'ALL_AND_CREW'">
+                AND A.announcement_type IN ('ALL', 'CREW')
+            </if>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND (
+                A.title LIKE '%' || #{params.keyword} || '%'
+                OR A.content LIKE '%' || #{params.keyword} || '%'
+                )
+            </if>
+        </where>
     </select>
 
 

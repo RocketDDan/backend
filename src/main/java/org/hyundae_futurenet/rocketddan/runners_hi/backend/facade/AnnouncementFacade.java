@@ -19,4 +19,7 @@ public interface AnnouncementFacade {
 	List<AnnouncementListResponse> getAnnouncementList(Map<String, Object> params, Long memberId, String role);
 
 	AnnouncementDetailResponse getAnnouncementDetail(Long announcementId);
+
+	int getAnnouncementTotalCount(Map<String, Object> params, Long memberId, String role);
+
 }

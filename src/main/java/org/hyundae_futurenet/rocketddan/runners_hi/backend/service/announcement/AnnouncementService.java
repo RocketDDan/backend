@@ -20,4 +20,6 @@ public interface AnnouncementService {
 	List<AnnouncementListResponse> findAnnouncements(Map<String, Object> params);
 
 	AnnouncementDetailResponse findDetailById(Long announcementId);
+
+	int countAnnouncements(Map<String, Object> params);
 }

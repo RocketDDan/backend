@@ -10,7 +10,9 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announce
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
@@ -51,5 +53,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	public AnnouncementDetailResponse findDetailById(Long announcementId) {
 
 		return announcementMapper.findDetailById(announcementId);
+	}
+
+	@Override
+	public int countAnnouncements(Map<String, Object> params) {
+
+		log.info("log" + announcementMapper.countAnnouncements(params));
+		return announcementMapper.countAnnouncements(params);
 	}
 }
