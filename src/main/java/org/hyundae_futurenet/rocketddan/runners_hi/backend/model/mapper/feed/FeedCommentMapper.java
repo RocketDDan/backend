@@ -23,7 +23,8 @@ public interface FeedCommentMapper {
 		INSERT INTO FEED_COMMENT(COMMENT_ID, FEED_ID, CONTENT, CREATED_BY) 
 		VALUES (SEQ_FEED_COMMENT.nextval, #{feedId}, #{comment}, #{loginMemberId})
 		""")
-	void insert(@Param("loginMemberId") long loginMemberId,
+	void insert(
+		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
 		@Param("comment") String comment);
 
@@ -44,7 +45,7 @@ public interface FeedCommentMapper {
 	boolean validateCommentExistence(
 		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
-		@Param("commentId") String commentId);
+		@Param("commentId") long commentId);
 
 	@Update("""
 		
@@ -52,14 +53,15 @@ public interface FeedCommentMapper {
 		SET CONTENT = #{newComment}
 		WHERE COMMENT_ID = #{commentId}
 		""")
-	void update(@Param("commentId") String commentId,
+	void update(
+		@Param("commentId") long commentId,
 		@Param("newComment") String newComment);
 
 	@Delete("""
 		DELETE FROM FEED_COMMENT
 		WHERE COMMENT_ID = #{commentId}
 		""")
-	void delete(@Param("commentId") String commentId);
+	void delete(@Param("commentId") long commentId);
 
 	@Select("""
 			SELECT
@@ -78,7 +80,8 @@ public interface FeedCommentMapper {
 			WHERE FC.FEED_ID = #{feedId}
 			ORDER BY FC.CREATED_AT
 		""")
-	List<CommentDetailSource> searchAll(@Param("loginMemberId") long loginMemberId,
+	List<CommentDetailSource> searchAll(
+		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId);
 
 }

@@ -43,7 +43,7 @@ public class FeedCommentController {
 	@PutMapping("/{comment-id}")
 	public ResponseEntity<Void> updateComment(
 		@PathVariable("feed-id") long feedId,
-		@PathVariable("comment-id") String commentId,
+		@PathVariable("comment-id") long commentId,
 		@RequestBody FeedCommentUpdateRequest feedCommentUpdateRequest
 	) {
 
@@ -56,7 +56,7 @@ public class FeedCommentController {
 	@DeleteMapping("/{comment-id}")
 	public ResponseEntity<Void> deleteComment(
 		@PathVariable("feed-id") long feedId,
-		@PathVariable("comment-id") String commentId
+		@PathVariable("comment-id") long commentId
 	) {
 
 		long loginMemberId = 1L;

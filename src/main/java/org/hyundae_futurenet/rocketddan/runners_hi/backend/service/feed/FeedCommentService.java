@@ -10,11 +10,11 @@ public interface FeedCommentService {
 
 	void register(long loginMemberId, long feedId, String comment);
 
-	void assertCommentExists(long loginMemberId, long feedId, String commentId);
+	void assertCommentExists(long loginMemberId, long feedId, long commentId);
 
-	void update(String commentId, String newComment);
+	void update(long commentId, String newComment);
 
-	void delete(String commentId);
+	void delete(long commentId);
 
 	List<CommentDetailSource> searchCommentList(long loginMemberId, long feedId);
 }
