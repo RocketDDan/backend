@@ -1,7 +1,9 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import java.util.List;
+import java.util.Map;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.admin.AdminService;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,29 @@ public class AdminFacadelmpl implements AdminFacade {
 	public List<AdminMemberResponse> getAdminMembers() {
 
 		return adminService.selectAdminMembers();
+	}
+
+	@Override
+	public List<AdminFeedResponse> getAdminFeedList(Map<String, Object> params) {
+
+		return adminService.getAdminFeedList(params);
+	}
+
+	@Override
+	public int getAdminFeedTotalCount(Map<String, Object> params) {
+
+		return adminService.getAdminFeedTotalCount(params);
+	}
+
+	@Override
+	public List<AdminMemberResponse> getAdminMemberList(Map<String, Object> params) {
+
+		return adminService.getAdminMemberList(params);
+	}
+
+	@Override
+	public int getAdminMemberTotalCount(Map<String, Object> params) {
+
+		return adminService.getAdminMemberTotalCount(params);
 	}
 }
