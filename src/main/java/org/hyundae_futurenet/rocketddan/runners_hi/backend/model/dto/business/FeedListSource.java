@@ -31,6 +31,8 @@ public class FeedListSource {
 
 	private int commentCount;
 
+	private int likeCount;
+
 	private Double lat;
 
 	private Double lng;

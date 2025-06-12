@@ -42,6 +42,9 @@ public class FeedListResponse {
 	@Schema(description = "댓글 수", example = "5")
 	private int commentCount;
 
+	@Schema(description = "좋아요 수", example = "500")
+	private int likeCount;
+
 	@Schema(description = "위도", example = "37.55")
 	private Double lat;
 

@@ -30,6 +30,7 @@
         <result javaType="boolean" property="isMine" column="isMine"/>
         <result javaType="boolean" property="isLike" column="isLike"/>
         <result property="commentCount" column="commentCount"/>
+        <result property="likeCount" column="likeCount"/>
         <result property="lat" column="lat"/>
         <result property="lng" column="lng"/>
         <result property="createdAt" column="createdAt"/>
@@ -70,6 +71,9 @@
         (SELECT COUNT(*)
         FROM FEED_COMMENT FC
         WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
+        (SELECT COUNT(*)
+        FROM FEED_LIKE FL
+        WHERE FL.FEED_ID = F.FEED_ID) AS likeCount,
         F.LAT AS lat,
         F.LNG AS lng,
         TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"

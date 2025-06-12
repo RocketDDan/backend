@@ -59,6 +59,7 @@ public class FeedListResponseConverter {
 			source.isMine(),
 			source.isLike(),
 			source.getCommentCount(),
+			source.getLikeCount(),
 			source.getLat(),
 			source.getLng(),
 			source.getCreatedAt(),
