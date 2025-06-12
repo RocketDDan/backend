@@ -17,6 +17,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.cr
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewJoinRequestMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewJoinRequestService;
@@ -51,6 +52,8 @@ public class CrewFacadeImpl implements CrewFacade {
 	private final CloudFrontFileUtil cloudFrontFileUtil;
 
 	private final int VALID_SECONDS = 60 * 10;
+
+	private final CrewJoinRequestMapper crewJoinRequestMapper;
 
 	@Override
 	@Transactional
@@ -123,17 +126,19 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		Optional<CrewMemberDetailResponse> memberDetail = crewMemberService.selectCrewMember(loginMemberId, crewId);
 
-		// 멤버 여부 및 역할 정보 저장
+		// 멤버 여부 및 역할 정보, 가입 요청 여부 저장
 		if (memberDetail.isPresent()) {
 			result = result.toBuilder()
 				.isLeader(memberDetail.get().isLeader())
 				.isMember(true)
+				.hasRequestedJoin(crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId))
 				.profilePath(getFilePath(result.getProfilePath()))
 				.build();
 		} else {
 			result = result.toBuilder()
 				.isLeader(false)
 				.isMember(false)
+				.hasRequestedJoin(crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId))
 				.profilePath(getFilePath(result.getProfilePath()))
 				.build();
 		}

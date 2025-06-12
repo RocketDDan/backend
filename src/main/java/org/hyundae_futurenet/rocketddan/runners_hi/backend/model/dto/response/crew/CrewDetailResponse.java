@@ -37,6 +37,9 @@ public class CrewDetailResponse {
 	@Schema(description = "크루 멤버 여부", example = "true")
 	private boolean isMember;
 
+	@Schema(description = "크루 가입 요청 여부", example = "true")
+	private boolean hasRequestedJoin;
+
 	@Schema(description = "전체 멤버 수", example = "10")
 	private int totalMemberCnt;
 
