@@ -1,6 +1,5 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
@@ -22,7 +21,7 @@ public interface FeedCommentMapper {
 
 	@Insert("""
 		INSERT INTO FEED_COMMENT(COMMENT_ID, FEED_ID, CONTENT, CREATED_BY) 
-		VALUES (SEQ_FEED_COMMENT.nextval, #{feedId}, #{content}, #{loginMemberId})
+		VALUES (SEQ_FEED_COMMENT.nextval, #{feedId}, #{comment}, #{loginMemberId})
 		""")
 	void insert(@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
@@ -50,7 +49,7 @@ public interface FeedCommentMapper {
 	@Update("""
 		
 		UPDATE FEED_COMMENT
-		SET CONTENT = #{newContent}
+		SET CONTENT = #{newComment}
 		WHERE COMMENT_ID = #{commentId}
 		""")
 	void update(@Param("commentId") String commentId,
