@@ -224,4 +224,16 @@ public class CrewController {
 		return ResponseEntity.ok(result);
 	}
 
+	@Operation(summary = "크루 이름 중복 조회", description = "크루 이름 중복 여부 조회")
+	@GetMapping("/duplicate")
+	private ResponseEntity<Boolean> selectDuplicateCrew(@RequestParam("crewName") String crewName) {
+
+		if (crewName == null || crewName.isBlank()) {
+			throw new IllegalArgumentException("크루명은 필수입니다.");
+		}
+
+		Boolean result = crewFacade.existsByCrewName(crewName);
+		return ResponseEntity.ok(result);
+	}
+
 }

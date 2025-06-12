@@ -168,4 +168,11 @@
         WHERE cm.member_id = #{loginMemberId}
           AND ROWNUM = 1
     </select>
+
+    <!-- 크루 이름 중복 조회 -->
+    <select id="existsByCrewName" resultType="boolean">
+        SELECT CASE WHEN count(*) > 0 THEN 1 ELSE 0 END
+        FROM crew
+        WHERE crew.crew_name = #{crewName}
+    </select>
 </mapper>

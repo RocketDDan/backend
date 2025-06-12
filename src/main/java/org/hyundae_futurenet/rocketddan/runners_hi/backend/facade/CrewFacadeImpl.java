@@ -285,6 +285,12 @@ public class CrewFacadeImpl implements CrewFacade {
 		return crewService.selectMyCrew(loginMemberId);
 	}
 
+	@Override
+	public boolean existsByCrewName(String crewName) {
+
+		return crewService.existsByCrewName(crewName);
+	}
+
 	// 크루장이 아닌 경우 예외 처리
 	private void checkCrewLeader(long loginMemberId, long crewId) {
 

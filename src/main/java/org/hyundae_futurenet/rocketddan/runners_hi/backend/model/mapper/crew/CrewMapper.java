@@ -56,4 +56,7 @@ public interface CrewMapper {
 	// 내 크루 조회
 	Long selectMyCrew(@Param("loginMemberId") long loginMemberId);
 
+	// 크루 이름 중복 조회
+	boolean existsByCrewName(@Param("crewName") String crewName);
+
 }

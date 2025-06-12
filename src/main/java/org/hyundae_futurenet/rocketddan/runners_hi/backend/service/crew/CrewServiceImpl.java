@@ -84,4 +84,11 @@ public class CrewServiceImpl implements CrewService {
 		log.info("CrewService :: selectMyCrew");
 		return crewMapper.selectMyCrew(loginMemberId);
 	}
+
+	@Override
+	public boolean existsByCrewName(String crewName) {
+
+		log.info("CrewService :: existsByCrewName, crewName = {}", crewName);
+		return crewMapper.existsByCrewName(crewName);
+	}
 }
