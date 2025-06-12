@@ -23,13 +23,19 @@ public class FeedListSource {
 
 	private String writerProfilePath;
 
+	private long viewCount;
+
 	private boolean isMine;
+
+	private boolean isLike;
 
 	private int commentCount;
 
-	private double lat;
+	private int likeCount;
 
-	private double lng;
+	private Double lat;
+
+	private Double lng;
 
 	private String createdAt;
 
@@ -53,6 +59,8 @@ public class FeedListSource {
 	@AllArgsConstructor
 	@ToString
 	public static class CommentThumbnailRaw {
+
+		private long commentId;
 
 		private String writerProfilePath;
 

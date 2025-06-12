@@ -3,6 +3,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedCommentRequest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedCommentUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,10 +32,10 @@ public class FeedCommentController {
 	@PostMapping
 	public ResponseEntity<Void> addComment(
 		@PathVariable("feed-id") long feedId,
-		@RequestParam String comment) {
+		@RequestBody FeedCommentRequest feedCommentRequest) {
 
 		long loginMemberId = 1L;
-		feedFacade.registerComment(loginMemberId, feedId, comment);
+		feedFacade.registerComment(loginMemberId, feedId, feedCommentRequest.getComment());
 		return ResponseEntity.ok().build();
 	}
 
@@ -41,12 +43,12 @@ public class FeedCommentController {
 	@PutMapping("/{comment-id}")
 	public ResponseEntity<Void> updateComment(
 		@PathVariable("feed-id") long feedId,
-		@PathVariable("comment-id") String commentId,
-		@RequestParam String newComment
+		@PathVariable("comment-id") long commentId,
+		@RequestBody FeedCommentUpdateRequest feedCommentUpdateRequest
 	) {
 
 		long loginMemberId = 1L;
-		feedFacade.updateComment(loginMemberId, feedId, commentId, newComment);
+		feedFacade.updateComment(loginMemberId, feedId, commentId, feedCommentUpdateRequest.getNewComment());
 		return ResponseEntity.ok().build();
 	}
 
@@ -54,7 +56,7 @@ public class FeedCommentController {
 	@DeleteMapping("/{comment-id}")
 	public ResponseEntity<Void> deleteComment(
 		@PathVariable("feed-id") long feedId,
-		@PathVariable("comment-id") String commentId
+		@PathVariable("comment-id") long commentId
 	) {
 
 		long loginMemberId = 1L;

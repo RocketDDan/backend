@@ -21,9 +21,9 @@ public interface FeedFacade {
 
 	void registerComment(long loginMemberId, long feedId, String comment);
 
-	void updateComment(long loginMemberId, long feedId, String commentId, String newComment);
+	void updateComment(long loginMemberId, long feedId, long commentId, String newComment);
 
-	void deleteCommit(long loginMemberId, long feedId, String commentId);
+	void deleteCommit(long loginMemberId, long feedId, long commentId);
 
 	List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId);
 
