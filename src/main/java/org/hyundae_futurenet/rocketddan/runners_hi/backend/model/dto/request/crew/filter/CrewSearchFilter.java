@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +16,11 @@ import lombok.Setter;
 public class CrewSearchFilter {
 
 	@Schema(description = "검색할 크루 이름", example = "러닝크루")
+	@Size(max = 30, message = "크루명은 최대 30자 입니다.")
 	private String crewName = "";
 
 	@Schema(description = "검색할 지역", example = "서울특별시 강남구")
+	@Size(max = 30, message = "지역은 최대 20자 입니다.")
 	private String region = "";
 
 	@Schema(description = "페이지 번호 (1 이상)", example = "1")
