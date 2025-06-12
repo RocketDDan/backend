@@ -1,12 +1,16 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "크루 상세 정보 응답 DTO")
 @Getter
-@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CrewDetailResponse {
 
 	@Schema(description = "크루 ID", example = "1")
