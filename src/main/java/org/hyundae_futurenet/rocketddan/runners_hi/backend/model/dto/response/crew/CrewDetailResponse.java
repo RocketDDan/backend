@@ -1,12 +1,16 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "크루 상세 정보 응답 DTO")
 @Getter
-@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CrewDetailResponse {
 
 	@Schema(description = "크루 ID", example = "1")
@@ -32,6 +36,9 @@ public class CrewDetailResponse {
 
 	@Schema(description = "크루 멤버 여부", example = "true")
 	private boolean isMember;
+
+	@Schema(description = "크루 가입 요청 여부", example = "true")
+	private boolean hasRequestedJoin;
 
 	@Schema(description = "전체 멤버 수", example = "10")
 	private int totalMemberCnt;

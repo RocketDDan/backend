@@ -17,11 +17,13 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.cr
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewJoinRequestMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewJoinRequestService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewMemberService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,12 @@ public class CrewFacadeImpl implements CrewFacade {
 	private final CrewMapper crewMapper;
 
 	private final CrewMemberMapper crewMemberMapper;
+
+	private final CloudFrontFileUtil cloudFrontFileUtil;
+
+	private final int VALID_SECONDS = 60 * 10;
+
+	private final CrewJoinRequestMapper crewJoinRequestMapper;
 
 	@Override
 	@Transactional
@@ -117,14 +125,23 @@ public class CrewFacadeImpl implements CrewFacade {
 			.orElseThrow(() -> new NotFoundException("존재하지 않는 크루입니다."));
 
 		Optional<CrewMemberDetailResponse> memberDetail = crewMemberService.selectCrewMember(loginMemberId, crewId);
-		if (memberDetail.isPresent()) {
-			result.setLeader(memberDetail.get().isLeader());
-			result.setMember(true);
-		} else {
-			result.setLeader(false);
-			result.setMember(false);
-		}
 
+		// 멤버 여부 및 역할 정보, 가입 요청 여부 저장
+		if (memberDetail.isPresent()) {
+			result = result.toBuilder()
+				.isLeader(memberDetail.get().isLeader())
+				.isMember(true)
+				.hasRequestedJoin(crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId))
+				.profilePath(getFilePath(result.getProfilePath()))
+				.build();
+		} else {
+			result = result.toBuilder()
+				.isLeader(false)
+				.isMember(false)
+				.hasRequestedJoin(crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId))
+				.profilePath(getFilePath(result.getProfilePath()))
+				.build();
+		}
 		return result;
 	}
 
@@ -132,7 +149,9 @@ public class CrewFacadeImpl implements CrewFacade {
 	@Transactional
 	public List<CrewListResponse> selectCrewsByFilter(long loginMemberId, CrewSearchFilter crewSearchFilter) {
 
-		return crewService.selectCrewsByFilter(loginMemberId, crewSearchFilter);
+		List<CrewListResponse> result = crewService.selectCrewsByFilter(loginMemberId, crewSearchFilter);
+		return result.stream()
+			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
 	}
 
 	@Override
@@ -145,7 +164,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		if (crewMemberMapper.isCrewMember(loginMemberId)) {
 			throw new AlreadyExistsException("이미 크루에 가입되어 있습니다.");
 		}
-		
+
 		crewJoinRequestService.insertCrewJoinRequest(loginMemberId, crewId, crewJoinRequest);
 	}
 
@@ -175,7 +194,10 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루장만 조회 가능
 		checkCrewLeader(loginMemberId, crewId);
-		return crewJoinRequestService.selectCrewJoinRequestsByStatus(crewId, crewJoinRequestSearchFilter);
+		return crewJoinRequestService
+			.selectCrewJoinRequestsByStatus(crewId, crewJoinRequestSearchFilter)
+			.stream()
+			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
 	}
 
 	@Override
@@ -226,7 +248,10 @@ public class CrewFacadeImpl implements CrewFacade {
 		long crewId,
 		CrewMemberSearchFilter crewMemberSearchFilter) {
 
-		return crewMemberService.selectCrewMembers(loginMemberId, crewId, crewMemberSearchFilter);
+		return crewMemberService
+			.selectCrewMembers(loginMemberId, crewId, crewMemberSearchFilter)
+			.stream()
+			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
 	}
 
 	@Override
@@ -254,13 +279,21 @@ public class CrewFacadeImpl implements CrewFacade {
 	@Transactional
 	public List<CrewListResponse> recommendCrewsByRegion(int perPage, String region) {
 
-		return crewService.recommendCrewsByRegion(perPage, region);
+		return crewService.recommendCrewsByRegion(perPage, region)
+			.stream()
+			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
 	}
 
 	@Override
 	public Long selectMyCrew(long loginMemberId) {
 
 		return crewService.selectMyCrew(loginMemberId);
+	}
+
+	@Override
+	public boolean existsByCrewName(String crewName) {
+
+		return crewService.existsByCrewName(crewName);
 	}
 
 	// 크루장이 아닌 경우 예외 처리
@@ -276,6 +309,14 @@ public class CrewFacadeImpl implements CrewFacade {
 		if (!crewMapper.existsByCrewId(crewId)) {
 			throw new NotFoundException("존재하지 않는 크루입니다.");
 		}
+	}
+
+	private String getFilePath(String filePath) {
+
+		if (filePath != null) {
+			filePath = cloudFrontFileUtil.generateSignedUrl(filePath, VALID_SECONDS);
+		}
+		return filePath;
 	}
 }
 

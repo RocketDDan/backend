@@ -67,5 +67,8 @@ public interface CrewFacade {
 
 	// 내 크루 조회
 	Long selectMyCrew(long loginMemberId);
+	
+	// 크루 이름 중복 조회
+	boolean existsByCrewName(String crewName);
 }
 
