@@ -13,4 +13,6 @@ import lombok.Setter;
 public class AppProperties {
 
 	private String clientDomain;
+
+	private String serverDomain;
 }
