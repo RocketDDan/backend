@@ -8,12 +8,12 @@
         SELECT
         M.NICKNAME,
         M.EMAIL,
-        NVL(C.CREW_NAME, '없음') AS crewName,
+        NVL(C.CREW_NAME, '로그인 사용자') AS crewName,
         CASE
-        WHEN M.ROLE = 'COMPANY' THEN 'COMPANY'
-        WHEN CM.MEMBER_ID IS NULL THEN 'ALL'
-        WHEN CM.IS_LEADER = 'Y' THEN 'LEADER'
-        ELSE 'CREW'
+        WHEN M.ROLE = 'COMPANY' THEN '회사'
+        WHEN CM.MEMBER_ID IS NULL THEN '로그인 사용자'
+        WHEN CM.IS_LEADER = 'Y' THEN '크루장'
+        ELSE '크루원'
         END AS crewRole
         FROM
         MEMBER M
@@ -63,12 +63,12 @@
         SELECT
         M.NICKNAME,
         M.EMAIL,
-        NVL(C.CREW_NAME, '없음') AS crewName,
+        NVL(C.CREW_NAME, '로그인 사용자') AS crewName,
         CASE
-        WHEN M.ROLE = 'COMPANY' THEN 'COMPANY'
-        WHEN CM.MEMBER_ID IS NULL THEN 'ALL'
-        WHEN CM.IS_LEADER = 'Y' THEN 'LEADER'
-        ELSE 'CREW'
+        WHEN M.ROLE = 'COMPANY' THEN '회사'
+        WHEN CM.MEMBER_ID IS NULL THEN '로그인 사용자'
+        WHEN CM.IS_LEADER = 'Y' THEN '크루장'
+        ELSE '크루원'
         END AS crewRole
         FROM MEMBER M
         LEFT JOIN CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
