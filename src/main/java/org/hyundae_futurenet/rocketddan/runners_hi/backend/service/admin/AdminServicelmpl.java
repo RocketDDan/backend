@@ -17,12 +17,6 @@ public class AdminServicelmpl implements AdminService {
 	private final AdminMapper adminMapper;
 
 	@Override
-	public List<AdminMemberResponse> selectAdminMembers() {
-
-		return adminMapper.selectAdminMembers();
-	}
-
-	@Override
 	public List<AdminFeedResponse> getAdminFeedList(Map<String, Object> params) {
 
 		return adminMapper.findAdminFeeds(params);
