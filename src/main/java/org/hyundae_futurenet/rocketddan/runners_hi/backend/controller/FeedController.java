@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,9 +44,9 @@ public class FeedController {
 	@Operation(summary = "Feed 업로드", description = "Feed를 파일과 함께 업로드합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> uploadFeed(
-		@RequestPart("content") String content,
-		@RequestPart(value = "lat", required = false) Double lat,
-		@RequestPart(value = "lng", required = false) Double lng,
+		@RequestParam("content") String content,
+		@RequestParam(value = "lat", required = false) Double lat,
+		@RequestParam(value = "lng", required = false) Double lng,
 		@RequestPart("fileList") List<MultipartFile> fileList
 	) {
 
