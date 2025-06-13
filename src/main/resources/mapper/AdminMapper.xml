@@ -38,6 +38,7 @@
     <select id="findAdminMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
         SELECT
+        M.MEMBER_ID as memberId,
         M.NICKNAME,
         M.EMAIL,
         NVL(C.CREW_NAME, '로그인 사용자') AS crewName,
