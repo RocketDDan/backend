@@ -15,7 +15,10 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.An
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,55 +34,50 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 
 	private final CrewMemberMapper crewMemberMapper;
 
+	private final S3FileUtil s3FileUtil;
+
 	@Override
-	public void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role) {
-		// COMPANY는 공지사항 등록 할 수 없음
+	@Transactional
+	public void createAnnouncement(String title, String content, List<MultipartFile> files, Long memberId,
+		String role) {
+
 		if ("COMPANY".equals(role)) {
 			throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
 		}
-		// USER일 경우 크루장일 경우에만 공지사항 등록 가능
-		if ("USER".equals(role)) {
-			// 크루 멤버의 리더임을 확인
-			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
-			if (!isLeader) {
-				throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
-			}
+		if ("USER".equals(role) && !crewMemberMapper.existsLeaderByMemberId(memberId)) {
+			throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
 		}
-		// ADMIN일 경우에는 ALL 타입으로 저장
+		files.stream().forEach(
+			file -> {
+				s3FileUtil.validateImageFile(file.getOriginalFilename());
+				s3FileUtil.validatePdfFile(file.getOriginalFilename());
+			}
+		);
+
 		String type = "ADMIN".equals(role) ? "ALL" : "CREW";
 
 		AnnouncementCreate create = new AnnouncementCreate(
-			null,
-			type,
-			request.getTitle(),
-			request.getContent(),
-			memberId
+			null, type, title, content, memberId
 		);
-
 		announcementService.insertAnnouncement(create);
 
-		// 첨부 파일이 존재할 경우에만 저장
-		List<String> attachPaths = request.getAttachPaths();
-		if (attachPaths != null && !attachPaths.isEmpty()) {
-			// 최대 3개까지만 저장 가능
-			if (attachPaths.size() > 3) {
+		if (files != null && !files.isEmpty()) {
+			if (files.size() > 3) {
 				throw new IllegalArgumentException("첨부파일은 최대 3개까지 가능합니다.");
 			}
-			// 이미지(jpg, png), pdf 파일만 저장 가능
-			for (String filePath : attachPaths) {
-				if (!isValidFileType(filePath)) {
-					throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
-				}
 
-				AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
-					null,
-					create.getAnnouncementId(),
-					filePath,
-					memberId
-				);
-				announcementFileService.insertFile(fileCreate);
-			}
+			// S3 업로드
+			List<String> uploadedPaths = s3FileUtil.uploadAnnouncementFile(files, create.getAnnouncementId());
+			AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+				null, create.getAnnouncementId(), filePath, memberId
+			);
+			announcementFileService.insertFile(fileCreate);
+
 		}
+	}
+
+	@Override
+	public void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role) {
 
 	}
 
@@ -244,13 +242,6 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		}
 
 		return announcementService.countAnnouncements(params);
-	}
-
-	// 파일 확장자 유효성 검사 - 파일 위치 확인 필요
-	private boolean isValidFileType(String filePath) {
-
-		String lower = filePath.toLowerCase();
-		return lower.endsWith(".jpg") || lower.endsWith(".png") || lower.endsWith(".pdf");
 	}
 
 }
