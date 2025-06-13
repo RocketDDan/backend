@@ -2,6 +2,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
@@ -25,11 +27,14 @@ public class CloudFrontFileUtil {
 		Date expirationDate = new Date(System.currentTimeMillis() + validSeconds * 1000);
 
 		try {
+			String encodedObjectKey = URLEncoder.encode(objectKey, StandardCharsets.UTF_8)
+				.replace("+", "%20"); // S3 URL에서 + 를 %20 으로 교체 (공백 문제 방지)
+
 			return CloudFrontUrlSigner.getSignedURLWithCannedPolicy(
 				SignerUtils.Protocol.https,
 				properties.getDistributionDomain(),
 				new File(properties.getPrivateKeyPath()),
-				objectKey,
+				encodedObjectKey,
 				properties.getKeyPairId(),
 				expirationDate
 			);
