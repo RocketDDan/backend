@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
@@ -13,6 +14,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.An
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.CrewMemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement.AnnouncementService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	private final CrewMemberMapper crewMemberMapper;
 
 	private final S3FileUtil s3FileUtil;
+
+	private final CloudFrontFileUtil cloudFrontFileUtil;
 
 	@Override
 	@Transactional
@@ -210,8 +214,13 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 			throw new IllegalArgumentException("해당 공지사항이 존재하지 않습니다.");
 		}
 		// 첨부파일 조회는 따로 처리
-		List<String> attachPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
-		detail.setAttachPaths(attachPaths);
+		List<String> filePaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
+
+		List<String> signedUrls = filePaths.stream()
+			.map(this::getSignedUrl)
+			.collect(Collectors.toList());
+
+		detail.setAttachPaths(signedUrls);
 		return detail;
 	}
 
@@ -247,6 +256,13 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		if (fullPath == null)
 			return "";
 		return fullPath.substring(fullPath.lastIndexOf("/") + 1);
+	}
+
+	private String getSignedUrl(String s3Key) {
+
+		if (s3Key == null || s3Key.isBlank())
+			return null;
+		return cloudFrontFileUtil.generateSignedUrl(s3Key, 60 * 10);
 	}
 
 }
