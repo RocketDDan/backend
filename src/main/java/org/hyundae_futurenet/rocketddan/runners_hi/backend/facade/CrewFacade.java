@@ -45,7 +45,10 @@ public interface CrewFacade {
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,
 		long crewId,
-		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
+		CrewJoinRequestSearchFilter filter);
+
+	// 가입 요청 목록 조회 시 다음 페이지 존재 여부
+	boolean isExistNextPage(CrewJoinRequestSearchFilter filter);
 
 	// 크루 멤버 생성
 	void insertCrewMember(long loginMemberId, long memberId, long crewId);

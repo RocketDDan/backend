@@ -1,6 +1,8 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
@@ -163,7 +165,7 @@ public class CrewController {
 
 	@Operation(summary = "크루 가입 요청 목록 조회", description = "크루의 가입 요청 목록을 조회합니다.")
 	@GetMapping("/{crew-id}/join-requests")
-	private ResponseEntity<List<CrewJoinRequestListResponse>> selectCrewJoinRequests(
+	private ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
 		@PathVariable("crew-id") Long crewId,
 		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter
 	) {
@@ -172,8 +174,12 @@ public class CrewController {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
 
-		List<CrewJoinRequestListResponse> result = crewFacade
+		List<CrewJoinRequestListResponse> crewJoinRequestList = crewFacade
 			.selectCrewJoinRequestsByStatus(loginMemberId, crewId, crewJoinRequestSearchFilter);
+		boolean isExistNextPage = crewFacade.isExistNextPage(crewJoinRequestSearchFilter);
+		Map<String, Object> result = new HashMap<>();
+		result.put("crewJoinRequestList", crewJoinRequestList);
+		result.put("isExistNextPage", isExistNextPage);
 		return ResponseEntity.ok(result);
 	}
 

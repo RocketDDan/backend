@@ -93,6 +93,29 @@
                 ORDER BY cjr.created_at ASC
             </when>
         </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <select id="isExistNextPage" resultType="boolean">
+        SELECT CASE WHEN EXISTS (
+        SELECT 1
+        FROM crew_join_request cjr
+        JOIN member m ON cjr.member_id = m.member_id
+        WHERE cjr.status = #{status}
+        <if test="req.nickname != null and req.nickname.trim() != ''">
+            AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
+        </if>
+        <choose>
+            <when test="req.order.name() == 'LATEST'">
+                ORDER BY cjr.created_at DESC
+            </when>
+            <when test="req.order.name() == 'OLDEST'">
+                ORDER BY cjr.created_at ASC
+            </when>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT 1 ROWS ONLY
+        ) THEN 1 ELSE 0 END
+        FROM dual
     </select>
 
 </mapper>

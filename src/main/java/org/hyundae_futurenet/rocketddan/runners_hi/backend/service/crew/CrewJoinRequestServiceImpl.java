@@ -68,13 +68,24 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 	@Override
 	public List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long crewId,
-		CrewJoinRequestSearchFilter requestSearchFilter) {
+		CrewJoinRequestSearchFilter filter) {
 
-		String status = getStatus(requestSearchFilter.getStatus());
-
+		String status = getStatus(filter.getStatus());
+		int limit = filter.getPerPage();
+		int offset = (filter.getPage() - 1) * limit;
 		log.info("CrewJoinRequestService :: selectCrewJoinRequestsByStatus, status: {}", status);
 
-		return crewJoinRequestMapper.selectCrewJoinRequestsByStatus(requestSearchFilter, status);
+		return crewJoinRequestMapper.selectCrewJoinRequestsByStatus(filter, status, offset, limit);
+	}
+
+	@Override
+	public boolean isExistNextPage(CrewJoinRequestSearchFilter filter) {
+
+		log.info("CrewJoinRequestService :: isExistNextPage");
+		String status = getStatus(filter.getStatus());
+		int limit = filter.getPerPage();
+		int offset = (filter.getPage() - 1) * limit;
+		return crewJoinRequestMapper.isExistNextPage(filter, status, offset + limit);
 	}
 
 	@Override

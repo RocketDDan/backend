@@ -196,14 +196,20 @@ public class CrewFacadeImpl implements CrewFacade {
 	public List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,
 		long crewId,
-		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter) {
+		CrewJoinRequestSearchFilter filter) {
 
 		// 크루장만 조회 가능
 		checkCrewLeader(loginMemberId, crewId);
 		return crewJoinRequestService
-			.selectCrewJoinRequestsByStatus(crewId, crewJoinRequestSearchFilter)
+			.selectCrewJoinRequestsByStatus(crewId, filter)
 			.stream()
 			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
+	}
+
+	@Override
+	public boolean isExistNextPage(CrewJoinRequestSearchFilter filter) {
+
+		return crewJoinRequestService.isExistNextPage(filter);
 	}
 
 	@Override
