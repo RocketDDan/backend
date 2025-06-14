@@ -41,19 +41,27 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	public void createAnnouncement(String title, String content, List<MultipartFile> files, Long memberId,
 		String role) {
 
+		// 권한 체크
 		if ("COMPANY".equals(role)) {
 			throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
 		}
 		if ("USER".equals(role) && !crewMemberMapper.existsLeaderByMemberId(memberId)) {
 			throw new IllegalStateException("공지사항 등록 권한이 없습니다.");
 		}
-		files.stream().forEach(
-			file -> {
-				s3FileUtil.validateImageFile(file.getOriginalFilename());
-				s3FileUtil.validatePdfFile(file.getOriginalFilename());
-			}
-		);
 
+		// 파일 유효성 검사
+		if (files != null) {
+			if (files.size() > 3) {
+				throw new IllegalArgumentException("첨부파일은 최대 3개까지 가능합니다.");
+			}
+
+			for (MultipartFile file : files) {
+				String filename = file.getOriginalFilename();
+				s3FileUtil.validateAllowedFileType(filename);
+			}
+		}
+
+		// 공지사항 저장
 		String type = "ADMIN".equals(role) ? "ALL" : "CREW";
 
 		AnnouncementCreate create = new AnnouncementCreate(
@@ -61,18 +69,19 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		);
 		announcementService.insertAnnouncement(create);
 
+		// 파일 업로드 및 파일 테이블 저장
 		if (files != null && !files.isEmpty()) {
-			if (files.size() > 3) {
-				throw new IllegalArgumentException("첨부파일은 최대 3개까지 가능합니다.");
-			}
-
-			// S3 업로드
 			List<String> uploadedPaths = s3FileUtil.uploadAnnouncementFile(files, create.getAnnouncementId());
-			AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
-				null, create.getAnnouncementId(), filePath, memberId
-			);
-			announcementFileService.insertFile(fileCreate);
 
+			for (String path : uploadedPaths) {
+				AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
+					null,
+					create.getAnnouncementId(),
+					path,
+					memberId
+				);
+				announcementFileService.insertFile(fileCreate);
+			}
 		}
 	}
 
@@ -117,11 +126,17 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 			if (newPaths.size() > 3) {
 				throw new IllegalArgumentException("첨부파일은 최대 3개까지 등록할 수 있습니다.");
 			}
-			for (String path : newPaths) {
-				if (!isValidFileType(path)) {
-					throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
-				}
-			}
+
+			// for (MultipartFile file : files) {
+			// 	String filename = file.getOriginalFilename();
+			// 	s3FileUtil.validateImageFile(filename);
+			// 	s3FileUtil.validatePdfFile(filename);
+			// }
+			// for (String path : newPaths) {
+			// 	if (!isValidFileType(path)) {
+			// 		throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
+			// 	}
+			// }
 
 			List<String> existingPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
 			Set<String> existingSet = new HashSet<>(existingPaths);

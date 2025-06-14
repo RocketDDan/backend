@@ -119,26 +119,14 @@ public class S3FileUtil {
 	}
 
 	// 파일 확장자 유효성 검사 - 파일 위치 확인 필요
-	public void validateImageFile(String filePath) {
+	public void validateAllowedFileType(String filePath) {
 
 		if (filePath == null) {
 			throw new IllegalArgumentException("파일명이 존재하지 않습니다.");
 		}
 		String lower = filePath.toLowerCase();
-		if (!lower.endsWith(".jpeg") && !lower.endsWith(".jpg") && !lower.endsWith(".png")) {
-			throw new IllegalArgumentException("확장자가 잘못되었습니다.");
-		}
-	}
-
-	// 파일 확장자 유효성 검사 - 파일 위치 확인 필요
-	public void validatePdfFile(String filePath) {
-
-		if (filePath == null) {
-			throw new IllegalArgumentException("파일명이 존재하지 않습니다.");
-		}
-		String lower = filePath.toLowerCase();
-		if (!lower.endsWith(".pdf")) {
-			throw new IllegalArgumentException("확장자가 잘못되었습니다.");
+		if (!(lower.endsWith(".jpeg") || lower.endsWith(".jpg") || lower.endsWith(".png") || lower.endsWith(".pdf"))) {
+			throw new IllegalArgumentException("허용되지 않은 파일 확장자입니다. (jpg, png, pdf만 허용)");
 		}
 	}
 }
