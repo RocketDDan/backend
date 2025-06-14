@@ -81,7 +81,7 @@
         FROM crew_join_request cjr
         JOIN member m ON cjr.member_id = m.member_id
         WHERE cjr.status = #{status}
-
+        AND cjr.crew_id = #{crewId}
         <if test="req.nickname != null and req.nickname.trim() != ''">
             AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
         </if>

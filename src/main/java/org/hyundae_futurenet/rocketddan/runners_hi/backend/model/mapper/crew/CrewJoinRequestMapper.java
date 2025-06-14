@@ -37,6 +37,7 @@ public interface CrewJoinRequestMapper {
 
 	// 가입 요청 상태별 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
+		@Param("crewId") long crewId,
 		@Param("req") CrewJoinRequestSearchFilter requestSearchFilter,
 		@Param("status") String status,
 		@Param("offset") int offset,

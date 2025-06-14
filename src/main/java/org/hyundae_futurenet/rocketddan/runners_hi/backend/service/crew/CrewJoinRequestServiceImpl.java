@@ -2,8 +2,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew;
 
 import java.util.List;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.exception.AlreadyExistsException;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.exception.NotFoundException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.CrewException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -39,7 +39,7 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
 		// 이미 가입 요청 이력이 존재하면 불가(REQUEST만)
 		if (crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId)) {
-			throw new AlreadyExistsException("이미 대기중인 가입 요청 이력이 존재합니다.");
+			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_JOIN_REQUEST);
 		}
 		crewJoinRequestMapper.insertCrewJoinRequest(crewId, loginMemberId, message);
 	}
@@ -55,7 +55,7 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 		log.info("CrewJoinRequestService :: update crewJoinRequestId: {} status: {}", crewJoinRequestId, status);
 
 		CrewJoinRequestSource source = crewJoinRequestMapper.selectCrewJoinRequestByCrewJoinRequestId(crewJoinRequestId)
-			.orElseThrow(() -> new NotFoundException("존재하지 않는 가입 요청입니다."));
+			.orElseThrow(() -> new CrewException(ErrorCode.NOT_FOUND_CREW_JOIN_REQUEST));
 
 		crewJoinRequestMapper.updateCrewJoinRequest(loginMemberId, status, crewJoinRequestId);
 
@@ -75,7 +75,7 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 		int offset = (filter.getPage() - 1) * limit;
 		log.info("CrewJoinRequestService :: selectCrewJoinRequestsByStatus, status: {}", status);
 
-		return crewJoinRequestMapper.selectCrewJoinRequestsByStatus(filter, status, offset, limit);
+		return crewJoinRequestMapper.selectCrewJoinRequestsByStatus(crewId, filter, status, offset, limit);
 	}
 
 	@Override
