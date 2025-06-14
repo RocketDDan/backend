@@ -76,8 +76,8 @@ public class AnnouncementController {
 	@DeleteMapping("/{announcementId}")
 	public ResponseEntity<Void> deleteAnnouncement(@PathVariable Long announcementId) {
 
-		Long memberId = 1L;
-		String role = "USER";
+		Long memberId = 6L;
+		String role = "ADMIN";
 		announcementFacade.deleteAnnouncement(announcementId, memberId, role);
 		return ResponseEntity.ok().build();
 	}

@@ -160,6 +160,12 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 			throw new IllegalStateException("공지사항 삭제 권한이 없습니다.");
 		}
 
+		// S3 파일 삭제
+		List<String> filePaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
+		if (!filePaths.isEmpty()) {
+			s3FileUtil.removeFiles(filePaths); // S3에서 삭제
+		}
+
 		announcementFileService.deleteFilesByAnnouncementId(announcementId);
 		announcementService.deleteAnnouncement(announcementId);
 	}
