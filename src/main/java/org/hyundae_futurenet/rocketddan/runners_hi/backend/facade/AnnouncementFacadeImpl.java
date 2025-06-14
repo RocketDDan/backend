@@ -1,14 +1,12 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
@@ -86,30 +84,27 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 	}
 
 	@Override
-	public void createAnnouncement(AnnouncementCreateRequest request, Long memberId, String role) {
-
-	}
-
-	@Override
+	@Transactional
 	public void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest request, Long memberId, String role) {
-		// 공지사항 존재 여부 유효성 검사
+
+		// 공지 존재 여부 확인
 		AnnouncementCreate announcement = announcementService.findById(announcementId);
 		if (announcement == null) {
 			throw new IllegalArgumentException("해당 공지사항이 없습니다.");
 		}
-		// ADMIN일 경우 전체 수정 가능
+
+		// 권한 체크
 		if ("ADMIN".equals(role)) {
 		} else if ("USER".equals(role)) {
-			// USER일 경우 크루장이 아니라면 수정 금지
 			boolean isLeader = crewMemberMapper.existsLeaderByMemberId(memberId);
 			if (!isLeader || !announcement.getCreatedBy().equals(memberId)) {
 				throw new IllegalStateException("공지사항 수정 권한이 없습니다.");
 			}
 		} else {
-			// 그 외에도 수정 금지
 			throw new IllegalStateException("공지사항 수정 권한이 없습니다.");
 		}
 
+		// 본문 수정
 		AnnouncementCreate updated = new AnnouncementCreate(
 			announcementId,
 			announcement.getAnnouncementType(),
@@ -119,48 +114,30 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		);
 		announcementService.updateAnnouncement(updated);
 
-		// 첨부파일 수정 처리
-		// 클라이언트가 attachPath 보내주지 않으면 그대로 유지 / 그게 아니라면 자유롭게 수정 가능
-		if (request.getAttachPaths() != null) {
-			List<String> newPaths = request.getAttachPaths();
-			if (newPaths.size() > 3) {
-				throw new IllegalArgumentException("첨부파일은 최대 3개까지 등록할 수 있습니다.");
-			}
-
-			// for (MultipartFile file : files) {
-			// 	String filename = file.getOriginalFilename();
-			// 	s3FileUtil.validateImageFile(filename);
-			// 	s3FileUtil.validatePdfFile(filename);
-			// }
-			// for (String path : newPaths) {
-			// 	if (!isValidFileType(path)) {
-			// 		throw new IllegalArgumentException("첨부파일은 jpg, png, pdf 형식만 허용됩니다.");
-			// 	}
-			// }
-
-			List<String> existingPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
-			Set<String> existingSet = new HashSet<>(existingPaths);
-			Set<String> newSet = new HashSet<>(newPaths);
-
-			// 삭제된 파일 제거
-			existingSet.stream()
-				.filter(path -> !newSet.contains(path))
-				.forEach(path -> announcementFileService.deleteFileByPath(announcementId, path));
-
-			// 새로 추가된 파일 등록
-			newSet.stream()
-				.filter(path -> !existingSet.contains(path))
-				.forEach(path -> {
-					AnnouncementFileCreate fileCreate = new AnnouncementFileCreate(
-						null,
-						announcementId,
-						path,
-						memberId
-					);
-					announcementFileService.insertFile(fileCreate);
-				});
+		// 기존 파일 전부 삭제
+		List<String> existingPaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
+		if (!existingPaths.isEmpty()) {
+			s3FileUtil.removeFiles(existingPaths); // S3 삭제
+			announcementFileService.deleteFilesByAnnouncementId(announcementId); // DB 삭제
 		}
 
+		// 새 파일 업로드
+		List<MultipartFile> newFiles = request.getNewFiles() != null ? request.getNewFiles() : new ArrayList<>();
+
+		if (newFiles.size() > 3) {
+			throw new IllegalArgumentException("첨부파일은 최대 3개까지 등록할 수 있습니다.");
+		}
+
+		List<String> uploadedPaths = s3FileUtil.uploadAnnouncementFile(newFiles, announcementId);
+
+		for (String path : uploadedPaths) {
+			announcementFileService.insertFile(new AnnouncementFileCreate(
+				null,
+				announcementId,
+				path,
+				memberId
+			));
+		}
 	}
 
 	@Override
@@ -257,6 +234,13 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		}
 
 		return announcementService.countAnnouncements(params);
+	}
+
+	private String extractFileName(String fullPath) {
+
+		if (fullPath == null)
+			return "";
+		return fullPath.substring(fullPath.lastIndexOf("/") + 1);
 	}
 
 }
