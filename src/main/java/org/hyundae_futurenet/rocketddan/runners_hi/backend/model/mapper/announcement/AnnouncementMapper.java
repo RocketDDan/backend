@@ -25,5 +25,5 @@ public interface AnnouncementMapper {
 	AnnouncementDetailResponse findDetailById(@Param("announcementId") Long announcementId);
 
 	int countAnnouncements(@Param("params") Map<String, Object> params);
-
+	
 }

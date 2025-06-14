@@ -2,6 +2,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -29,5 +31,7 @@ public class AnnouncementUpdateRequest {
 	@Schema(description = "첨부 파일 경로 리스트 (최대 3개)", example = "[\"release/announcement/sample1.jpg\", \"release/announcement/sample2.pdf\"]")
 	@Size(max = 3, message = "첨부파일은 최대 3개까지 등록할 수 있습니다.")
 	private List<String> attachPaths;
+
+	private List<MultipartFile> newFiles;
 
 }
