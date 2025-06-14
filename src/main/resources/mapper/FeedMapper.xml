@@ -12,6 +12,7 @@
     <!-- CommentThumbnailRaw 매핑 -->
     <resultMap id="CommentThumbnailMap"
                type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource$CommentThumbnailRaw">
+        <result property="commentId" column="commentId"/>
         <result property="content" column="content"/>
         <result property="writerNickname" column="nickname"/>
         <result property="writerProfilePath" column="profilePath"/>
@@ -25,8 +26,11 @@
         <result property="writerId" column="writerId"/>
         <result property="writerNickname" column="writerNickname"/>
         <result property="writerProfilePath" column="writerProfilePath"/>
+        <result property="viewCount" column="viewCount"/>
         <result javaType="boolean" property="isMine" column="isMine"/>
+        <result javaType="boolean" property="isLike" column="isLike"/>
         <result property="commentCount" column="commentCount"/>
+        <result property="likeCount" column="likeCount"/>
         <result property="lat" column="lat"/>
         <result property="lng" column="lng"/>
         <result property="createdAt" column="createdAt"/>
@@ -49,19 +53,32 @@
         F.CREATED_BY AS writerId,
         M.NICKNAME AS writerNickname,
         M.PROFILE_PATH AS writerProfilePath,
+        F.VIEW_COUNT AS viewCount,
         CASE
         WHEN F.CREATED_BY = #{loginMemberId} THEN 1
         ELSE 0
         END AS isMine,
+        CASE
+        WHEN EXISTS (
+        SELECT 1
+        FROM FEED_LIKE FL
+        WHERE FL.FEED_ID = F.FEED_ID
+        AND FL.CREATED_BY = #{loginMemberId}
+        )
+        THEN 1
+        ELSE 0
+        END AS isLike,
         (SELECT COUNT(*)
         FROM FEED_COMMENT FC
         WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
+        (SELECT COUNT(*)
+        FROM FEED_LIKE FL
+        WHERE FL.FEED_ID = F.FEED_ID) AS likeCount,
         F.LAT AS lat,
         F.LNG AS lng,
         TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"
         FROM FEED F
         JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
-
         <where>
             <choose>
                 <when test="feedSearchFilter.scope.name() == 'ALL_EXCEPT_ME'">
@@ -124,7 +141,8 @@
 
     <!-- CommentThumbnailRaw 목록 조회 -->
     <select id="selectCommentThumbnailsByFeedId" resultMap="CommentThumbnailMap">
-        SELECT M.PROFILE_PATH AS profilePath,
+        SELECT FC.COMMENT_ID  AS commentId,
+               M.PROFILE_PATH AS profilePath,
                M.NICKNAME     AS nickname,
                FC.CONTENT     AS content
         FROM FEED_COMMENT FC

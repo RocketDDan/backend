@@ -30,17 +30,26 @@ public class FeedListResponse {
 	@Schema(description = "피드 작성자의 프로필 이미지 URL", example = "https://cdn.example.com/profile.jpg")
 	private String writerProfileUrl;
 
+	@Schema(description = "조회수", example = "123")
+	private long viewCount;
+
 	@Schema(description = "현재 로그인한 사용자의 피드인지 여부", example = "true")
 	private boolean isMine;
+
+	@Schema(description = "현재 로그인한 사용자가 좋아요 누른 피드인지 여부", example = "true")
+	private boolean isLike;
 
 	@Schema(description = "댓글 수", example = "5")
 	private int commentCount;
 
+	@Schema(description = "좋아요 수", example = "500")
+	private int likeCount;
+
 	@Schema(description = "위도", example = "37.55")
-	private double lat;
+	private Double lat;
 
 	@Schema(description = "경도", example = "127.05")
-	private double lng;
+	private Double lng;
 
 	@Schema(description = "피드 생성 시각 (YYYY-MM-DD HH:MM:SS 형식)", example = "2025-06-04 12:34:56")
 	private String createdAt;
@@ -71,6 +80,9 @@ public class FeedListResponse {
 	@ToString
 	@Schema(description = "댓글 썸네일 정보")
 	public static class CommentThumbnail {
+
+		@Schema(description = "댓글 id", example = "1")
+		private long commentId;
 
 		@Schema(description = "댓글 작성자 프로필 이미지 URL", example = "https://cdn.example.com/profile.jpg")
 		private String writerProfileUrl;

@@ -27,7 +27,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 	}
 
 	@Override
-	public void assertCommentExists(long loginMemberId, long feedId, String commentId) {
+	public void assertCommentExists(long loginMemberId, long feedId, long commentId) {
 
 		if (!feedCommentMapper.validateCommentExistence(loginMemberId, feedId, commentId)) {
 			throw new IllegalArgumentException("해당 로그인한 유저와 피드 id에 해당하는 댓글이 없습니다.");
@@ -35,13 +35,13 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 	}
 
 	@Override
-	public void update(String commentId, String newComment) {
+	public void update(long commentId, String newComment) {
 
 		feedCommentMapper.update(commentId, newComment);
 	}
 
 	@Override
-	public void delete(String commentId) {
+	public void delete(long commentId) {
 
 		feedCommentMapper.delete(commentId);
 	}

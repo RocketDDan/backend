@@ -38,6 +38,8 @@ public class AnnouncementController {
 
 	@PostMapping
 	public ResponseEntity<Void> createAnnouncement(@Valid @RequestBody AnnouncementCreateRequest request) {
+
+		log.info("post announcement 호출");
 		// 임시 member_id와 role 지정
 		Long memberId = 6L;
 		String role = "ADMIN";
