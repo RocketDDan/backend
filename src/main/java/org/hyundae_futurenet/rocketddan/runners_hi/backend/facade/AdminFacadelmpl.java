@@ -19,12 +19,6 @@ public class AdminFacadelmpl implements AdminFacade {
 	private final AdminService adminService;
 
 	@Override
-	public List<AdminMemberResponse> getAdminMembers() {
-
-		return adminService.selectAdminMembers();
-	}
-
-	@Override
 	public List<AdminFeedResponse> getAdminFeedList(Map<String, Object> params) {
 
 		return adminService.getAdminFeedList(params);

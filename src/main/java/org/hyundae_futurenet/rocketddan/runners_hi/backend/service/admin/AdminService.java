@@ -8,8 +8,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 
 public interface AdminService {
 
-	List<AdminMemberResponse> selectAdminMembers();
-
 	List<AdminFeedResponse> getAdminFeedList(Map<String, Object> params);
 
 	int getAdminFeedTotalCount(Map<String, Object> params);

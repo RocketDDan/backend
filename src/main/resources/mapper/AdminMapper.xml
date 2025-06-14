@@ -3,29 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.admin.AdminMapper">
-    <select id="selectAdminMembers"
-            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
-        SELECT
-        M.NICKNAME,
-        M.EMAIL,
-        NVL(C.CREW_NAME, '로그인 사용자') AS crewName,
-        CASE
-        WHEN M.ROLE = 'COMPANY' THEN '회사'
-        WHEN CM.MEMBER_ID IS NULL THEN '로그인 사용자'
-        WHEN CM.IS_LEADER = 'Y' THEN '크루장'
-        ELSE '크루원'
-        END AS crewRole
-        FROM
-        MEMBER M
-        LEFT JOIN
-        CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
-        LEFT JOIN
-        CREW C ON CM.CREW_ID = C.CREW_ID
-        WHERE
-        M.ROLE != 'ADMIN'
-        ORDER BY
-        M.CREATED_AT DESC
-    </select>
 
     <select id="findAdminFeeds"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse">
@@ -61,6 +38,7 @@
     <select id="findAdminMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
         SELECT
+        M.MEMBER_ID as memberId,
         M.NICKNAME,
         M.EMAIL,
         NVL(C.CREW_NAME, '로그인 사용자') AS crewName,
