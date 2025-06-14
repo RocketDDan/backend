@@ -60,6 +60,14 @@
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </update>
 
+    <!-- 가입 요청 삭제  -->
+    <delete id="deleteCrewJoinRequest">
+        DELETE
+        FROM crew_join_request
+        WHERE crew_id = #{crewId}
+          AND member_id = #{memberId}
+    </delete>
+
     <select id="selectCrewJoinRequestsByStatus"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewJoinRequestListResponse">
         SELECT cjr.crew_join_request_id as crewJoinRequestId,

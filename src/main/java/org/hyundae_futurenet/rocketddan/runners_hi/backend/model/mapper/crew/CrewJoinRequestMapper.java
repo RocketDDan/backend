@@ -29,6 +29,12 @@ public interface CrewJoinRequestMapper {
 		@Param("status") String status,
 		@Param("crewJoinRequestId") long crewJoinRequestId);
 
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(
+		@Param("memberId") long memberId,
+		@Param("crewId") long crewId
+	);
+
 	// 가입 요청 상태별 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		@Param("req") CrewJoinRequestSearchFilter requestSearchFilter,

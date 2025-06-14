@@ -77,6 +77,13 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 		return crewJoinRequestMapper.selectCrewJoinRequestsByStatus(requestSearchFilter, status);
 	}
 
+	@Override
+	public void deleteCrewJoinRequest(long loginMemberId, long crewId) {
+
+		log.info("CrewJoinRequestService :: deleteCrewJoinRequest, crewId = {}", crewId);
+		crewJoinRequestMapper.deleteCrewJoinRequest(loginMemberId, crewId);
+	}
+
 	// Status String으로 반환
 	private static String getStatus(CrewJoinRequestStatus crewJoinRequestStatus) {
 

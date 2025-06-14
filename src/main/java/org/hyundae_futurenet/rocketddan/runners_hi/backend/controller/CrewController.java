@@ -153,6 +153,14 @@ public class CrewController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "크루 가입 요청 삭제", description = "크루 가입 요청을 취소합니다.")
+	@DeleteMapping("/{crew-id}/join-requests")
+	private ResponseEntity<Void> deleteCrewJoinRequests(@PathVariable("crew-id") Long crewId) {
+
+		crewFacade.deleteCrewJoinRequest(loginMemberId, crewId);
+		return ResponseEntity.ok().build();
+	}
+
 	@Operation(summary = "크루 가입 요청 목록 조회", description = "크루의 가입 요청 목록을 조회합니다.")
 	@GetMapping("/{crew-id}/join-requests")
 	private ResponseEntity<List<CrewJoinRequestListResponse>> selectCrewJoinRequests(

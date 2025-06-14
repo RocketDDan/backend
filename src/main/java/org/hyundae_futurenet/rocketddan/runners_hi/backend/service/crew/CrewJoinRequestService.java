@@ -19,4 +19,7 @@ public interface CrewJoinRequestService {
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long crewId,
 		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
+
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(long loginMemberId, long crewId);
 }

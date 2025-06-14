@@ -186,6 +186,12 @@ public class CrewFacadeImpl implements CrewFacade {
 	}
 
 	@Override
+	public void deleteCrewJoinRequest(long loginMemberId, long crewId) {
+
+		crewJoinRequestService.deleteCrewJoinRequest(loginMemberId, crewId);
+	}
+
+	@Override
 	@Transactional
 	public List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,

@@ -38,6 +38,9 @@ public interface CrewFacade {
 	// 가입 요청 상태 변경
 	void updateCrewJoinRequest(long loginMemberId, long crewId, long crewJoinRequestId, CrewJoinRequestStatus status);
 
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(long loginMemberId, long crewId);
+
 	// 가입 요청 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,
@@ -67,7 +70,7 @@ public interface CrewFacade {
 
 	// 내 크루 조회
 	Long selectMyCrew(long loginMemberId);
-	
+
 	// 크루 이름 중복 조회
 	boolean existsByCrewName(String crewName);
 }
