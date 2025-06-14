@@ -53,6 +53,11 @@ spring:
   application:
     name: backend
 
+  #  data:
+  #    redis:
+  #      host: ${REDIS_HOST}
+  #      port: 6379
+
   datasource:
     url: jdbc:oracle:thin:@${ORACLE_DB_CONNECTION_NAME}?TNS_ADMIN=${ORACLE_WALLET_DIRECTORY_PATH}
     username: ${ORACLE_DB_USER_NAME}
