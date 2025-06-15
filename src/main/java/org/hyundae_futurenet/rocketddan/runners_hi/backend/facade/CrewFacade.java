@@ -38,17 +38,17 @@ public interface CrewFacade {
 	// 가입 요청 상태 변경
 	void updateCrewJoinRequest(long loginMemberId, long crewId, long crewJoinRequestId, CrewJoinRequestStatus status);
 
-	// 가입 요청 삭제
-	void deleteCrewJoinRequest(long loginMemberId, long crewId);
-
 	// 가입 요청 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,
 		long crewId,
-		CrewJoinRequestSearchFilter filter);
+		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
 
-	// 가입 요청 목록 조회 시 다음 페이지 존재 여부
+	// 다음 페이지 존재 여부 조회
 	boolean isExistNextPage(CrewJoinRequestSearchFilter filter);
+
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(long loginMemberId, long crewJoinRequestId);
 
 	// 크루 멤버 생성
 	void insertCrewMember(long loginMemberId, long memberId, long crewId);

@@ -8,7 +8,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewMemberResignRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewJoinRequestSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewMemberSearchFilter;
@@ -46,7 +45,7 @@ public class CrewController {
 
 	private final CrewFacade crewFacade;
 
-	private final long loginMemberId = 1L; // 임시
+	private final long loginMemberId = 7L; // 임시
 
 	@Operation(summary = "크루 생성", description = "새로운 크루를 생성합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -186,9 +185,7 @@ public class CrewController {
 	@Operation(summary = "크루 멤버 탈퇴", description = "크루에서 탈퇴합니다.")
 	@PostMapping("/{crew-id}/resign")
 	private ResponseEntity<Void> deleteCrewMember(
-		@PathVariable("crew-id") Long crewId,
-		@RequestBody CrewMemberResignRequest request
-	) {
+		@PathVariable("crew-id") Long crewId) {
 		// 사용자 비밀번호 검증 로직 필요
 
 		crewFacade.deleteCrewMember(loginMemberId, crewId);

@@ -61,7 +61,7 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
 		// 승인 요청인 경우 크루원에 추가
 		if (crewJoinRequestStatus.equals(CrewJoinRequestStatus.ACCEPT)) {
-			crewMemberMapper.insertCrewMember(loginMemberId, source.memberId(), source.crewId());
+			crewMemberMapper.insertCrewMember(loginMemberId, source.memberId(), source.crewId(), false);
 		}
 	}
 

@@ -13,10 +13,11 @@
           AND status = 'REQUEST'
     </select>
 
-    <select id="existsCrewJoinRequest" resultType="boolean">
+    <select id="existsCrewJoinRequestByMemberId" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_join_request
-        WHERE crew_join_request_id = #{crewJoinRequestId}
+        WHERE member_id = #{memberId}
+          AND status = 'REQUEST'
     </select>
 
     <select id="selectCrewJoinRequestByCrewJoinRequestId"

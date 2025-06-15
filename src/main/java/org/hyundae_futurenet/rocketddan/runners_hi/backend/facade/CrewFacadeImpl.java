@@ -63,11 +63,12 @@ public class CrewFacadeImpl implements CrewFacade {
 			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_MEMBER);
 		}
 		// 크루 이름 중복 검사
-		if (crewMapper.existsByName(crewCreateRequest.crewName())) {
+		if (crewMapper.existsByName(crewCreateRequest.getCrewName())) {
 			throw new CrewException(ErrorCode.DUPLICATED_CREW_NAME);
 		}
 		// 크루 먼저 생성
-		long crewId = crewService.insertCrew(loginMemberId, crewCreateRequest);
+		crewService.insertCrew(loginMemberId, crewCreateRequest);
+		long crewId = crewCreateRequest.getCrewId();
 
 		// 크루 프로필 이미지 설정
 		String profilePath = null;
@@ -77,6 +78,9 @@ public class CrewFacadeImpl implements CrewFacade {
 			crewService.updateCrewProfilePath(crewId, profilePath);
 			log.info("Profile path: {}", profilePath);
 		}
+
+		// 크루에 리더 추가
+		crewMemberService.insertCrewMember(loginMemberId, loginMemberId, crewId, true);
 		return crewId;
 	}
 
@@ -160,6 +164,11 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루 존재 여부 검증
 		checkCrewExisted(crewId);
 
+		// 이미 다른 크루에 요청 대기 중인 상태이면 더 이상 요청 불가
+		if (crewJoinRequestMapper.existsCrewJoinRequestByMemberId(loginMemberId)) {
+			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_JOIN_REQUEST);
+		}
+
 		// 이미 크루 멤버인 경우 생성 불가
 		if (crewMemberMapper.isCrewMember(loginMemberId)) {
 			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_MEMBER);
@@ -187,6 +196,10 @@ public class CrewFacadeImpl implements CrewFacade {
 
 	@Override
 	public void deleteCrewJoinRequest(long loginMemberId, long crewId) {
+
+		if (!crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId)) {
+			throw new CrewException(ErrorCode.NOT_FOUND_CREW_JOIN_REQUEST);
+		}
 
 		crewJoinRequestService.deleteCrewJoinRequest(loginMemberId, crewId);
 	}
@@ -217,7 +230,7 @@ public class CrewFacadeImpl implements CrewFacade {
 	public void insertCrewMember(long loginMemberId, long memberId, long crewId) {
 		// 크루장만 가능
 		checkCrewLeader(loginMemberId, crewId);
-		crewMemberService.insertCrewMember(loginMemberId, memberId, crewId);
+		crewMemberService.insertCrewMember(loginMemberId, memberId, crewId, false);
 	}
 
 	@Override

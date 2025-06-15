@@ -15,7 +15,7 @@ public interface CrewJoinRequestMapper {
 	boolean existsCrewJoinRequestByMemberIdAndCrewId(@Param("memberId") long memberId, @Param("crewId") long crewId);
 
 	// 가입 요청 존재 여부
-	boolean existsCrewJoinRequest(@Param("crewJoinRequestId") long crewJoinRequestId);
+	boolean existsCrewJoinRequestByMemberId(@Param("memberId") long memberId);
 
 	// 가입 요청 생성
 	void insertCrewJoinRequest(
