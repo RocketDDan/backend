@@ -46,9 +46,9 @@
                 #{loginMemberId},
                 #{message},
                 'REQUEST',
-                sysdate,
+                SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
                 #{loginMemberId},
-                sysdate,
+                SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
                 #{loginMemberId})
     </insert>
 
@@ -56,7 +56,7 @@
     <update id="updateCrewJoinRequest">
         UPDATE crew_join_request
         SET status     = #{status},
-            updated_at = sysdate,
+            updated_at = SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
             updated_by = #{loginMemberId}
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </update>

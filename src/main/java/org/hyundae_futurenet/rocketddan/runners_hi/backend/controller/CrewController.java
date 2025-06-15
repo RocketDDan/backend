@@ -45,7 +45,7 @@ public class CrewController {
 
 	private final CrewFacade crewFacade;
 
-	private final long loginMemberId = 7L; // 임시
+	private final long loginMemberId = 5L; // 임시
 
 	@Operation(summary = "크루 생성", description = "새로운 크루를 생성합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

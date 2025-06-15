@@ -112,9 +112,9 @@
         #{req.crewIntroduce},
         #{req.crewAddress},
         #{req.crewRegion},
-        sysdate,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{loginMemberId},
-        sysdate,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{loginMemberId})
     </insert>
 
@@ -137,7 +137,7 @@
             <if test="profilePath != null">
                 profile_path = #{profilePath},
             </if>
-            updated_at = sysdate,
+            updated_at = SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
             updated_by = #{loginMemberId}
         </set>
         WHERE crew_id = #{crewId}
