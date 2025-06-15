@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.boot.web.server.Cookie.SameSite;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
@@ -35,15 +36,17 @@ public class CookieUtils {
 			.build();
 	}
 
-	public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+	public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name,
+		String path) {
 
 		Optional<Cookie> cookieOptional = getCookie(request, name);
 		if (cookieOptional.isPresent()) {
-			Cookie cookie = cookieOptional.get();
-			cookie.setValue("");
-			cookie.setPath("/");
-			cookie.setMaxAge(0);
-			response.addCookie(cookie);
+			ResponseCookie deleteCookie = buildCookie(
+				name,
+				"",
+				0,
+				path);
+			response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 		}
 	}
 

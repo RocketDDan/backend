@@ -1,5 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.constant.Role;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.Member;
 
 import lombok.AccessLevel;
@@ -8,23 +9,26 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberInfoResponse {
+public class MemberResponse {
+
+	private Long memberId;
 
 	private String email;
 
 	private String nickname;
 
-	private String profilePath;
+	private String profileImageUrl;
 
-	private String phone;
+	private Role role;
 
-	public static MemberInfoResponse from(final Member member) {
+	public static MemberResponse from(final Member member, final String profileImageUrl) {
 
-		return new MemberInfoResponse(
+		return new MemberResponse(
+			member.getMemberId(),
 			member.getEmail(),
 			member.getNickname(),
-			member.getProfilePath(),
-			member.getPhone()
+			profileImageUrl,
+			member.getRole()
 		);
 	}
 }
