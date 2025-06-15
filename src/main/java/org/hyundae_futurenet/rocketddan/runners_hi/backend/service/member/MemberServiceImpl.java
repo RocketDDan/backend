@@ -54,4 +54,10 @@ public class MemberServiceImpl implements MemberService {
 
 		memberMapper.updateProfileImage(memberId, uploadedFilePath);
 	}
+
+	@Override
+	public boolean existsByNickname(String nickname) {
+
+		return memberMapper.existsByNickname(nickname);
+	}
 }

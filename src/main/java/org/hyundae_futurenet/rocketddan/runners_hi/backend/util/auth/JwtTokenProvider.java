@@ -27,10 +27,13 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenProvider {
 
 	public static final String ACCESS_TOKEN_COOKIE_NAME = "access_token";
+
 	public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+
 	public static final String SIGNUP_TOKEN_COOKIE_NAME = "signup_token";
 
 	private final JwtProperties jwtProperties;
+
 	private SecretKey key;
 
 	@PostConstruct
@@ -100,6 +103,11 @@ public class JwtTokenProvider {
 		return Role.valueOf(
 			getPayload(token).get("role", String.class)
 		);
+	}
+
+	public String getEmail(String token) {
+
+		return getPayload(token).get("email", String.class);
 	}
 
 	public void validateToken(String token) {

@@ -16,4 +16,6 @@ public interface MemberService {
 	void updateProfileImage(long memberId, String uploadedFilePath);
 
 	Optional<Member> findMember(Long memberId);
+
+	boolean existsByNickname(String nickname);
 }

@@ -1,7 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
-import java.util.Objects;
-
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.InvalidTokenException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.OAuth2Facade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.SignUpRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtTokenProvider;
@@ -32,15 +31,15 @@ public class OAuth2Controller {
 	@Operation(summary = "OAuth2 회원가입", description = "OAuth2 회원가입을 처리합니다.")
 	@PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> signUp(
-		// TODO 프론트 구현 후, 쿠키를 require=true로 변경
-		@CookieValue(value = JwtTokenProvider.SIGNUP_TOKEN_COOKIE_NAME, required = false) String signupToken,
+		@CookieValue(value = JwtTokenProvider.SIGNUP_TOKEN_COOKIE_NAME) String signupToken,
 		@Valid @RequestPart("signUp") SignUpRequest signUpRequest,
 		@RequestPart(value = "profileImage", required = false) MultipartFile profileImage
 	) {
 
-		// TODO 프론트 구현 후, 조건문 제거
-		if (Objects.nonNull(signupToken)) {
-			jwtTokenProvider.validateToken(signupToken);
+		jwtTokenProvider.validateToken(signupToken);
+		String tokenEmail = jwtTokenProvider.getEmail(signupToken);
+		if (!tokenEmail.equals(signUpRequest.getEmail())) {
+			throw new InvalidTokenException();
 		}
 		oAuth2Facade.signUp(signUpRequest, profileImage);
 		return ResponseEntity.ok().build();

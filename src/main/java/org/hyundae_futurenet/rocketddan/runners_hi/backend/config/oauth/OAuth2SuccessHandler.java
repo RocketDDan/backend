@@ -48,7 +48,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 		String email = oAuth2User.getAttribute("email");
 		String nickname = oAuth2User.getAttribute("nickname");
-		String profileImageUrl = oAuth2User.getAttribute("profileImageUrl");
 		String provider = oAuth2User.getAttribute("provider");
 
 		Optional<Member> optionalMember = memberMapper.findByEmail(email);
@@ -56,7 +55,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			Member member = optionalMember.get();
 			processExistingMember(request, response, member);
 		} else {
-			processNewMember(request, response, email, nickname, profileImageUrl, provider);
+			processNewMember(request, response, email, nickname, provider);
 		}
 	}
 
@@ -64,7 +63,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		HttpServletResponse response,
 		String email,
 		String nickname,
-		String profileImageUrl,
 		String provider) throws IOException {
 
 		String signupToken = jwtTokenProvider.generateSignupToken(email, provider);
@@ -80,7 +78,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			.path("/signup")
 			.queryParam("email", email)
 			.queryParam("nickname", URLEncoder.encode(nickname, StandardCharsets.UTF_8))
-			.queryParam("profileImageUrl", profileImageUrl)
 			.build()
 			.toUriString();
 
