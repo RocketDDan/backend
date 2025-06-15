@@ -140,6 +140,7 @@
     <resultMap id="AnnouncementDetailMap"
                type="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse">
         <result property="announcementId" column="announcement_id"/>
+        <result property="createdBy" column="created_by"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="createdAt" column="created_at"/>
@@ -151,6 +152,7 @@
             resultMap="AnnouncementDetailMap">
         SELECT
         A.announcement_id,
+        A.created_by,
         A.title,
         A.content,
         TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
