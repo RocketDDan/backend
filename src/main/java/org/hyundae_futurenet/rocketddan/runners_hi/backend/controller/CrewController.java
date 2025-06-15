@@ -1,12 +1,13 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewMemberResignRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewUpdateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewJoinRequestSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewMemberSearchFilter;
@@ -44,7 +45,7 @@ public class CrewController {
 
 	private final CrewFacade crewFacade;
 
-	private final long loginMemberId = 1L; // 임시
+	private final long loginMemberId = 5L; // 임시
 
 	@Operation(summary = "크루 생성", description = "새로운 크루를 생성합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -153,9 +154,17 @@ public class CrewController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "크루 가입 요청 삭제", description = "크루 가입 요청을 취소합니다.")
+	@DeleteMapping("/{crew-id}/join-requests")
+	private ResponseEntity<Void> deleteCrewJoinRequests(@PathVariable("crew-id") Long crewId) {
+
+		crewFacade.deleteCrewJoinRequest(loginMemberId, crewId);
+		return ResponseEntity.ok().build();
+	}
+
 	@Operation(summary = "크루 가입 요청 목록 조회", description = "크루의 가입 요청 목록을 조회합니다.")
 	@GetMapping("/{crew-id}/join-requests")
-	private ResponseEntity<List<CrewJoinRequestListResponse>> selectCrewJoinRequests(
+	private ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
 		@PathVariable("crew-id") Long crewId,
 		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter
 	) {
@@ -164,17 +173,19 @@ public class CrewController {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
 
-		List<CrewJoinRequestListResponse> result = crewFacade
+		List<CrewJoinRequestListResponse> crewJoinRequestList = crewFacade
 			.selectCrewJoinRequestsByStatus(loginMemberId, crewId, crewJoinRequestSearchFilter);
+		boolean isExistNextPage = crewFacade.isExistNextPage(crewJoinRequestSearchFilter);
+		Map<String, Object> result = new HashMap<>();
+		result.put("crewJoinRequestList", crewJoinRequestList);
+		result.put("isExistNextPage", isExistNextPage);
 		return ResponseEntity.ok(result);
 	}
 
 	@Operation(summary = "크루 멤버 탈퇴", description = "크루에서 탈퇴합니다.")
 	@PostMapping("/{crew-id}/resign")
 	private ResponseEntity<Void> deleteCrewMember(
-		@PathVariable("crew-id") Long crewId,
-		@RequestBody CrewMemberResignRequest request
-	) {
+		@PathVariable("crew-id") Long crewId) {
 		// 사용자 비밀번호 검증 로직 필요
 
 		crewFacade.deleteCrewMember(loginMemberId, crewId);

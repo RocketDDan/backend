@@ -15,7 +15,7 @@ public interface CrewJoinRequestMapper {
 	boolean existsCrewJoinRequestByMemberIdAndCrewId(@Param("memberId") long memberId, @Param("crewId") long crewId);
 
 	// 가입 요청 존재 여부
-	boolean existsCrewJoinRequest(@Param("crewJoinRequestId") long crewJoinRequestId);
+	boolean existsCrewJoinRequestByMemberId(@Param("memberId") long memberId);
 
 	// 가입 요청 생성
 	void insertCrewJoinRequest(
@@ -29,10 +29,25 @@ public interface CrewJoinRequestMapper {
 		@Param("status") String status,
 		@Param("crewJoinRequestId") long crewJoinRequestId);
 
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(
+		@Param("memberId") long memberId,
+		@Param("crewId") long crewId
+	);
+
 	// 가입 요청 상태별 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
+		@Param("crewId") long crewId,
 		@Param("req") CrewJoinRequestSearchFilter requestSearchFilter,
-		@Param("status") String status);
+		@Param("status") String status,
+		@Param("offset") int offset,
+		@Param("limit") int limit);
+
+	// 다음 페이지 존재 여부 조회
+	boolean isExistNextPage(
+		@Param("req") CrewJoinRequestSearchFilter requestSearchFilter,
+		@Param("status") String status,
+		@Param("offset") int offset);
 
 	// 가입 요청 정보 조회
 	Optional<CrewJoinRequestSource> selectCrewJoinRequestByCrewJoinRequestId(
