@@ -17,6 +17,8 @@ public class AnnouncementDetailResponse {
 
 	private Long announcementId;
 
+	private Long createdBy;
+
 	private String title;
 
 	private String content;
