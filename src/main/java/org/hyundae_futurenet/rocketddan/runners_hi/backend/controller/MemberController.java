@@ -4,7 +4,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.MemberFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberInfoResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +25,9 @@ public class MemberController {
 	@Operation(summary = "회원 정보 조회", description = "로그인한 회원의 정보를 조회한다.")
 	@NotGuest
 	@GetMapping("/personal-info")
-	public ResponseEntity<MemberInfoResponse> getPersonalInfo(@Auth final Accessor accessor) {
+	public ResponseEntity<MemberResponse> findMember(@Auth final Accessor accessor) {
 
-		final MemberInfoResponse memberInfoResponse = memberFacade.getPersonalInfo(accessor.getMemberId());
-		return ResponseEntity.ok(memberInfoResponse);
+		final MemberResponse memberResponse = memberFacade.findMember(accessor.getMemberId());
+		return ResponseEntity.ok(memberResponse);
 	}
 }
