@@ -18,4 +18,5 @@ public interface MemberMapper {
 
 	void updateProfileImage(long memberId, String uploadedFilePath);
 
+	boolean existsByNickname(String nickname);
 }

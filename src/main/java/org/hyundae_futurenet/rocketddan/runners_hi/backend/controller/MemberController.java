@@ -5,9 +5,11 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.MemberFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,5 +31,15 @@ public class MemberController {
 
 		final MemberResponse memberResponse = memberFacade.findMember(accessor.getMemberId());
 		return ResponseEntity.ok(memberResponse);
+	}
+
+	@Operation(summary = "닉네임 중복 확인", description = "닉네임 중복 여부를 확인한다.")
+	@GetMapping("/nickname-check")
+	public ResponseEntity<NicknameCheckResponse> checkNicknameDuplicate(
+		@RequestParam("nickname") final String nickname
+	) {
+
+		NicknameCheckResponse nicknameCheckResponse = memberFacade.existsByNickname(nickname);
+		return ResponseEntity.ok(nicknameCheckResponse);
 	}
 }
