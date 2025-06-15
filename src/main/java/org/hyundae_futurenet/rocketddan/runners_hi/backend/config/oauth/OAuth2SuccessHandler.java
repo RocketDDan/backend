@@ -73,7 +73,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			signupToken,
 			jwtProperties.getSignupTokenExpirationMinutes(),
 			"/oauth2/signup");
-		CookieUtils.deleteCookie(request, response, SIGNUP_TOKEN_COOKIE_NAME);
+		CookieUtils.deleteCookie(request, response, SIGNUP_TOKEN_COOKIE_NAME, "/oauth2/signup");
 		response.addHeader(HttpHeaders.SET_COOKIE, signupCookie.toString());
 
 		String targetUrl = UriComponentsBuilder.fromUriString(appProperties.getClientDomain())
@@ -89,7 +89,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 	private void processExistingMember(HttpServletRequest request,
 		HttpServletResponse response,
-		Member member) {
+		Member member) throws IOException {
 
 		if (Objects.nonNull(member.getDeletedAt())) {
 			throw new MemberWithdrawnException();
@@ -102,7 +102,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			accessToken,
 			jwtProperties.getAccessTokenExpirationMinutes(),
 			"/");
-		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME);
+		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME, "/");
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 
 		String refreshToken = jwtTokenProvider.generateRefreshToken(member.getMemberId(), member.getEmail(),
@@ -112,9 +112,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			refreshToken,
 			jwtProperties.getRefreshTokenExpirationMinutes(),
 			"/auth");
-		CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
+		CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME, "/auth");
 		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
 		response.setStatus(HttpStatus.OK.value());
+		String targetUrl = UriComponentsBuilder.fromUriString(appProperties.getClientDomain())
+			.path("/auth/callback")
+			.build()
+			.toUriString();
+		response.sendRedirect(targetUrl);
 	}
 }
