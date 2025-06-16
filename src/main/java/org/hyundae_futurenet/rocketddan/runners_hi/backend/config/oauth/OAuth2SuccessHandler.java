@@ -11,8 +11,10 @@ import java.util.Optional;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.AppProperties;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.JwtProperties;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.member.MemberWithdrawnException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.member.MemberException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.Member;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.LoginResult;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.member.MemberMapper;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.CookieUtils;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtTokenProvider;
@@ -53,7 +55,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		Optional<Member> optionalMember = memberMapper.findByEmail(email);
 		if (optionalMember.isPresent()) {
 			Member member = optionalMember.get();
-			processExistingMember(request, response, member);
+			LoginResult loginResult = processExistingMember(member, jwtTokenProvider, jwtProperties, appProperties);
+			CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME, "/");
+			response.addHeader(HttpHeaders.SET_COOKIE, loginResult.getAccessTokenCookie());
+			CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME, "/auth");
+			response.addHeader(HttpHeaders.SET_COOKIE, loginResult.getRefreshTokenCookie());
+			response.setStatus(HttpStatus.OK.value());
+			response.sendRedirect(loginResult.getRedirectUrl());
 		} else {
 			processNewMember(request, response, email, nickname, provider);
 		}
@@ -84,39 +92,41 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		response.sendRedirect(targetUrl);
 	}
 
-	private void processExistingMember(HttpServletRequest request,
-		HttpServletResponse response,
-		Member member) throws IOException {
+	public static LoginResult processExistingMember(
+		Member member,
+		JwtTokenProvider jwtTokenProvider,
+		JwtProperties jwtProperties,
+		AppProperties appProperties) {
 
 		if (Objects.nonNull(member.getDeletedAt())) {
-			throw new MemberWithdrawnException();
+			throw new MemberException(ErrorCode.MEMBER_DELETED);
 		}
 
 		String accessToken = jwtTokenProvider.generateAccessToken(member.getMemberId(), member.getEmail(),
 			member.getRole());
-		ResponseCookie accessCookie = buildCookie(
+		ResponseCookie accessTokenCookie = buildCookie(
 			ACCESS_TOKEN_COOKIE_NAME,
 			accessToken,
 			jwtProperties.getAccessTokenExpirationMinutes(),
 			"/");
-		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME, "/");
-		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 
 		String refreshToken = jwtTokenProvider.generateRefreshToken(member.getMemberId(), member.getEmail(),
 			member.getRole());
-		ResponseCookie refreshCookie = buildCookie(
+		ResponseCookie refreshTokenCookie = buildCookie(
 			REFRESH_TOKEN_COOKIE_NAME,
 			refreshToken,
 			jwtProperties.getRefreshTokenExpirationMinutes(),
 			"/auth");
-		CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME, "/auth");
-		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-		response.setStatus(HttpStatus.OK.value());
-		String targetUrl = UriComponentsBuilder.fromUriString(appProperties.getClientDomain())
+		String redirectUrl = UriComponentsBuilder.fromUriString(appProperties.getClientDomain())
 			.path("/auth/callback")
 			.build()
 			.toUriString();
-		response.sendRedirect(targetUrl);
+
+		return new LoginResult(
+			accessTokenCookie.toString(),
+			refreshTokenCookie.toString(),
+			redirectUrl
+		);
 	}
 }
