@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberOnlyChecker {
 
-	@Before("@annotation(org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly)")
+	@Before("@annotation(org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberCompanyOnly)")
 	public void check(final JoinPoint joinPoint) {
 
 		Arrays.stream(joinPoint.getArgs())
 			.filter(Accessor.class::isInstance)
 			.map(Accessor.class::cast)
-			.filter(Accessor::isMember)
+			.filter(accessor -> accessor.isMember() || accessor.isCompany())
 			.findFirst()
 			.orElseThrow(InvalidAuthorityException::new);
 	}
