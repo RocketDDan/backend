@@ -15,7 +15,9 @@ public class CommentDetailResponseConverter {
 
 	public CommentDetailResponse toDto(CommentDetailSource source) {
 
-		String writerProfileUrl = cloudFrontFileUtil.generateSignedUrl(source.getWriterProfilePath(), 60 * 10);
+		String writerProfileUrl = source.getWriterProfilePath() != null
+			? cloudFrontFileUtil.generateSignedUrl(source.getWriterProfilePath(), 60 * 10)
+			: null;
 
 		return new CommentDetailResponse(
 			source.getCommentId(),
