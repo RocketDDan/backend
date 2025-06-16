@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MailSendRequest {
 
-	private String from = "러너스 하이 <guseo001237@gmail.com>"; // 보내는사람이름 <이메일주소>
+	private String from = "Runners Hi <guseo001237@gmail.com>"; // 보내는사람이름 <이메일주소>
 
 	private ArrayList<String> to;
 

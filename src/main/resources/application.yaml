@@ -53,6 +53,18 @@ spring:
   application:
     name: backend
 
+  mail:
+    host: smtp.gmail.com # 하루 최대 500통
+    port: 587
+    username: ${GOOGLE_MAIL_USERNAME}@gmail.com
+    password: ${GOOGLE_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true  # 사용자 인증 시도 여부
+          starttls:
+            enable: true
+
   #  data:
   #    redis:
   #      host: ${REDIS_HOST}
