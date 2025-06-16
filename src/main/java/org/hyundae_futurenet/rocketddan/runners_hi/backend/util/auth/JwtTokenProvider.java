@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.JwtProperties;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.InvalidTokenException;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.TokenExpiredException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidTokenException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.TokenExpiredException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.constant.Role;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth;
 
 public class InvalidTokenException extends AuthException {
 

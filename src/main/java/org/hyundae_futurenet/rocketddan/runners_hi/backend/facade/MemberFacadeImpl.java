@@ -3,7 +3,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.member.MemberException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.member.MemberException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.Member;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
@@ -33,7 +34,7 @@ public class MemberFacadeImpl implements MemberFacade {
 	public MemberResponse findMember(Long memberId) {
 
 		Member member = memberService.findMember(memberId)
-			.orElseThrow(() -> new MemberException("존재하지 않는 회원입니다."));
+			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_EXIST));
 		String profileImageUrl = Objects.nonNull(member.getProfilePath()) ?
 			cloudFrontFileUtil.generateSignedUrl(member.getProfilePath(), 60 * 10) : null;
 		return MemberResponse.from(member, profileImageUrl);
