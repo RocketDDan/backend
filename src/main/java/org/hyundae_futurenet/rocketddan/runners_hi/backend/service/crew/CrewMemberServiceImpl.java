@@ -79,5 +79,12 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 		char leader = isLeader ? 'Y' : 'N';
 		crewMemberMapper.updateCrewMemberIsLeader(crewMemberId, leader, loginMemberId);
 	}
+
+	@Override
+	public Long selectCrewLeaderIdByCrewId(long crewId) {
+
+		log.info("CrewMemberService :: selectCrewLeaderIdByCrewId = {}", crewId);
+		return crewMemberMapper.selectCrewLeaderIdByCrewId(crewId);
+	}
 }
 

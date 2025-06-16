@@ -18,13 +18,14 @@ public enum ErrorCode {
 	SIGNUP_MEMBER_NICKNAME_DUPLICATED("이미 사용중인 닉네임입니다.", HttpStatus.BAD_REQUEST, "이미 사용중인 닉네임입니다."),
 	MEMBER_DELETED("탈퇴한 회원입니다.", HttpStatus.BAD_REQUEST, "탈퇴한 회원입니다. 다시 가입해주세요."),
 	MEMBER_NOT_EXIST("존재하지 않는 회원입니다.", HttpStatus.BAD_REQUEST, "해당 회원이 존재하지 않습니다."),
-  
+
 	/** 크루 */
 	NOT_FOUND_CREW("크루를 찾을 수 없습니다.", HttpStatus.NOT_FOUND, "해당 크루가 존재하지 않습니다."),
 	NOT_FOUND_CREW_JOIN_REQUEST("크루 가입 요청을 찾을 수 없습니다.", HttpStatus.NOT_FOUND, "해당 가입 요청이 존재하지 않습니다."),
 	DUPLICATED_CREW_NAME("중복된 크루명입니다.", HttpStatus.BAD_REQUEST, "이미 존재하는 크루명입니다."),
 	ALREADY_EXIST_CREW_MEMBER("이미 크루 멤버입니다.", HttpStatus.BAD_REQUEST, "더 이상 크루에 가입할 수 없습니다."),
-	ALREADY_EXIST_CREW_JOIN_REQUEST("이미 크루 가입 요청 이력이 있습니다.", HttpStatus.BAD_REQUEST, "더 이상 가입 요청을 할 수 없습니다.");
+	ALREADY_EXIST_CREW_JOIN_REQUEST("이미 크루 가입 요청 이력이 있습니다.", HttpStatus.BAD_REQUEST, "더 이상 가입 요청을 할 수 없습니다."),
+	NOT_ALLOWED_CREW_LEADER_RESIGN("크루장은 탈퇴할 수 없습니다.", HttpStatus.BAD_REQUEST, "크루장을 넘기고 탈퇴해야 합니다.");
 
 	private final String message;
 

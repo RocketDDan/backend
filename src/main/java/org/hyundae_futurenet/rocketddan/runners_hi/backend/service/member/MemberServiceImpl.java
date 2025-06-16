@@ -67,4 +67,12 @@ public class MemberServiceImpl implements MemberService {
 
 		return memberMapper.existsByNickname(nickname);
 	}
+
+	@Override
+	public String findMemberEmail(long memberId) {
+
+		return memberMapper.findById(memberId)
+			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_EXIST))
+			.getEmail();
+	}
 }

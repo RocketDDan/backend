@@ -25,4 +25,7 @@ public interface CrewJoinRequestService {
 
 	// 가입 요청 삭제
 	void deleteCrewJoinRequest(long loginMemberId, long crewId);
+
+	// 가입 요청자의 이메일 가져오기
+	String selectEmailByCrewJoinRequestId(long crewJoinRequestId);
 }
