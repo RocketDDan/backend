@@ -258,11 +258,6 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루장만 가능
 		checkCrewLeader(loginMemberId, crewId);
 
-		// 자기 자신 강퇴 불가능
-		if (loginMemberId == crewMemberId) {
-			throw new IllegalArgumentException("자기 자신을 강퇴할 수 없습니다.");
-		}
-
 		crewMemberService.deleteCrewMember(loginMemberId, crewMemberId);
 	}
 
