@@ -12,6 +12,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,6 +108,16 @@ public class AdminController {
 
 		FeedViewSummaryResponse result = adminFacade.getViewSummary(feedId, startDate, endDate);
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/my-wallet")
+	public ResponseEntity<MyWalletListResponse> getMyWallet(
+		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "6") int perPage
+	) {
+
+		Long memberId = 1L;
+		return ResponseEntity.ok(adminFacade.getMyWalletList(memberId, page, perPage));
 	}
 
 }

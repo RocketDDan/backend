@@ -8,6 +8,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletResponse;
 
 public interface AdminService {
 
@@ -24,4 +25,8 @@ public interface AdminService {
 	List<FeedHourlyViewResponse> getHourlyViews(Long feedId, String targetDate);
 
 	FeedViewSummaryResponse getViewSummary(Long feedId, String startDate, String endDate);
+
+	List<MyWalletResponse> getMyWalletList(Map<String, Object> params);
+
+	int getMyWalletTotalCount(Map<String, Object> params);
 }

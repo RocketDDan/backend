@@ -10,6 +10,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletResponse;
 
 @Mapper
 public interface AdminMapper {
@@ -34,6 +35,10 @@ public interface AdminMapper {
 	FeedViewSummaryResponse selectFeedViewSummary(@Param("feedId") Long feedId,
 		@Param("startDate") String startDate,
 		@Param("endDate") String endDate);
+
+	List<MyWalletResponse> findMyWalletList(Map<String, Object> params);
+
+	int countMyWalletList(Map<String, Object> params);
 
 }
 

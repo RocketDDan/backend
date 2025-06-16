@@ -115,4 +115,36 @@
         AND CREATED_AT BETWEEN TO_TIMESTAMP(#{startDate}, 'YYYY-MM-DD') AND TO_TIMESTAMP(#{endDate}, 'YYYY-MM-DD') + 1
     </select>
 
+    <!--  내 wallet 조회  -->
+    <select id="findMyWalletList"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletResponse">
+        SELECT
+        F.feed_id as feedId,
+        F.created_at as createdAt,
+        F.balance,
+        F.charge_amount as chargeAmount
+        FROM member_wallet F
+        <where>
+            <if test="memberId != null">
+                F.member_id = #{memberId}
+            </if>
+        </where>
+        ORDER BY F.CREATED_AT DESC
+        OFFSET #{offset, jdbcType=INTEGER} ROWS
+        FETCH NEXT #{perPage, jdbcType=INTEGER} ROWS ONLY
+    </select>
+
+    <!--  총 내 wallet 조회 갯수  -->
+    <select id="countMyWalletList"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM member_wallet F
+        <where>
+            <if test="memberId != null">
+                F.member_id = #{memberId}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>
