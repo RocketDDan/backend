@@ -3,8 +3,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 import java.util.List;
 import java.util.Optional;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.exception.AlreadyExistsException;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.exception.NotFoundException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.CrewException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -60,14 +60,15 @@ public class CrewFacadeImpl implements CrewFacade {
 	public long insertCrew(long loginMemberId, CrewCreateRequest crewCreateRequest, MultipartFile multipartFile) {
 		// 이미 크루 멤버인 경우 생성 불가
 		if (crewMemberMapper.isCrewMember(loginMemberId)) {
-			throw new AlreadyExistsException("이미 크루에 가입되어 있습니다.");
+			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_MEMBER);
 		}
 		// 크루 이름 중복 검사
-		if (crewMapper.existsByName(crewCreateRequest.crewName())) {
-			throw new AlreadyExistsException("이미 존재하는 크루명입니다.");
+		if (crewMapper.existsByName(crewCreateRequest.getCrewName())) {
+			throw new CrewException(ErrorCode.DUPLICATED_CREW_NAME);
 		}
 		// 크루 먼저 생성
-		long crewId = crewService.insertCrew(loginMemberId, crewCreateRequest);
+		crewService.insertCrew(loginMemberId, crewCreateRequest);
+		long crewId = crewCreateRequest.getCrewId();
 
 		// 크루 프로필 이미지 설정
 		String profilePath = null;
@@ -77,6 +78,9 @@ public class CrewFacadeImpl implements CrewFacade {
 			crewService.updateCrewProfilePath(crewId, profilePath);
 			log.info("Profile path: {}", profilePath);
 		}
+
+		// 크루에 리더 추가
+		crewMemberService.insertCrewMember(loginMemberId, loginMemberId, crewId, true);
 		return crewId;
 	}
 
@@ -92,7 +96,7 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루 이름 중복 검사
 		if (crewMapper.existsByName(crewUpdateRequest.crewName())) {
-			throw new AlreadyExistsException("이미 존재하는 크루명입니다.");
+			throw new CrewException(ErrorCode.DUPLICATED_CREW_NAME);
 		}
 
 		// 크루장만 변경 가능
@@ -122,7 +126,7 @@ public class CrewFacadeImpl implements CrewFacade {
 	public CrewDetailResponse selectCrewByCrewId(long loginMemberId, long crewId) {
 		// 크루 존재 여부 검증
 		CrewDetailResponse result = crewService.selectCrewByCrewId(loginMemberId, crewId)
-			.orElseThrow(() -> new NotFoundException("존재하지 않는 크루입니다."));
+			.orElseThrow(() -> new CrewException(ErrorCode.NOT_FOUND_CREW));
 
 		Optional<CrewMemberDetailResponse> memberDetail = crewMemberService.selectCrewMember(loginMemberId, crewId);
 
@@ -160,9 +164,14 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루 존재 여부 검증
 		checkCrewExisted(crewId);
 
+		// 이미 다른 크루에 요청 대기 중인 상태이면 더 이상 요청 불가
+		if (crewJoinRequestMapper.existsCrewJoinRequestByMemberId(loginMemberId)) {
+			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_JOIN_REQUEST);
+		}
+
 		// 이미 크루 멤버인 경우 생성 불가
 		if (crewMemberMapper.isCrewMember(loginMemberId)) {
-			throw new AlreadyExistsException("이미 크루에 가입되어 있습니다.");
+			throw new CrewException(ErrorCode.ALREADY_EXIST_CREW_MEMBER);
 		}
 
 		crewJoinRequestService.insertCrewJoinRequest(loginMemberId, crewId, crewJoinRequest);
@@ -186,18 +195,34 @@ public class CrewFacadeImpl implements CrewFacade {
 	}
 
 	@Override
+	public void deleteCrewJoinRequest(long loginMemberId, long crewId) {
+
+		if (!crewJoinRequestMapper.existsCrewJoinRequestByMemberIdAndCrewId(loginMemberId, crewId)) {
+			throw new CrewException(ErrorCode.NOT_FOUND_CREW_JOIN_REQUEST);
+		}
+
+		crewJoinRequestService.deleteCrewJoinRequest(loginMemberId, crewId);
+	}
+
+	@Override
 	@Transactional
 	public List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long loginMemberId,
 		long crewId,
-		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter) {
+		CrewJoinRequestSearchFilter filter) {
 
 		// 크루장만 조회 가능
 		checkCrewLeader(loginMemberId, crewId);
 		return crewJoinRequestService
-			.selectCrewJoinRequestsByStatus(crewId, crewJoinRequestSearchFilter)
+			.selectCrewJoinRequestsByStatus(crewId, filter)
 			.stream()
 			.map(rep -> rep.toBuilder().profilePath(getFilePath(rep.getProfilePath())).build()).toList();
+	}
+
+	@Override
+	public boolean isExistNextPage(CrewJoinRequestSearchFilter filter) {
+
+		return crewJoinRequestService.isExistNextPage(filter);
 	}
 
 	@Override
@@ -205,7 +230,7 @@ public class CrewFacadeImpl implements CrewFacade {
 	public void insertCrewMember(long loginMemberId, long memberId, long crewId) {
 		// 크루장만 가능
 		checkCrewLeader(loginMemberId, crewId);
-		crewMemberService.insertCrewMember(loginMemberId, memberId, crewId);
+		crewMemberService.insertCrewMember(loginMemberId, memberId, crewId, false);
 	}
 
 	@Override
@@ -216,7 +241,7 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루 회원만 가능
 		CrewMemberDetailResponse result = crewMemberService.selectCrewMember(loginMemberId, crewId)
-			.orElseThrow(() -> new NotFoundException("존재하지 않는 크루 회원입니다."));
+			.orElseThrow(() -> new CrewException(ErrorCode.NOT_FOUND_CREW));
 
 		// 크루장이면 탈퇴 불가능
 		if (result.isLeader()) {
@@ -307,7 +332,7 @@ public class CrewFacadeImpl implements CrewFacade {
 	private void checkCrewExisted(long crewId) {
 		// 크루 존재 여부 검증
 		if (!crewMapper.existsByCrewId(crewId)) {
-			throw new NotFoundException("존재하지 않는 크루입니다.");
+			throw new CrewException(ErrorCode.NOT_FOUND_CREW);
 		}
 	}
 

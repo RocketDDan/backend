@@ -94,12 +94,11 @@
     </select>
 
     <!-- 크루 생성 -->
-    <insert id="insertCrew" useGeneratedKeys="true" keyProperty="crewId">
-        <selectKey keyProperty="crewId" resultType="long" order="BEFORE">
-            SELECT seq_crew.nextval FROM dual
+    <insert id="insertCrew">
+        <selectKey keyProperty="req.crewId" resultType="long" order="BEFORE">
+            SELECT seq_crew.NEXTVAL AS crewId FROM dual
         </selectKey>
-        INSERT INTO crew (
-        crew_id,
+        INSERT INTO crew (crew_id,
         crew_name,
         introduce,
         crew_address,
@@ -107,18 +106,16 @@
         created_at,
         created_by,
         updated_at,
-        updated_by
-        ) VALUES (
-        #{crewId},
+        updated_by)
+        VALUES (#{req.crewId},
         #{req.crewName},
         #{req.crewIntroduce},
         #{req.crewAddress},
         #{req.crewRegion},
-        sysdate,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{loginMemberId},
-        sysdate,
-        #{loginMemberId}
-        )
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
+        #{loginMemberId})
     </insert>
 
     <!-- 크루 정보 변경 -->
@@ -140,7 +137,7 @@
             <if test="profilePath != null">
                 profile_path = #{profilePath},
             </if>
-            updated_at = sysdate,
+            updated_at = SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
             updated_by = #{loginMemberId}
         </set>
         WHERE crew_id = #{crewId}
@@ -162,7 +159,7 @@
 
     <!-- 내 크루 조회-->
     <select id="selectMyCrew" resultType="long">
-        SELECT cm.member_id
+        SELECT c.crew_id
         FROM crew c
                  LEFT JOIN crew_member cm ON c.CREW_ID = cm.CREW_ID
         WHERE cm.member_id = #{loginMemberId}
