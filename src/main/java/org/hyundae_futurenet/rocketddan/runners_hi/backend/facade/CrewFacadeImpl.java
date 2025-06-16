@@ -25,6 +25,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewMemb
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.mail.GoogleMailUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +55,8 @@ public class CrewFacadeImpl implements CrewFacade {
 	private final int VALID_SECONDS = 60 * 10;
 
 	private final CrewJoinRequestMapper crewJoinRequestMapper;
+
+	private final GoogleMailUtil googleMailUtil;
 
 	@Override
 	@Transactional
@@ -175,6 +178,11 @@ public class CrewFacadeImpl implements CrewFacade {
 		}
 
 		crewJoinRequestService.insertCrewJoinRequest(loginMemberId, crewId, crewJoinRequest);
+
+		// TODO: 크루장에게 가입 요청 메일 보내기
+		// 해당 크루(crewId)의 크루장의 이메일 가져오기
+		// String email = crewMemberService.searchCrewLeadersEmail(crewId);
+		// googleMailUtil.sendCrewJoinRequestMail(email);
 	}
 
 	@Override
@@ -192,6 +200,10 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		crewJoinRequestService.updateCrewJoinRequest(loginMemberId, crewJoinRequestId, status);
 
+		// TODO: 크루원에게 가입 요청 메일 보내기
+		// 해당 가입요청 id(crewJoinRequestId)에 해당하는 멤버의 이메일 가져오기
+		// String email = crewJoinRequestService.getMemberEmail(crewJoinRequestId);
+		// googleMailUtil.sendCrewJoinRequestMail(email);
 	}
 
 	@Override
