@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.admin.AdminService;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +43,23 @@ public class AdminFacadelmpl implements AdminFacade {
 	public int getAdminMemberTotalCount(Map<String, Object> params) {
 
 		return adminService.getAdminMemberTotalCount(params);
+	}
+
+	@Override
+	public List<FeedDailyViewResponse> getDailyViews(Long feedId, String startDate, String endDate) {
+
+		return adminService.getDailyViews(feedId, startDate, endDate);
+	}
+
+	@Override
+	public List<FeedHourlyViewResponse> getHourlyView(Long feedId, String targetDate) {
+
+		return adminService.getHourlyViews(feedId, targetDate);
+	}
+
+	@Override
+	public FeedViewSummaryResponse getViewSummary(Long feedId, String startDate, String endDate) {
+
+		return adminService.getViewSummary(feedId, startDate, endDate);
 	}
 }

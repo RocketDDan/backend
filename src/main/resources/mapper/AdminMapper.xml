@@ -41,7 +41,6 @@
         </where>
     </select>
 
-
     <select id="findAdminMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
         SELECT
@@ -102,10 +101,10 @@
         FROM FEED_VIEW_LOG
         WHERE FEED_ID = #{feedId} AND TO_CHAR(CREATED_AT, 'YYYY-MM-DD') = #{targetDate}
         GROUP BY TO_CHAR(CREATED_AT, 'HH24')
-        ORDER BY viewHour;
+        ORDER BY viewHour
     </select>
 
-    <!--  통계 : 총 클릭수와 순방문자 수  -->
+    <!--  통계 : 총 클릭수와 순 방문자 수  -->
     <select id="selectFeedViewSummary"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse">
         SELECT

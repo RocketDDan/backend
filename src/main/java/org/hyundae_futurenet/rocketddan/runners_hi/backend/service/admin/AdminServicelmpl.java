@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.admin.AdminMapper;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +41,23 @@ public class AdminServicelmpl implements AdminService {
 	public int getAdminMemberTotalCount(Map<String, Object> params) {
 
 		return adminMapper.countAdminMembers(params);
+	}
+
+	@Override
+	public List<FeedDailyViewResponse> getDailyViews(Long feedId, String startDate, String endDate) {
+
+		return adminMapper.selectDailyViews(feedId, startDate, endDate);
+	}
+
+	@Override
+	public List<FeedHourlyViewResponse> getHourlyViews(Long feedId, String targetDate) {
+
+		return adminMapper.selectHourlyViews(feedId, targetDate);
+	}
+
+	@Override
+	public FeedViewSummaryResponse getViewSummary(Long feedId, String startDate, String endDate) {
+
+		return adminMapper.selectFeedViewSummary(feedId, startDate, endDate);
 	}
 }

@@ -9,8 +9,12 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,6 +78,35 @@ public class AdminController {
 		int totalCount = adminFacade.getAdminFeedTotalCount(params);
 
 		return ResponseEntity.ok(new AdminFeedListResponse(feeds, totalCount));
+	}
+
+	@GetMapping("/feeds/{id}/views/daily")
+	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
+		@PathVariable("id") Long feedId,
+		@RequestParam String startDate,
+		@RequestParam String endDate) {
+
+		List<FeedDailyViewResponse> result = adminFacade.getDailyViews(feedId, startDate, endDate);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/feeds/{id}/views/hourly")
+	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
+		@PathVariable("id") Long feedId,
+		@RequestParam String targetDate) {
+
+		List<FeedHourlyViewResponse> result = adminFacade.getHourlyView(feedId, targetDate);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/feeds/{id}/views/summary")
+	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
+		@PathVariable("id") Long feedId,
+		@RequestParam String startDate,
+		@RequestParam String endDate) {
+
+		FeedViewSummaryResponse result = adminFacade.getViewSummary(feedId, startDate, endDate);
+		return ResponseEntity.ok(result);
 	}
 
 }
