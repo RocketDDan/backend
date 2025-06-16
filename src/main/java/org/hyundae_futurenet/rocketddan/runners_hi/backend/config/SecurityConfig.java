@@ -63,7 +63,10 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin(appProperties.getClientDomain());
+		config.setAllowedOrigins(List.of(
+			"https://localhost:3000",
+			"https://runners-hi.shop"
+		));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);
