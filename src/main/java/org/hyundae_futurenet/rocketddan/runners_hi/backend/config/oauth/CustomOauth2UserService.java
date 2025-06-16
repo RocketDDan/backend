@@ -3,7 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.config.oauth;
 import java.util.Collections;
 import java.util.Map;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.OAuth2AuthException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.OAuth2AuthException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

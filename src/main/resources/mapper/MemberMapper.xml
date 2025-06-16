@@ -96,6 +96,12 @@
           AND DELETED_AT IS NULL
     </select>
 
+    <select id="findPasswordByEmail" resultType="String">
+        SELECT PWD_HASH
+        FROM MEMBER
+        WHERE EMAIL = #{email}
+    </select>
+
     <select id="existsByNickname" resultType="boolean">
         SELECT CASE
                    WHEN COUNT(*) > 0 THEN 1

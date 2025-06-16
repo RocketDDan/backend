@@ -11,6 +11,8 @@ public interface MemberService {
 
 	Optional<Member> findByNickname(String nickname);
 
+	Optional<String> findPasswordByEmail(String email);
+
 	long signUp(SignUpRequest signUpRequest);
 
 	void updateProfileImage(long memberId, String uploadedFilePath);

@@ -1,6 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.InvalidTokenException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidTokenException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.OAuth2Facade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.SignUpRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtTokenProvider;
