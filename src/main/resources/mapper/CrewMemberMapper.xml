@@ -107,11 +107,11 @@
     <select id="selectCrewMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse">
         SELECT
+        cm.crew_member_id as crewMemberId,
         cm.member_id as memberId,
         m.nickname as nickname,
-        m.email as email,
         m.profile_path as profilePath,
-        TO_CHAR(cm.created_at, 'YYYY-MM-DD HH24:MI:SS') as registerDate,
+        TO_CHAR(cm.created_at, 'YYYY-MM-DD') as registerDate,
         cm.is_leader as isLeader
         FROM crew_member cm
         JOIN member m ON cm.member_id = m.member_id

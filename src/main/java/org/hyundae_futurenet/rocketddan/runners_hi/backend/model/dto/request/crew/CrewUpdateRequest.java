@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record CrewUpdateRequest(
 
 	@Schema(description = "크루 이름", example = "러닝메이트")
-	@Size(min = 1, max = 255, message = "크루명은 최대 255자입니다.")
+	@Size(min = 1, max = 50, message = "크루명은 최대 50자입니다.")
 	@NotBlank(message = "크루명은 필수입니다.")
 	String crewName,
 
@@ -17,12 +17,12 @@ public record CrewUpdateRequest(
 	String crewIntroduce,
 
 	@Schema(description = "크루 지역", example = "서울특별시 강남구")
-	@Size(min = 1, max = 100, message = "크루 지역은 최대 100자입니다.")
+	@Size(min = 1, max = 50, message = "크루 지역은 최대 50자입니다.")
 	@NotBlank(message = "크루 지역은 필수입니다.")
 	String crewRegion,
 
 	@Schema(description = "크루 주소", example = "서울특별시 강남구 테헤란로 123")
-	@Size(min = 1, max = 255, message = "크루 주소는 최대 255자입니다.")
+	@Size(min = 1, max = 50, message = "크루 주소는 최대 50자입니다.")
 	@NotBlank(message = "크루 주소는 필수입니다.")
 	String crewAddress,
 
