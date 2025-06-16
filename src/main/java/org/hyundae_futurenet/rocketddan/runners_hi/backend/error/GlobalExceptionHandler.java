@@ -27,4 +27,10 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("🚫 " + ex.getMessage());
 	}
+
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<?> handleCustomException(CustomException ex) {
+
+		return ResponseEntity.status(ex.getErrorCode().getStatus()).body("⚠️ " + ex.getMessage());
+	}
 }
