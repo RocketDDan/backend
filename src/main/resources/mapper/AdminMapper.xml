@@ -18,10 +18,17 @@
             <if test="params.keyword != null and params.keyword != ''">
                 M.nickname LIKE '%' || #{params.keyword} || '%'
             </if>
+            <if test="params.month != null and params.month != ''">
+                AND TO_CHAR(F.created_at, 'MM') = #{params.month}
+            </if>
+            <if test="params.day != null and params.day != ''">
+                AND TO_CHAR(F.created_at, 'DD') = #{params.day}
+            </if>
         </where>
         ORDER BY F.created_at DESC
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
     </select>
+
 
     <select id="countAdminFeeds" resultType="int">
         SELECT COUNT(*)
