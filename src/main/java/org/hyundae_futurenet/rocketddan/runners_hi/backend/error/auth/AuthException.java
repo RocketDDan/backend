@@ -1,9 +1,12 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth;
 
-public class AuthException extends RuntimeException {
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.CustomException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 
-	public AuthException(final String message) {
+public class AuthException extends CustomException {
 
-		super(message);
+	public AuthException(final ErrorCode errorCode) {
+
+		super(errorCode);
 	}
 }
