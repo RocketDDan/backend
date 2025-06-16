@@ -9,8 +9,13 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Ad
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +29,7 @@ public class AdminController {
 
 	private final AdminFacade adminFacade;
 
+	// 회원 목록 조회
 	@GetMapping("/members")
 	public ResponseEntity<AdminMemberListResponse> getAdminMembers(
 		@RequestParam(required = false) String keyword,
@@ -44,17 +50,26 @@ public class AdminController {
 		return ResponseEntity.ok(new AdminMemberListResponse(members, totalCount));
 	}
 
+	// 리워드 홍보 피드 조회
 	@GetMapping("/rewards")
 	public ResponseEntity<AdminFeedListResponse> getAdminFeeds(
 		@RequestParam(required = false) String keyword,
 		@RequestParam(required = false, defaultValue = "1") int page,
-		@RequestParam(required = false, defaultValue = "6") int perPage
+		@RequestParam(required = false, defaultValue = "6") int perPage,
+		@RequestParam(required = false) String month,
+		@RequestParam(required = false) String day
 	) {
 
 		Map<String, Object> params = new HashMap<>();
 
 		if (keyword != null && !keyword.isEmpty()) {
 			params.put("keyword", keyword);
+		}
+		if (month != null && !month.isEmpty()) {
+			params.put("month", month);
+		}
+		if (day != null && !day.isEmpty()) {
+			params.put("day", day);
 		}
 
 		params.put("offset", (page - 1) * perPage);
@@ -64,6 +79,45 @@ public class AdminController {
 		int totalCount = adminFacade.getAdminFeedTotalCount(params);
 
 		return ResponseEntity.ok(new AdminFeedListResponse(feeds, totalCount));
+	}
+
+	@GetMapping("/feeds/{id}/views/daily")
+	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
+		@PathVariable("id") Long feedId,
+		@RequestParam String startDate,
+		@RequestParam String endDate) {
+
+		List<FeedDailyViewResponse> result = adminFacade.getDailyViews(feedId, startDate, endDate);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/feeds/{id}/views/hourly")
+	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
+		@PathVariable("id") Long feedId,
+		@RequestParam String targetDate) {
+
+		List<FeedHourlyViewResponse> result = adminFacade.getHourlyView(feedId, targetDate);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/feeds/{id}/views/summary")
+	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
+		@PathVariable("id") Long feedId,
+		@RequestParam String startDate,
+		@RequestParam String endDate) {
+
+		FeedViewSummaryResponse result = adminFacade.getViewSummary(feedId, startDate, endDate);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/my-wallet")
+	public ResponseEntity<MyWalletListResponse> getMyWallet(
+		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "6") int perPage
+	) {
+
+		Long memberId = 1L;
+		return ResponseEntity.ok(adminFacade.getMyWalletList(memberId, page, perPage));
 	}
 
 }

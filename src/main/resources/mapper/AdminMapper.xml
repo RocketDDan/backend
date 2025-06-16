@@ -18,10 +18,17 @@
             <if test="params.keyword != null and params.keyword != ''">
                 M.nickname LIKE '%' || #{params.keyword} || '%'
             </if>
+            <if test="params.month != null and params.month != ''">
+                AND TO_CHAR(F.created_at, 'MM') = #{params.month}
+            </if>
+            <if test="params.day != null and params.day != ''">
+                AND TO_CHAR(F.created_at, 'DD') = #{params.day}
+            </if>
         </where>
         ORDER BY F.created_at DESC
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
     </select>
+
 
     <select id="countAdminFeeds" resultType="int">
         SELECT COUNT(*)
@@ -33,7 +40,6 @@
             </if>
         </where>
     </select>
-
 
     <select id="findAdminMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberResponse">
@@ -74,6 +80,70 @@
             OR C.crew_name LIKE '%' || #{params.keyword} || '%'
             )
         </if>
+    </select>
+
+    <!--  통계 : 일자별 클릭 수  -->
+    <select id="selectDailyViews"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedDailyViewResponse">
+        SELECT TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS viewDate, COUNT(*) AS views
+        FROM FEED_VIEW_LOG
+        WHERE FEED_ID = #{feedId}
+        AND CREATED_AT BETWEEN TO_TIMESTAMP(#{startDate}, 'YYYY-MM-DD')
+        AND TO_TIMESTAMP(#{endDate}, 'YYYY-MM-DD') + 1
+        GROUP BY TO_CHAR(CREATED_AT, 'YYYY-MM-DD')
+        ORDER BY viewDate
+    </select>
+
+    <!--  통계 : 시간대별 클릭 수  -->
+    <select id="selectHourlyViews"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedHourlyViewResponse">
+        SELECT TO_CHAR(CREATED_AT, 'HH24') AS viewHour, COUNT(*) AS views
+        FROM FEED_VIEW_LOG
+        WHERE FEED_ID = #{feedId} AND TO_CHAR(CREATED_AT, 'YYYY-MM-DD') = #{targetDate}
+        GROUP BY TO_CHAR(CREATED_AT, 'HH24')
+        ORDER BY viewHour
+    </select>
+
+    <!--  통계 : 총 클릭수와 순 방문자 수  -->
+    <select id="selectFeedViewSummary"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedViewSummaryResponse">
+        SELECT
+        COUNT(*) AS totalViews,
+        COUNT(DISTINCT CREATED_BY) AS uniqueVisitors
+        FROM FEED_VIEW_LOG
+        WHERE FEED_ID = #{feedId}
+        AND CREATED_AT BETWEEN TO_TIMESTAMP(#{startDate}, 'YYYY-MM-DD') AND TO_TIMESTAMP(#{endDate}, 'YYYY-MM-DD') + 1
+    </select>
+
+    <!--  내 wallet 조회  -->
+    <select id="findMyWalletList"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MyWalletResponse">
+        SELECT
+        F.feed_id as feedId,
+        F.created_at as createdAt,
+        F.balance,
+        F.charge_amount as chargeAmount
+        FROM member_wallet F
+        <where>
+            <if test="memberId != null">
+                F.member_id = #{memberId}
+            </if>
+        </where>
+        ORDER BY F.CREATED_AT DESC
+        OFFSET #{offset, jdbcType=INTEGER} ROWS
+        FETCH NEXT #{perPage, jdbcType=INTEGER} ROWS ONLY
+    </select>
+
+    <!--  총 내 wallet 조회 갯수  -->
+    <select id="countMyWalletList"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM member_wallet F
+        <where>
+            <if test="memberId != null">
+                F.member_id = #{memberId}
+            </if>
+        </where>
     </select>
 
 
