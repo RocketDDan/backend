@@ -60,6 +60,16 @@
                            WHERE member_id = #{memberId})
     </select>
 
+    <!-- 해당 크루의 리더 조회-->
+    <select id="selectCrewLeaderIdByCrewId" resultType="long">
+        SELECT cm.member_id
+        FROM crew_member cm
+                 JOIN crew c ON cm.crew_id = c.crew_id
+        WHERE cm.is_leader = 'Y'
+          AND c.crew_id = #{crewId}
+
+    </select>
+
     <!-- 자신이 크루에 속해있는지 확인 -->
     <select id="isCrewMember" parameterType="long" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END

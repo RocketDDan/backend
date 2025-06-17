@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
@@ -48,63 +48,72 @@ public class CrewController {
 
 	private final CrewFacade crewFacade;
 
-	private final long loginMemberId = 5L; // 임시
-
 	@Operation(summary = "크루 생성", description = "새로운 크루를 생성합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private ResponseEntity<Long> createCrew(
+	@NotGuest
+	public ResponseEntity<Long> createCrew(
 		@RequestPart(value = "crew") CrewCreateRequest crewCreateRequest,
-		@RequestPart(value = "profile", required = false) MultipartFile profile
+		@RequestPart(value = "profile", required = false) MultipartFile profile,
+		@Auth final Accessor accessor
 	) {
 
-		Long crewId = crewFacade.insertCrew(loginMemberId, crewCreateRequest, profile);
+		Long crewId = crewFacade.insertCrew(accessor.getMemberId(), crewCreateRequest, profile);
 		return ResponseEntity.ok(crewId);
 	}
 
 	@Operation(summary = "크루 수정", description = "크루 정보를 수정합니다.")
 	@PutMapping(value = "/{crew-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private ResponseEntity<Void> updateCrew(
+	@NotGuest
+	public ResponseEntity<Void> updateCrew(
 		@PathVariable("crew-id") Long crewId,
 		@RequestPart(value = "crew") CrewUpdateRequest crewUpdateRequest,
-		@RequestPart(value = "profile", required = false) MultipartFile profile
+		@RequestPart(value = "profile", required = false) MultipartFile profile,
+		@Auth final Accessor accessor
 	) {
 
-		crewFacade.updateCrew(loginMemberId, crewId, crewUpdateRequest, profile);
+		crewFacade.updateCrew(accessor.getMemberId(), crewId, crewUpdateRequest, profile);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 삭제", description = "크루를 삭제합니다.")
 	@DeleteMapping("/{crew-id}")
-	private ResponseEntity<Void> deleteCrew(@PathVariable("crew-id") Long crewId) {
+	@NotGuest
+	public ResponseEntity<Void> deleteCrew(
+		@PathVariable("crew-id") Long crewId,
+		@Auth final Accessor accessor) {
 
-		crewFacade.deleteCrew(loginMemberId, crewId);
+		crewFacade.deleteCrew(accessor.getMemberId(), crewId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 프로필 조회", description = "크루를 조회합니다.")
 	@GetMapping("/{crew-id}")
-	private ResponseEntity<CrewDetailResponse> selectCrew(@PathVariable("crew-id") Long crewId) {
+	public ResponseEntity<CrewDetailResponse> selectCrew(
+		@PathVariable("crew-id") Long crewId,
+		@Auth final Accessor accessor
+	) {
 
-		CrewDetailResponse result = crewFacade.selectCrewByCrewId(loginMemberId, crewId);
+		CrewDetailResponse result = crewFacade.selectCrewByCrewId(accessor.getMemberId(), crewId);
 		return ResponseEntity.ok(result);
 	}
 
 	@Operation(summary = "크루 목록 조회", description = "필터 조건에 맞는 크루 목록을 조회합니다.")
 	@GetMapping
-	private ResponseEntity<List<CrewListResponse>> selectCrews(
-		@Valid @ModelAttribute CrewSearchFilter crewSearchFilter) {
+	public ResponseEntity<List<CrewListResponse>> selectCrews(
+		@Valid @ModelAttribute CrewSearchFilter crewSearchFilter,
+		@Auth final Accessor accessor) {
 
 		if (crewSearchFilter == null) {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
 
-		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(loginMemberId, crewSearchFilter);
+		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(accessor.getMemberId(), crewSearchFilter);
 		return ResponseEntity.ok(result);
 	}
 
 	@Operation(summary = "크루 지역 추천", description = "지역 기반 크루 랜덤 추천")
 	@GetMapping("/recommend")
-	private ResponseEntity<List<CrewListResponse>> recommendCrews(
+	public ResponseEntity<List<CrewListResponse>> recommendCrews(
 		@Parameter(
 			name = "perPage",
 			description = "한 페이지에 보여줄 크루의 개수 (기본값 9)",
@@ -126,50 +135,62 @@ public class CrewController {
 
 	@Operation(summary = "크루 가입 요청", description = "크루에 가입을 요청합니다.")
 	@PostMapping("/{crew-id}/join-requests")
-	private ResponseEntity<Void> insertCrewJoinRequest(
+	@NotGuest
+	public ResponseEntity<Void> insertCrewJoinRequest(
 		@PathVariable("crew-id") Long crewId,
-		@Valid @RequestBody CrewJoinRequest crewJoinRequest
+		@Valid @RequestBody CrewJoinRequest crewJoinRequest,
+		@Auth final Accessor accessor
 	) {
 
-		crewFacade.insertCrewJoinRequest(loginMemberId, crewId, crewJoinRequest);
+		crewFacade.insertCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequest);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 가입 요청 승인", description = "크루 가입 요청의 상태를 승인으로 변경합니다.")
 	@PutMapping("/{crew-id}/join-requests/{request-id}/accept")
-	private ResponseEntity<Void> acceptCrewJoinRequest(
+	@NotGuest
+	public ResponseEntity<Void> acceptCrewJoinRequest(
 		@PathVariable("crew-id") Long crewId,
-		@PathVariable("request-id") Long crewJoinRequestId
+		@PathVariable("request-id") Long crewJoinRequestId,
+		@Auth final Accessor accessor
 	) {
 
-		crewFacade.updateCrewJoinRequest(loginMemberId, crewId, crewJoinRequestId, CrewJoinRequestStatus.ACCEPT);
+		crewFacade.updateCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequestId,
+			CrewJoinRequestStatus.ACCEPT);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 가입 요청 거절", description = "크루 가입 요청의 상태를 거절로 변경합니다.")
 	@PutMapping("/{crew-id}/join-requests/{request-id}/deny")
-	private ResponseEntity<Void> denyCrewJoinRequest(
+	@NotGuest
+	public ResponseEntity<Void> denyCrewJoinRequest(
 		@PathVariable("crew-id") Long crewId,
-		@PathVariable("request-id") Long crewJoinRequestId
+		@PathVariable("request-id") Long crewJoinRequestId,
+		@Auth final Accessor accessor
 	) {
 
-		crewFacade.updateCrewJoinRequest(loginMemberId, crewId, crewJoinRequestId, CrewJoinRequestStatus.DENY);
+		crewFacade.updateCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequestId, CrewJoinRequestStatus.DENY);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 가입 요청 삭제", description = "크루 가입 요청을 취소합니다.")
 	@DeleteMapping("/{crew-id}/join-requests")
-	private ResponseEntity<Void> deleteCrewJoinRequests(@PathVariable("crew-id") Long crewId) {
+	@NotGuest
+	public ResponseEntity<Void> deleteCrewJoinRequests(
+		@PathVariable("crew-id") Long crewId,
+		@Auth final Accessor accessor) {
 
-		crewFacade.deleteCrewJoinRequest(loginMemberId, crewId);
+		crewFacade.deleteCrewJoinRequest(accessor.getMemberId(), crewId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 가입 요청 목록 조회", description = "크루의 가입 요청 목록을 조회합니다.")
 	@GetMapping("/{crew-id}/join-requests")
-	private ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
+	@NotGuest
+	public ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
 		@PathVariable("crew-id") Long crewId,
-		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter
+		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter,
+		@Auth final Accessor accessor
 	) {
 
 		if (crewJoinRequestSearchFilter == null) {
@@ -177,7 +198,7 @@ public class CrewController {
 		}
 
 		List<CrewJoinRequestListResponse> crewJoinRequestList = crewFacade
-			.selectCrewJoinRequestsByStatus(loginMemberId, crewId, crewJoinRequestSearchFilter);
+			.selectCrewJoinRequestsByStatus(accessor.getMemberId(), crewId, crewJoinRequestSearchFilter);
 		boolean isExistNextPage = crewFacade.isExistNextPage(crewJoinRequestSearchFilter);
 		Map<String, Object> result = new HashMap<>();
 		result.put("crewJoinRequestList", crewJoinRequestList);
@@ -187,34 +208,40 @@ public class CrewController {
 
 	@Operation(summary = "크루 멤버 탈퇴", description = "크루에서 탈퇴합니다.")
 	@PostMapping("/{crew-id}/resign")
-	private ResponseEntity<Void> deleteCrewMember(
-		@PathVariable("crew-id") Long crewId) {
+	@NotGuest
+	public ResponseEntity<Void> deleteCrewMember(
+		@PathVariable("crew-id") Long crewId,
+		@Auth final Accessor accessor) {
 		// 사용자 비밀번호 검증 로직 필요
 
-		crewFacade.deleteCrewMember(loginMemberId, crewId);
+		crewFacade.deleteCrewMember(accessor.getMemberId(), crewId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루 멤버 강퇴", description = "크루에서 특정 멤버를 강제 퇴출시킵니다.")
 	@DeleteMapping("/{crew-id}/members/{crew-member-id}")
-	private ResponseEntity<Void> forcedRemovalCrewMember(
+	@NotGuest
+	public ResponseEntity<Void> forcedRemovalCrewMember(
 		@PathVariable("crew-id") Long crewId,
-		@PathVariable("crew-member-id") Long crewMemberId
+		@PathVariable("crew-member-id") Long crewMemberId,
+		@Auth final Accessor accessor
 	) {
 
-		crewFacade.forcedRemovalCrewMember(loginMemberId, crewId, crewMemberId);
+		crewFacade.forcedRemovalCrewMember(accessor.getMemberId(), crewId, crewMemberId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "크루원 목록 조회", description = "닉네임 검색 가능합니다. 크루장은 첫번째 고정입니다.")
 	@GetMapping("/{crew-id}/members")
-	private ResponseEntity<List<CrewMemberListResponse>> selectCrewMembers(
+	@NotGuest
+	public ResponseEntity<List<CrewMemberListResponse>> selectCrewMembers(
 		@PathVariable("crew-id") Long crewId,
-		@ModelAttribute CrewMemberSearchFilter crewMemberSearchFilter
+		@ModelAttribute CrewMemberSearchFilter crewMemberSearchFilter,
+		@Auth final Accessor accessor
 	) {
 
 		List<CrewMemberListResponse> result = crewFacade.selectCrewMembers(
-			loginMemberId,
+			accessor.getMemberId(),
 			crewId,
 			crewMemberSearchFilter);
 		return ResponseEntity.ok(result);
@@ -222,17 +249,19 @@ public class CrewController {
 
 	@Operation(summary = "크루장 변경", description = "크루장이 다른 크루원에게 권한을 넘깁니다.")
 	@PutMapping("/{crew-id}/leader/{crew-member-id}")
-	private ResponseEntity<Void> changeCrewLeader(
+	@NotGuest
+	public ResponseEntity<Void> changeCrewLeader(
 		@PathVariable("crew-id") long crewId,
-		@PathVariable("crew-member-id") long crewMemberId) {
+		@PathVariable("crew-member-id") long crewMemberId,
+		@Auth final Accessor accessor) {
 
-		crewFacade.updateCrewMemberIsLeader(loginMemberId, crewId, crewMemberId);
+		crewFacade.updateCrewMemberIsLeader(accessor.getMemberId(), crewId, crewMemberId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "내 크루 조회", description = "내가 속한 크루 반환")
-	@MemberOnly
 	@PutMapping("/me")
+	@NotGuest
 	public ResponseEntity<Long> selectMyCrew(@Auth final Accessor accessor) {
 
 		Long result = crewFacade.selectMyCrew(accessor.getMemberId());
@@ -241,7 +270,8 @@ public class CrewController {
 
 	@Operation(summary = "크루 이름 중복 조회", description = "크루 이름 중복 여부 조회")
 	@GetMapping("/duplicate")
-	private ResponseEntity<Boolean> selectDuplicateCrew(@RequestParam("crewName") String crewName) {
+	@NotGuest
+	public ResponseEntity<Boolean> selectDuplicateCrew(@RequestParam("crewName") String crewName) {
 
 		if (crewName == null || crewName.isBlank()) {
 			throw new IllegalArgumentException("크루명은 필수입니다.");

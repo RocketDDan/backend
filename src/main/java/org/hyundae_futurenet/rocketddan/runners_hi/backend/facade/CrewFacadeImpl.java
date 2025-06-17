@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.CrewException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidAuthorityException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -23,6 +24,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.crew.Cre
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewJoinRequestService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewMemberService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew.CrewService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.member.MemberService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.mail.GoogleMailUtil;
@@ -41,6 +43,8 @@ public class CrewFacadeImpl implements CrewFacade {
 	private final CrewService crewService;
 
 	private final CrewMemberService crewMemberService;
+
+	private final MemberService memberService;
 
 	private final CrewJoinRequestService crewJoinRequestService;
 
@@ -84,6 +88,8 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루에 리더 추가
 		crewMemberService.insertCrewMember(loginMemberId, loginMemberId, crewId, true);
+		// 만약 다른 크루에 대한 가입 요청이 존재한다면 모두 삭제
+		crewJoinRequestMapper.deleteCrewJoinRequestByMemberId(loginMemberId);
 		return crewId;
 	}
 
@@ -181,8 +187,9 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// TODO: 크루장에게 가입 요청 메일 보내기
 		// 해당 크루(crewId)의 크루장의 이메일 가져오기
-		// String email = crewMemberService.searchCrewLeadersEmail(crewId);
-		// googleMailUtil.sendCrewJoinRequestMail(email);
+		Long leaderId = crewMemberService.selectCrewLeaderIdByCrewId(crewId);
+		String email = memberService.findMemberEmail(leaderId);
+		googleMailUtil.sendCrewJoinRequestMail(email);
 	}
 
 	@Override
@@ -202,8 +209,8 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// TODO: 크루원에게 가입 요청 메일 보내기
 		// 해당 가입요청 id(crewJoinRequestId)에 해당하는 멤버의 이메일 가져오기
-		// String email = crewJoinRequestService.getMemberEmail(crewJoinRequestId);
-		// googleMailUtil.sendCrewJoinRequestMail(email);
+		String email = crewJoinRequestService.selectEmailByCrewJoinRequestId(crewJoinRequestId);
+		googleMailUtil.sendCrewJoinRequestMail(email);
 	}
 
 	@Override
@@ -257,7 +264,7 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// 크루장이면 탈퇴 불가능
 		if (result.isLeader()) {
-			throw new IllegalArgumentException("크루장은 탈퇴할 수 없습니다.");
+			throw new CrewException(ErrorCode.NOT_ALLOWED_CREW_LEADER_RESIGN);
 		}
 
 		crewMemberService.deleteCrewMember(loginMemberId, result.crewMemberId());
@@ -292,7 +299,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 로그인 유저가 크루장인지 점검
 		CrewMemberDetailResponse leaderInfo = crewMemberService.selectCrewMember(loginMemberId, crewId).get();
 		if (leaderInfo == null || !leaderInfo.isLeader()) {
-			throw new IllegalArgumentException("크루장이 아닙니다.");
+			throw new InvalidAuthorityException();
 		}
 
 		// 권한을 넘기려는 멤버가 일반 크루원인지 점검
@@ -332,7 +339,7 @@ public class CrewFacadeImpl implements CrewFacade {
 	private void checkCrewLeader(long loginMemberId, long crewId) {
 
 		if (!crewMemberService.isLeader(loginMemberId, crewId)) {
-			throw new IllegalArgumentException("크루장이 아닙니다.");
+			throw new InvalidAuthorityException();
 		}
 	}
 

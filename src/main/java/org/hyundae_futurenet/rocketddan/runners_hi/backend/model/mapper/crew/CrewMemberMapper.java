@@ -54,4 +54,7 @@ public interface CrewMemberMapper {
 	boolean isCrewMemberByCrewMemberIdAndCrewId(
 		@Param("crewMemberId") long crewMemberId,
 		@Param("crewId") long crewId);
+
+	// 특정 크루의 리더 조회
+	Long selectCrewLeaderIdByCrewId(@Param("crewId") long crewId);
 }

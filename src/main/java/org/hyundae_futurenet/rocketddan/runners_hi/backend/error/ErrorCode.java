@@ -25,7 +25,7 @@ public enum ErrorCode {
 	DUPLICATED_CREW_NAME("중복된 크루명입니다.", HttpStatus.BAD_REQUEST, "이미 존재하는 크루명입니다."),
 	ALREADY_EXIST_CREW_MEMBER("이미 크루 멤버입니다.", HttpStatus.BAD_REQUEST, "더 이상 크루에 가입할 수 없습니다."),
 	ALREADY_EXIST_CREW_JOIN_REQUEST("이미 크루 가입 요청 이력이 있습니다.", HttpStatus.BAD_REQUEST, "더 이상 가입 요청을 할 수 없습니다."),
-
+	NOT_ALLOWED_CREW_LEADER_RESIGN("크루장은 탈퇴할 수 없습니다.", HttpStatus.BAD_REQUEST, "크루장을 넘기고 탈퇴해야 합니다."),
 	// 인증
 	INVALID_TOKEN("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
 	TOKEN_EXPIRED("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED, "토큰 재발행이 필요합니다."),
