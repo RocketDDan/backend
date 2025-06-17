@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.JwtProperties;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidTokenException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.TokenExpiredException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.constant.Role;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.constant.TokenType;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -46,6 +48,7 @@ public class JwtTokenProvider {
 	public String generateAccessToken(long memberId, String memberEmail, Role role) {
 
 		Map<String, Object> claims = Map.of(
+			"type", TokenType.ACCESS.name(),
 			"memberId", String.valueOf(memberId),
 			"memberEmail", memberEmail,
 			"role", role.name()
@@ -56,6 +59,7 @@ public class JwtTokenProvider {
 	public String generateRefreshToken(long memberId, String memberEmail, Role role) {
 
 		Map<String, Object> claims = Map.of(
+			"type", TokenType.REFRESH.name(),
 			"memberId", String.valueOf(memberId),
 			"memberEmail", memberEmail,
 			"role", role.name()
@@ -66,6 +70,7 @@ public class JwtTokenProvider {
 	public String generateSignupToken(String email, String provider) {
 
 		Map<String, Object> claims = Map.of(
+			"type", TokenType.SIGNUP.name(),
 			"email", email,
 			"provider", provider
 		);
@@ -110,18 +115,6 @@ public class JwtTokenProvider {
 		return getPayload(token).get("email", String.class);
 	}
 
-	public void validateToken(String token) {
-
-		try {
-			JwtParser jwtParser = Jwts.parser()
-				.verifyWith(key)
-				.build();
-			jwtParser.parseSignedClaims(token);
-		} catch (JwtException | IllegalArgumentException e) {
-			throw new InvalidTokenException();
-		}
-	}
-
 	private Claims getPayload(String token) {
 
 		try {
@@ -131,7 +124,13 @@ public class JwtTokenProvider {
 			return jwtParser.parseSignedClaims(token)
 				.getPayload();
 		} catch (ExpiredJwtException e) {
-			throw new TokenExpiredException();
+			TokenType type = TokenType.valueOf(e.getClaims().get("type", String.class));
+			switch (type) {
+				case ACCESS -> throw new TokenExpiredException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+				case REFRESH -> throw new TokenExpiredException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+				case SIGNUP -> throw new TokenExpiredException(ErrorCode.SIGNUP_TOKEN_EXPIRED);
+				default -> throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
+			}
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new InvalidTokenException();
 		}
