@@ -9,6 +9,13 @@ mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: org.hyundae_futurenet.rocketddan.runners_hi.backend.model
 
+kakao-pay:
+  admin-key: ${KAKAO_ADMIN_KEY}
+  #  approve-url: ${SERVER_DOMAIN}/kakao-pay/approve
+  success-url: ${CLIENT_DOMAIN}/pay/kakao/success
+  cancel-url: ${SERVER_DOMAIN}/pay/kakao/cancel
+  fail-url: ${SERVER_DOMAIN}/pay/kakao/fail
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

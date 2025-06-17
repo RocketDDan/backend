@@ -30,6 +30,14 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
+	public long saveAdvertiseFeedWithStatusWait(long loginMemberId, String content, Double lat, Double lng) {
+
+		long feedId = feedMapper.getNextFeedId();
+		feedMapper.insertAdvertiseFeedWithStatusWait(feedId, loginMemberId, content, lat, lng);
+		return feedId;
+	}
+
+	@Override
 	public void delete(long feedId) {
 
 		feedMapper.delete(feedId);

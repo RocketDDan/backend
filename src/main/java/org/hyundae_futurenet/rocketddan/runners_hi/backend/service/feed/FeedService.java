@@ -11,6 +11,8 @@ public interface FeedService {
 
 	long save(long loginMemberId, String content, Double lat, Double lng);
 
+	long saveAdvertiseFeedWithStatusWait(long loginMemberId, String content, Double lat, Double lng);
+
 	void delete(long feedId);
 
 	void assertFeedExists(long loginMemberId, long feedId);
