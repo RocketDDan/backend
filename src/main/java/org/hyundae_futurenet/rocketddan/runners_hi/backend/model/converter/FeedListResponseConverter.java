@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse.CommentThumbnail;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse.FeedFileUrl;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse.CommentThumbnail;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse.FeedFileUrl;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +33,15 @@ public class FeedListResponseConverter {
 			})
 			.collect(Collectors.toList());
 		// 작성자 프로필 url
-		String writerProfileUrl = cloudFrontFileUtil.generateSignedUrl(source.getWriterProfilePath(), 60 * 10);
+		String writerProfileUrl = source.getWriterProfilePath() != null
+			? cloudFrontFileUtil.generateSignedUrl(source.getWriterProfilePath(), 60 * 10)
+			: null;
 		// 댓글 작성자 프로필 url
 		List<CommentThumbnail> commentThumbnails = source.getCommentList().stream()
 			.map(comment -> {
-				String commentWriterProfileUrl = cloudFrontFileUtil.generateSignedUrl(comment.getWriterProfilePath(),
-					60 * 10);
+				String commentWriterProfileUrl = comment.getWriterProfilePath() != null
+					? cloudFrontFileUtil.generateSignedUrl(comment.getWriterProfilePath(), 60 * 10)
+					: null;
 				// log.info("comment writer profile path: {} \ncomment writer profile url: {}",
 				// 	comment.getWriterProfilePath(), commentWriterProfileUrl);
 				return new CommentThumbnail(

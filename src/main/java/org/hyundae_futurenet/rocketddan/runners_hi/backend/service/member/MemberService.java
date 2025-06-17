@@ -20,4 +20,6 @@ public interface MemberService {
 	Optional<Member> findMember(Long memberId);
 
 	boolean existsByNickname(String nickname);
+	
+	String findMemberEmail(long memberId);
 }

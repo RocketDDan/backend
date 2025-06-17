@@ -3,9 +3,9 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyAdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AdminFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @Tag(name = "관리자 및 회사 API", description = "관리자 및 회사 전용 API")
@@ -48,6 +48,7 @@ public class AdminController {
 		@Parameter(description = "페이지 번호") @RequestParam(required = false, defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목 수") @RequestParam(required = false, defaultValue = "6") int perPage,
 		@Parameter(description = "역할 필터 (COMPANY 등)") @RequestParam(required = false) String role
+
 	) {
 
 		log.info("role={}", role);
@@ -102,7 +103,7 @@ public class AdminController {
 
 	@Operation(summary = "일별 피드 클릭 수 조회", description = "특정 피드의 날짜별 클릭 수를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/daily")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
@@ -115,7 +116,7 @@ public class AdminController {
 
 	@Operation(summary = "시간대별 클릭 수 조회", description = "특정 피드의 특정 날짜에 대한 시간대별 클릭 수를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/hourly")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
@@ -127,7 +128,7 @@ public class AdminController {
 
 	@Operation(summary = "피드 조회 요약 통계", description = "특정 날짜에 피드의 클릭 수, 순 방문자 수 등의 요약 통계를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/summary")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
@@ -146,7 +147,6 @@ public class AdminController {
 		@Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목수") @RequestParam(defaultValue = "6") int perPage
 	) {
-
 		return ResponseEntity.ok(adminFacade.getMyWalletList(accessor.getMemberId(), page, perPage));
 	}
 

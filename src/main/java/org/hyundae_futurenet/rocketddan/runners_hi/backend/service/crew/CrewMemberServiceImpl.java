@@ -67,7 +67,10 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 		String nickname = crewMemberSearchFilter.getNickname();
 		int limit = crewMemberSearchFilter.getPerPage();
 		int offset = (crewMemberSearchFilter.getPage() - 1) * limit;
-		log.info("CrewMemberService :: selectCrewMembers, crewId = {}, nickname = {}", crewId, nickname);
+		log.info("CrewMemberService :: selectCrewMembers, crewId = {}, nickname = {} page = {}",
+			crewId,
+			nickname,
+			crewMemberSearchFilter.getPage());
 
 		return crewMemberMapper.selectCrewMembers(crewId, nickname, limit, offset);
 	}
@@ -78,6 +81,13 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 
 		char leader = isLeader ? 'Y' : 'N';
 		crewMemberMapper.updateCrewMemberIsLeader(crewMemberId, leader, loginMemberId);
+	}
+
+	@Override
+	public Long selectCrewLeaderIdByCrewId(long crewId) {
+
+		log.info("CrewMemberService :: selectCrewLeaderIdByCrewId = {}", crewId);
+		return crewMemberMapper.selectCrewLeaderIdByCrewId(crewId);
 	}
 }
 
