@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberAdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AnnouncementFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
@@ -47,8 +46,7 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 등록", description = "관리자 또는 크루장이 공지를 등록합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@AdminOnly
-	@MemberOnly
+	@MemberAdminOnly
 	public ResponseEntity<Void> createAnnouncement(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 제목") @RequestParam("title") String title,
@@ -57,7 +55,8 @@ public class AnnouncementController {
 	) {
 
 		log.info("공지 등록 요청 들어옴");
-
+		log.info("확인 : {}", accessor.getMemberId());
+		log.info("권한 확인 : {}", accessor.getAuthority().name());
 		announcementFacade.createAnnouncement(title, content, files, accessor.getMemberId(),
 			accessor.getAuthority().name());
 		return ResponseEntity.ok().build();
@@ -65,6 +64,7 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 수정", description = "공지 ID를 기반으로 공지사항 내용을 수정합니다.")
 	@PutMapping(value = "/{announcementId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@MemberAdminOnly
 	public ResponseEntity<Void> updateAnnouncement(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 ID") @PathVariable Long announcementId,
@@ -73,8 +73,9 @@ public class AnnouncementController {
 		@Parameter(description = "새 첨부 파일") @RequestPart(value = "files", required = false) List<MultipartFile> files
 	) {
 
-		log.info("확인 : {}", accessor.getMemberId());
-		log.info("권한 확인 : {}", accessor.getAuthority().name());
+		log.info("멤버 확인 : {}", accessor.getMemberId());
+		log.info("권한 학안 : {}", accessor.getAuthority().name());
+
 		AnnouncementUpdateRequest request = new AnnouncementUpdateRequest();
 		request.setTitle(title);
 		request.setContent(content);
@@ -87,13 +88,14 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 삭제", description = "공지 ID를 기반으로 공지사항을 삭제합니다.")
 	@DeleteMapping("/{announcementId}")
-	@AdminOnly
-	@MemberOnly
+	@MemberAdminOnly
 	public ResponseEntity<Void> deleteAnnouncement(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 ID") @PathVariable Long announcementId
 	) {
 
+		log.info("확인 : {}", accessor.getMemberId());
+		log.info("권한 확인 : {}", accessor.getAuthority().name());
 		announcementFacade.deleteAnnouncement(announcementId, accessor.getMemberId(), accessor.getAuthority().name());
 		return ResponseEntity.ok().build();
 	}
@@ -110,6 +112,9 @@ public class AnnouncementController {
 		@Parameter(description = "정렬 순서 (LATEST 등)") @RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
+		log.info("공지 목록 출력");
+		log.info("확인 : {}", accessor.getMemberId());
+		log.info("권한 확인 : {}", accessor.getAuthority().name());
 		Map<String, Object> params = new HashMap<>();
 		if (scope != null) {
 			params.put("scope", scope);
@@ -138,6 +143,8 @@ public class AnnouncementController {
 		@Parameter(description = "공지 ID") @PathVariable Long announcementId
 	) {
 
+		log.info("확인 : {}", accessor.getMemberId());
+		log.info("권한 확인 : {}", accessor.getAuthority().name());
 		AnnouncementDetailResponse response = announcementFacade.getAnnouncementDetail(announcementId);
 		log.info("AnnouncementDetail::Controller={}", response);
 		return ResponseEntity.ok(response);
