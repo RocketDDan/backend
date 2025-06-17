@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -228,10 +231,11 @@ public class CrewController {
 	}
 
 	@Operation(summary = "내 크루 조회", description = "내가 속한 크루 반환")
+	@MemberOnly
 	@PutMapping("/me")
-	private ResponseEntity<Long> selectMyCrew() {
+	public ResponseEntity<Long> selectMyCrew(@Auth final Accessor accessor) {
 
-		Long result = crewFacade.selectMyCrew(loginMemberId);
+		Long result = crewFacade.selectMyCrew(accessor.getMemberId());
 		return ResponseEntity.ok(result);
 	}
 
