@@ -1,10 +1,12 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.feed;
 
 import java.util.List;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,22 +37,24 @@ public class FeedController {
 	@Operation(summary = "Feed 조회", description = "Feed를 조회합니다.")
 	@GetMapping
 	public ResponseEntity<List<FeedListResponse>> searchFeedList(
+		@Auth final Accessor accessor,
 		@Validated @ModelAttribute FeedSearchFilter feedSearchFilter) {
 
-		long loginMemberId = 1L;
+		long loginMemberId = accessor.getMemberId();
 		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(loginMemberId, feedSearchFilter));
 	}
 
-	@Operation(summary = "Feed 업로드", description = "Feed를 파일과 함께 업로드합니다.")
+	@Operation(summary = "개인의 Feed 업로드", description = "Feed를 파일과 함께 업로드합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> uploadFeed(
+		@Auth final Accessor accessor,
 		@RequestParam("content") String content,
 		@RequestParam(value = "lat", required = false) Double lat,
 		@RequestParam(value = "lng", required = false) Double lng,
 		@RequestPart("fileList") List<MultipartFile> fileList
 	) {
 
-		long loginMemberId = 1L;
+		long loginMemberId = accessor.getMemberId();
 		feedFacade.uploadFeed(loginMemberId, content, lat, lng, fileList);
 
 		return ResponseEntity.ok().build();
@@ -58,9 +62,12 @@ public class FeedController {
 
 	@Operation(summary = "Feed 삭제", description = "Feed를 삭제합니다.")
 	@DeleteMapping("/{feed-id}")
-	public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") long feedId) {
+	public ResponseEntity<Void> deleteFeed(
+		@Auth final Accessor accessor,
+		@PathVariable("feed-id") long feedId
+	) {
 
-		long loginMemberId = 1L;
+		long loginMemberId = accessor.getMemberId();
 		feedFacade.deleteFeed(loginMemberId, feedId);
 
 		return ResponseEntity.ok().build();
@@ -69,6 +76,7 @@ public class FeedController {
 	@Operation(summary = "Feed 수정", description = "Feed를 수정합니다.")
 	@PutMapping("/{feed-id}")
 	public ResponseEntity<Void> updateFeed(
+		@Auth final Accessor accessor,
 		@PathVariable("feed-id") long feedId,
 		@RequestPart("content") String newContent,
 		@RequestPart(value = "lat", required = false) Double newLat,
@@ -76,7 +84,7 @@ public class FeedController {
 		@RequestPart("fileList") List<MultipartFile> newfileList
 	) {
 
-		long loginMemberId = 1L;
+		long loginMemberId = accessor.getMemberId();
 		feedFacade.updateFeed(loginMemberId, feedId, newContent, newLat, newLng, newfileList);
 		return ResponseEntity.ok().build();
 	}
