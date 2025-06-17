@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AdminFacade;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminFeedResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AdminMemberListResponse;
@@ -31,7 +35,9 @@ public class AdminController {
 
 	// 회원 목록 조회
 	@GetMapping("/members")
+	@AdminOnly
 	public ResponseEntity<AdminMemberListResponse> getAdminMembers(
+		@Auth final Accessor accessor,
 		@RequestParam(required = false) String keyword,
 		@RequestParam(required = false, defaultValue = "1") int page,
 		@RequestParam(required = false, defaultValue = "6") int perPage
@@ -52,7 +58,9 @@ public class AdminController {
 
 	// 리워드 홍보 피드 조회
 	@GetMapping("/rewards")
+	@AdminOnly
 	public ResponseEntity<AdminFeedListResponse> getAdminFeeds(
+		@Auth final Accessor accessor,
 		@RequestParam(required = false) String keyword,
 		@RequestParam(required = false, defaultValue = "1") int page,
 		@RequestParam(required = false, defaultValue = "6") int perPage,
@@ -82,7 +90,9 @@ public class AdminController {
 	}
 
 	@GetMapping("/feeds/{id}/views/daily")
+	@CompanyOnly
 	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
+		@Auth final Accessor accessor,
 		@PathVariable("id") Long feedId,
 		@RequestParam String startDate,
 		@RequestParam String endDate) {
@@ -92,7 +102,9 @@ public class AdminController {
 	}
 
 	@GetMapping("/feeds/{id}/views/hourly")
+	@CompanyOnly
 	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
+		@Auth final Accessor accessor,
 		@PathVariable("id") Long feedId,
 		@RequestParam String targetDate) {
 
@@ -101,7 +113,9 @@ public class AdminController {
 	}
 
 	@GetMapping("/feeds/{id}/views/summary")
+	@CompanyOnly
 	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
+		@Auth final Accessor accessor,
 		@PathVariable("id") Long feedId,
 		@RequestParam String startDate,
 		@RequestParam String endDate) {
@@ -111,13 +125,14 @@ public class AdminController {
 	}
 
 	@GetMapping("/my-wallet")
+	@CompanyOnly
 	public ResponseEntity<MyWalletListResponse> getMyWallet(
+		@Auth final Accessor accessor,
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "6") int perPage
 	) {
 
-		Long memberId = 1L;
-		return ResponseEntity.ok(adminFacade.getMyWalletList(memberId, page, perPage));
+		return ResponseEntity.ok(adminFacade.getMyWalletList(accessor.getMemberId(), page, perPage));
 	}
 
 }
