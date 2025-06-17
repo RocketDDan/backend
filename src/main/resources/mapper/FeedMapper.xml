@@ -98,6 +98,9 @@
                 </when>
             </choose>
         </where>
+        <where>
+            AND STATUS = 'APPROVED'
+        </where>
 
         <choose>
             <when test="feedSearchFilter.order.name() == 'LATEST'">
