@@ -3,6 +3,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.util.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayApproveResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +43,7 @@ public class KakaoPayUtil {
 	/**
 	 * 결제 준비 (Ready API)
 	 */
-	public Map<String, Object> kakaoPayReady(
+	public KakaoPayReadyResponse kakaoPayReady(
 		String partnerOrderId,
 		String partnerUserId,
 		String itemName,
@@ -64,7 +66,9 @@ public class KakaoPayUtil {
 
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(params, getHeader());
 
-		ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+		ResponseEntity<KakaoPayReadyResponse> response = restTemplate.exchange(
+			url, HttpMethod.POST, request, KakaoPayReadyResponse.class);
+
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return response.getBody();
 		}
@@ -74,7 +78,7 @@ public class KakaoPayUtil {
 	/**
 	 * 결제 승인 (Approve API)
 	 */
-	public Map<String, Object> kakaoPayApprove(
+	public KakaoPayApproveResponse kakaoPayApprove(
 		String tid,
 		String partnerOrderId,
 		String partnerUserId,
@@ -91,8 +95,8 @@ public class KakaoPayUtil {
 
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(params, getHeader());
 
-		ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
-
+		ResponseEntity<KakaoPayApproveResponse> response = restTemplate.exchange(
+			url, HttpMethod.POST, request, KakaoPayApproveResponse.class);
 		return response.getBody();
 	}
 
