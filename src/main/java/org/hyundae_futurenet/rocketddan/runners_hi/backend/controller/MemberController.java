@@ -8,6 +8,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.Me
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +25,22 @@ public class MemberController {
 
 	private final MemberFacade memberFacade;
 
-	@Operation(summary = "회원 정보 조회", description = "로그인한 회원의 정보를 조회한다.")
+	@Operation(summary = "로그인한 회원 정보 조회", description = "로그인한 회원의 정보를 조회한다.")
 	@NotGuest
 	@GetMapping("/personal-info")
 	public ResponseEntity<MemberResponse> findMember(@Auth final Accessor accessor) {
 
 		final MemberResponse memberResponse = memberFacade.findMember(accessor.getMemberId());
+		return ResponseEntity.ok(memberResponse);
+	}
+
+	@Operation(summary = "특정 회원 정보 조회", description = "특정 회원의 정보를 조회한다.")
+	@GetMapping("/{memberId}")
+	public ResponseEntity<MemberResponse> findMemberById(
+		@PathVariable("memberId") final Long memberId
+	) {
+
+		final MemberResponse memberResponse = memberFacade.findMember(memberId);
 		return ResponseEntity.ok(memberResponse);
 	}
 
