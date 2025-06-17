@@ -65,8 +65,6 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 수정", description = "공지 ID를 기반으로 공지사항 내용을 수정합니다.")
 	@PutMapping(value = "/{announcementId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@AdminOnly
-	@MemberOnly
 	public ResponseEntity<Void> updateAnnouncement(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 ID") @PathVariable Long announcementId,
@@ -75,6 +73,8 @@ public class AnnouncementController {
 		@Parameter(description = "새 첨부 파일") @RequestPart(value = "files", required = false) List<MultipartFile> files
 	) {
 
+		log.info("확인 : {}", accessor.getMemberId());
+		log.info("권한 확인 : {}", accessor.getAuthority().name());
 		AnnouncementUpdateRequest request = new AnnouncementUpdateRequest();
 		request.setTitle(title);
 		request.setContent(content);
