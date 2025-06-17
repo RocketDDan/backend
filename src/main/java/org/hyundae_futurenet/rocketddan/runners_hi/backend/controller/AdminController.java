@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyAdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AdminFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
@@ -95,7 +96,7 @@ public class AdminController {
 
 	@Operation(summary = "일별 피드 클릭 수 조회", description = "특정 피드의 날짜별 클릭 수를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/daily")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
@@ -108,7 +109,7 @@ public class AdminController {
 
 	@Operation(summary = "시간대별 클릭 수 조회", description = "특정 피드의 특정 날짜에 대한 시간대별 클릭 수를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/hourly")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
@@ -120,7 +121,7 @@ public class AdminController {
 
 	@Operation(summary = "피드 조회 요약 통계", description = "특정 날짜에 피드의 클릭 수, 순 방문자 수 등의 요약 통계를 조회합니다.")
 	@GetMapping("/feeds/{id}/views/summary")
-	@CompanyOnly
+	@CompanyAdminOnly
 	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
 		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,

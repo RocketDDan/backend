@@ -73,8 +73,9 @@ public class AnnouncementController {
 		@Parameter(description = "새 첨부 파일") @RequestPart(value = "files", required = false) List<MultipartFile> files
 	) {
 
-		log.info("확인 : {}", accessor.getMemberId());
-		log.info("권한 확인 : {}", accessor.getAuthority().name());
+		log.info("멤버 확인 : {}", accessor.getMemberId());
+		log.info("권한 학안 : {}", accessor.getAuthority().name());
+
 		AnnouncementUpdateRequest request = new AnnouncementUpdateRequest();
 		request.setTitle(title);
 		request.setContent(content);
