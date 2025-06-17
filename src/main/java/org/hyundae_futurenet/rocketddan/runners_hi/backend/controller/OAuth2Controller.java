@@ -36,7 +36,6 @@ public class OAuth2Controller {
 		@RequestPart(value = "profileImage", required = false) MultipartFile profileImage
 	) {
 
-		jwtTokenProvider.validateToken(signupToken);
 		String tokenEmail = jwtTokenProvider.getEmail(signupToken);
 		if (!tokenEmail.equals(signUpRequest.getEmail())) {
 			throw new InvalidTokenException();

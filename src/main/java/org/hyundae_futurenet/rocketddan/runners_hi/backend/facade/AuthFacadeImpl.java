@@ -25,8 +25,6 @@ public class AuthFacadeImpl implements AuthFacade {
 	@Override
 	public String reissueAccessToken(String refreshToken) {
 
-		jwtTokenProvider.validateToken(refreshToken);
-
 		long memberId = jwtTokenProvider.getMemberId(refreshToken);
 		Role role = jwtTokenProvider.getRole(refreshToken);
 		String memberEmail = jwtTokenProvider.getMemberEmail(refreshToken);
