@@ -1,7 +1,7 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.error;
 
-
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<?> handleCustomException(CustomException e) {
+
+		ErrorCode errorCode = e.getErrorCode();
+		HttpStatusCode status = errorCode.getStatus();
+		return ResponseEntity.status(status).body("⚠️ " + errorCode.getMessage());
+	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
@@ -29,4 +37,3 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("🚫 " + ex.getMessage());
 	}
 }
-

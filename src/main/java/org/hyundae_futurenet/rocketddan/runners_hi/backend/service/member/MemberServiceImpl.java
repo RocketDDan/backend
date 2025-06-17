@@ -2,10 +2,10 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.member;
 
 import java.util.Optional;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.member.MemberException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.member.MemberException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.Member;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.SignUpRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberInfoResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.member.MemberMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,18 +33,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberInfoResponse getPersonalInfo(Long memberId) {
+	public Optional<Member> findMember(Long memberId) {
 
-		return memberMapper.findById(memberId)
-			.map(MemberInfoResponse::from)
-			.orElseThrow(() -> new MemberException("존재하지 않는 회원입니다."));
+		return memberMapper.findById(memberId);
+	}
+
+	@Override
+	public Optional<String> findPasswordByEmail(String email) {
+
+		return memberMapper.findPasswordByEmail(email);
 	}
 
 	@Override
 	public long signUp(SignUpRequest signUpRequest) {
 
 		if (findByNickname(signUpRequest.getNickname()).isPresent()) {
-			throw new MemberException("이미 존재하는 닉네임입니다.");
+			throw new MemberException(ErrorCode.SIGNUP_MEMBER_NICKNAME_DUPLICATED);
 		}
 
 		Member member = signUpRequest.toMember(passwordEncoder);
@@ -56,5 +60,11 @@ public class MemberServiceImpl implements MemberService {
 	public void updateProfileImage(long memberId, String uploadedFilePath) {
 
 		memberMapper.updateProfileImage(memberId, uploadedFilePath);
+	}
+
+	@Override
+	public boolean existsByNickname(String nickname) {
+
+		return memberMapper.existsByNickname(nickname);
 	}
 }

@@ -1,6 +1,5 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.feed;
 
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
@@ -22,9 +21,10 @@ public interface FeedCommentMapper {
 
 	@Insert("""
 		INSERT INTO FEED_COMMENT(COMMENT_ID, FEED_ID, CONTENT, CREATED_BY) 
-		VALUES (SEQ_FEED_COMMENT.nextval, #{feedId}, #{content}, #{loginMemberId})
+		VALUES (SEQ_FEED_COMMENT.nextval, #{feedId}, #{comment}, #{loginMemberId})
 		""")
-	void insert(@Param("loginMemberId") long loginMemberId,
+	void insert(
+		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
 		@Param("comment") String comment);
 
@@ -45,22 +45,23 @@ public interface FeedCommentMapper {
 	boolean validateCommentExistence(
 		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId,
-		@Param("commentId") String commentId);
+		@Param("commentId") long commentId);
 
 	@Update("""
 		
 		UPDATE FEED_COMMENT
-		SET CONTENT = #{newContent}
+		SET CONTENT = #{newComment}
 		WHERE COMMENT_ID = #{commentId}
 		""")
-	void update(@Param("commentId") String commentId,
+	void update(
+		@Param("commentId") long commentId,
 		@Param("newComment") String newComment);
 
 	@Delete("""
 		DELETE FROM FEED_COMMENT
 		WHERE COMMENT_ID = #{commentId}
 		""")
-	void delete(@Param("commentId") String commentId);
+	void delete(@Param("commentId") long commentId);
 
 	@Select("""
 			SELECT
@@ -77,8 +78,10 @@ public interface FeedCommentMapper {
 			FROM FEED_COMMENT FC
 			JOIN MEMBER M ON FC.CREATED_BY = M.MEMBER_ID
 			WHERE FC.FEED_ID = #{feedId}
+			ORDER BY FC.CREATED_AT
 		""")
-	List<CommentDetailSource> searchAll(@Param("loginMemberId") long loginMemberId,
+	List<CommentDetailSource> searchAll(
+		@Param("loginMemberId") long loginMemberId,
 		@Param("feedId") long feedId);
 
 }

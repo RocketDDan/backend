@@ -16,7 +16,10 @@ public class FeedFileServiceImpl implements FeedFileService {
 	@Override
 	public void save(long loginMemberId, long feedId, List<String> uploadedfilePathList) {
 
-		feedFileMapper.insertAll(loginMemberId, feedId, uploadedfilePathList);
+		// feedFileMapper.insertAll(loginMemberId, feedId, uploadedfilePathList);
+		for (int i = 0; i < uploadedfilePathList.size(); i++) {
+			feedFileMapper.insert(loginMemberId, feedId, uploadedfilePathList.get(i), i + 1);
+		}
 	}
 
 	@Override

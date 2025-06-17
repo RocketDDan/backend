@@ -10,8 +10,8 @@
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_member
         WHERE member_id = #{memberId}
-        AND crew_id = #{crewId}
-        AND is_leader = 'Y'
+          AND crew_id = #{crewId}
+          AND is_leader = 'Y'
     </select>
 
     <!--  일반 크루 멤버인지 확인  -->
@@ -19,45 +19,45 @@
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_member
         WHERE member_id = #{memberId}
-        AND crew_id = #{crewId}
-        AND IS_LEADER = 'N'
+          AND crew_id = #{crewId}
+          AND IS_LEADER = 'N'
     </select>
 
     <select id="isCrewMemberByCrewMemberIdAndCrewId" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_member
         WHERE crew_member_id = #{crewMemberId}
-        AND crew_id = #{crewId}
+          AND crew_id = #{crewId}
     </select>
 
     <!--  멤버 정보 확인  -->
     <select id="selectCrewMemberByCrewIdAndMemberId"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberDetailResponse">
-        SELECT crew_member_id as crewMemberId,
-        member_id as memberId,
-        is_leader as isLeader,
-        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
+        SELECT crew_member_id                               as crewMemberId,
+               member_id                                    as memberId,
+               is_leader                                    as isLeader,
+               TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as createdAt
         FROM crew_member
         WHERE member_id = #{memberId}
-        AND crew_id = #{crewId}
+          AND crew_id = #{crewId}
     </select>
 
     <select id="existsLeaderByMemberId" parameterType="long" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_member
         WHERE member_id = #{memberId}
-        AND is_leader = 'Y'
+          AND is_leader = 'Y'
     </select>
 
     <!--  자신이 속한 크루의 리더 조회  -->
     <select id="findCrewLeaderIdByMemberId" parameterType="long" resultType="long">
         SELECT CM.member_id
         FROM crew_member CM
-        JOIN crew C ON CM.crew_id = C.crew_id
+                 JOIN crew C ON CM.crew_id = C.crew_id
         WHERE CM.is_leader = 'Y'
-        AND C.crew_id = (SELECT crew_id
-        FROM crew_member
-        WHERE member_id = #{memberId})
+          AND C.crew_id = (SELECT crew_id
+                           FROM crew_member
+                           WHERE member_id = #{memberId})
     </select>
 
     <!-- 자신이 크루에 속해있는지 확인 -->
@@ -81,7 +81,15 @@
         VALUES (seq_crew_member.nextval,
         #{memberId},
         #{crewId},
-        'N',
+        <choose>
+            <when test="isLeader == true">
+                'Y'
+            </when>
+            <otherwise>
+                'N'
+            </otherwise>
+        </choose>
+        ,
         systimestamp,
         #{loginMemberId},
         systimestamp,
@@ -99,11 +107,11 @@
     <select id="selectCrewMembers"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse">
         SELECT
+        cm.crew_member_id as crewMemberId,
         cm.member_id as memberId,
         m.nickname as nickname,
-        m.email as email,
         m.profile_path as profilePath,
-        TO_CHAR(cm.created_at, 'YYYY-MM-DD HH24:MI:SS') as registerDate,
+        TO_CHAR(cm.created_at, 'YYYY-MM-DD') as registerDate,
         cm.is_leader as isLeader
         FROM crew_member cm
         JOIN member m ON cm.member_id = m.member_id
@@ -121,9 +129,9 @@
 
     <update id="updateCrewMemberIsLeader">
         UPDATE crew_member
-        SET is_leader = #{isLeader},
-        updated_at = sysdate,
-        updated_by = #{loginMemberId}
+        SET is_leader  = #{isLeader},
+            updated_at = sysdate,
+            updated_by = #{loginMemberId}
         WHERE crew_member_id = #{crewMemberId}
     </update>
 

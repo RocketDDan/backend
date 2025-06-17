@@ -1,11 +1,13 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.auth;
 
+import static org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode.*;
+
 import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.InvalidAuthorityException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.AuthException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Authority;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,6 @@ public class NotGuestChecker {
 			.map(Accessor.class::cast)
 			.filter((accessor) -> !accessor.getAuthority().equals(Authority.GUEST))
 			.findFirst()
-			.orElseThrow(InvalidAuthorityException::new);
+			.orElseThrow(() -> new AuthException(UNAUTHORIZED_ACCESS));
 	}
 }

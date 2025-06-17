@@ -44,6 +44,12 @@ public interface CrewFacade {
 		long crewId,
 		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
 
+	// 다음 페이지 존재 여부 조회
+	boolean isExistNextPage(CrewJoinRequestSearchFilter filter);
+
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(long loginMemberId, long crewJoinRequestId);
+
 	// 크루 멤버 생성
 	void insertCrewMember(long loginMemberId, long memberId, long crewId);
 
@@ -67,5 +73,8 @@ public interface CrewFacade {
 
 	// 내 크루 조회
 	Long selectMyCrew(long loginMemberId);
+
+	// 크루 이름 중복 조회
+	boolean existsByCrewName(String crewName);
 }
 

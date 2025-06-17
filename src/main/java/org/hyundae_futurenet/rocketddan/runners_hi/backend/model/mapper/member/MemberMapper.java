@@ -14,8 +14,11 @@ public interface MemberMapper {
 
 	Optional<Member> findById(long memberId);
 
+	Optional<String> findPasswordByEmail(String email);
+
 	int insertMember(Member member);
 
 	void updateProfileImage(long memberId, String uploadedFilePath);
 
+	boolean existsByNickname(String nickname);
 }

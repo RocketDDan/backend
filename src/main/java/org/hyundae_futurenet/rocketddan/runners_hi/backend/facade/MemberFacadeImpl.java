@@ -1,10 +1,15 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.member.MemberException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.Member;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberInfoResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.member.MemberService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +22,8 @@ public class MemberFacadeImpl implements MemberFacade {
 
 	private final MemberService memberService;
 
+	private final CloudFrontFileUtil cloudFrontFileUtil;
+
 	@Override
 	public Optional<Member> findByEmail(String email) {
 
@@ -24,8 +31,18 @@ public class MemberFacadeImpl implements MemberFacade {
 	}
 
 	@Override
-	public MemberInfoResponse getPersonalInfo(Long memberId) {
+	public MemberResponse findMember(Long memberId) {
 
-		return memberService.getPersonalInfo(memberId);
+		Member member = memberService.findMember(memberId)
+			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_EXIST));
+		String profileImageUrl = Objects.nonNull(member.getProfilePath()) ?
+			cloudFrontFileUtil.generateSignedUrl(member.getProfilePath(), 60 * 10) : null;
+		return MemberResponse.from(member, profileImageUrl);
+	}
+
+	@Override
+	public NicknameCheckResponse existsByNickname(String nickname) {
+
+		return new NicknameCheckResponse(memberService.existsByNickname(nickname));
 	}
 }

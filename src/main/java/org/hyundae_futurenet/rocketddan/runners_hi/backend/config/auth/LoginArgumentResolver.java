@@ -5,7 +5,7 @@ import static org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtT
 import java.util.Optional;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.BadRequestException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.exception.BadRequestException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.constant.Role;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.CookieUtils;

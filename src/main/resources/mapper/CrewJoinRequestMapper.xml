@@ -13,10 +13,11 @@
           AND status = 'REQUEST'
     </select>
 
-    <select id="existsCrewJoinRequest" resultType="boolean">
+    <select id="existsCrewJoinRequestByMemberId" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
         FROM crew_join_request
-        WHERE crew_join_request_id = #{crewJoinRequestId}
+        WHERE member_id = #{memberId}
+          AND status = 'REQUEST'
     </select>
 
     <select id="selectCrewJoinRequestByCrewJoinRequestId"
@@ -45,9 +46,9 @@
                 #{loginMemberId},
                 #{message},
                 'REQUEST',
-                sysdate,
+                SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
                 #{loginMemberId},
-                sysdate,
+                SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
                 #{loginMemberId})
     </insert>
 
@@ -55,10 +56,18 @@
     <update id="updateCrewJoinRequest">
         UPDATE crew_join_request
         SET status     = #{status},
-            updated_at = sysdate,
+            updated_at = SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
             updated_by = #{loginMemberId}
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </update>
+
+    <!-- 가입 요청 삭제  -->
+    <delete id="deleteCrewJoinRequest">
+        DELETE
+        FROM crew_join_request
+        WHERE crew_id = #{crewId}
+          AND member_id = #{memberId}
+    </delete>
 
     <select id="selectCrewJoinRequestsByStatus"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewJoinRequestListResponse">
@@ -73,7 +82,7 @@
         FROM crew_join_request cjr
         JOIN member m ON cjr.member_id = m.member_id
         WHERE cjr.status = #{status}
-
+        AND cjr.crew_id = #{crewId}
         <if test="req.nickname != null and req.nickname.trim() != ''">
             AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
         </if>
@@ -85,6 +94,29 @@
                 ORDER BY cjr.created_at ASC
             </when>
         </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <select id="isExistNextPage" resultType="boolean">
+        SELECT CASE WHEN EXISTS (
+        SELECT 1
+        FROM crew_join_request cjr
+        JOIN member m ON cjr.member_id = m.member_id
+        WHERE cjr.status = #{status}
+        <if test="req.nickname != null and req.nickname.trim() != ''">
+            AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
+        </if>
+        <choose>
+            <when test="req.order.name() == 'LATEST'">
+                ORDER BY cjr.created_at DESC
+            </when>
+            <when test="req.order.name() == 'OLDEST'">
+                ORDER BY cjr.created_at ASC
+            </when>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT 1 ROWS ONLY
+        ) THEN 1 ELSE 0 END
+        FROM dual
     </select>
 
 </mapper>

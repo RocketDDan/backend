@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.InvalidAuthorityException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidAuthorityException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberOnlyChecker {
 
-	@Before("@annotation(org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberOnly)")
+	@Before("@annotation(org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberCompanyOnly)")
 	public void check(final JoinPoint joinPoint) {
 
 		Arrays.stream(joinPoint.getArgs())
 			.filter(Accessor.class::isInstance)
 			.map(Accessor.class::cast)
-			.filter(Accessor::isMember)
+			.filter(accessor -> accessor.isMember() || accessor.isCompany())
 			.findFirst()
 			.orElseThrow(InvalidAuthorityException::new);
 	}

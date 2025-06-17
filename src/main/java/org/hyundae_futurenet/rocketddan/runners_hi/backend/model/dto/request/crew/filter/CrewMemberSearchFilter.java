@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CrewMemberSearchFilter {
 
 	@Schema(description = "크루원 닉네임 검색", example = "User")
-	@Max(value = 255, message = "닉네임은 최대 255자입니다.")
+	@Max(value = 255, message = "닉네임은 최대 50자입니다.")
 	private String nickname = "";
 
 	@Schema(description = "페이지 번호 (1 이상)", example = "1")

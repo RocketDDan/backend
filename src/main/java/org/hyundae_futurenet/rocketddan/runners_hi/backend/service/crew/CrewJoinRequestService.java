@@ -18,5 +18,11 @@ public interface CrewJoinRequestService {
 	// 가입 요청 목록 조회
 	List<CrewJoinRequestListResponse> selectCrewJoinRequestsByStatus(
 		long crewId,
-		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
+		CrewJoinRequestSearchFilter filter);
+
+	// 다음 페이지 존재 여부 조회
+	boolean isExistNextPage(CrewJoinRequestSearchFilter filter);
+
+	// 가입 요청 삭제
+	void deleteCrewJoinRequest(long loginMemberId, long crewId);
 }

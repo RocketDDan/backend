@@ -23,9 +23,9 @@
         #{announcementFileId},
         #{filePath},
         #{announcementId},
-        SYSDATE,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{createdBy},
-        SYSDATE,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{createdBy}
         )
     </insert>
@@ -45,7 +45,7 @@
             <if test="filePath != null and filePath != ''">
                 FILE_PATH = #{filePath},
             </if>
-            UPDATED_AT = SYSDATE,
+            UPDATED_AT = SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
             UPDATED_BY = #{createdBy}
         </set>
         WHERE ANNOUNCEMENT_ID = #{announcementId}
@@ -53,7 +53,8 @@
 
     <!--  첨부파일 삭제  -->
     <delete id="deleteByAnnouncementId" parameterType="long">
-        DELETE FROM announcement_file
+        DELETE
+        FROM announcement_file
         WHERE announcement_id = #{announcementId}
     </delete>
 
@@ -66,9 +67,10 @@
 
     <!-- 파일 개별 삭제 -->
     <delete id="deleteFileByPath" parameterType="map">
-        DELETE FROM announcement_file
+        DELETE
+        FROM announcement_file
         WHERE announcement_id = #{announcementId}
-        AND file_path = #{filePath}
+          AND file_path = #{filePath}
     </delete>
 
 

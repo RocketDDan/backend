@@ -15,9 +15,9 @@ public class AnnouncementListResponse {
 
 	private String title;
 
-	private String content;
+	private String crewName;
 
-	private String email;
+	private Long announcementId;
 
 	private String createdAt;
 }

@@ -29,8 +29,8 @@ public interface FeedMapper {
 		    ) VALUES (
 		        #{feedId},
 		        #{content},
-		        #{lat},
-		        #{lng},
+		        #{lat, jdbcType=NUMERIC},
+		        #{lng, jdbcType=NUMERIC},
 		        #{loginMemberId}
 		    )
 		""")

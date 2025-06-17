@@ -52,6 +52,7 @@ public class FeedFacadeImpl implements FeedFacade {
 
 	@Override
 	@Transactional
+	// TODO: feed_file 테이블에 피드 파일 정보 저장에서 에러 시 S3에는 파일이 올라감
 	public void uploadFeed(long loginMemberId, String content, Double lat, Double lng, List<MultipartFile> fileList) {
 		// feed 테이블에 피드 정보 저장
 		long feedId = feedService.save(loginMemberId, content, lat, lng);
@@ -97,7 +98,7 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
-	public void updateComment(long loginMemberId, long feedId, String commentId, String newComment) {
+	public void updateComment(long loginMemberId, long feedId, long commentId, String newComment) {
 		// 해당하는 댓글 없으면 예외 던지기
 		feedCommentService.assertCommentExists(loginMemberId, feedId, commentId);
 		// 댓글 수정
@@ -105,7 +106,7 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
-	public void deleteCommit(long loginMemberId, long feedId, String commentId) {
+	public void deleteCommit(long loginMemberId, long feedId, long commentId) {
 		// 해당하는 댓글 없으면 예외 던지기
 		feedCommentService.assertCommentExists(loginMemberId, feedId, commentId);
 		// 댓글 삭제

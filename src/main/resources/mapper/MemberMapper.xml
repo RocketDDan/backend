@@ -41,9 +41,9 @@
         #{phone},
         #{pwdHash},
         #{role},
-        SYSDATE,
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
         #{memberId},
-        SYSDATE
+        SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul'
         )
     </insert>
 
@@ -96,11 +96,24 @@
           AND DELETED_AT IS NULL
     </select>
 
+    <select id="findPasswordByEmail" resultType="String">
+        SELECT PWD_HASH
+        FROM MEMBER
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="existsByNickname" resultType="boolean">
+        SELECT CASE
+                   WHEN COUNT(*) > 0 THEN 1
+                   ELSE 0
+                   END
+        FROM MEMBER
+        WHERE NICKNAME = #{nickname}
+    </select>
+
     <update id="updateProfileImage">
         UPDATE MEMBER
-        SET PROFILE_PATH = #{uploadedFilePath},
-            UPDATED_AT   = SYSDATE,
-            UPDATED_BY   = #{memberId}
+        SET PROFILE_PATH = #{uploadedFilePath}
         WHERE MEMBER_ID = #{memberId}
     </update>
 </mapper>

@@ -53,16 +53,41 @@ spring:
   application:
     name: backend
 
+  mail:
+    host: smtp.gmail.com # 하루 최대 500통
+    port: 587
+    username: ${GOOGLE_MAIL_USERNAME}@gmail.com
+    password: ${GOOGLE_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true  # 사용자 인증 시도 여부
+          starttls:
+            enable: true
+
+  #  data:
+  #    redis:
+  #      host: ${REDIS_HOST}
+  #      port: 6379
+
   datasource:
     url: jdbc:oracle:thin:@${ORACLE_DB_CONNECTION_NAME}?TNS_ADMIN=${ORACLE_WALLET_DIRECTORY_PATH}
     username: ${ORACLE_DB_USER_NAME}
     password: ${ORACLE_DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      connection-init-sql: "ALTER SESSION SET TIME_ZONE = 'Asia/Seoul'"
+      maximum-pool-size: 20
+      minimum-idle: 3
+      idle-timeout: 300000  # 5분
+      max-lifetime: 900000  # 15분 (autonomous db는 session recycling 주기가 있기 때문에 너무 길게 안잡음)
+      validation-timeout: 5000
+      connection-timeout: 30000
 
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 15MB
+      max-request-size: 30MB
 
   security:
     oauth2:
@@ -95,3 +120,4 @@ jwt:
 
 app:
   client-domain: ${CLIENT_DOMAIN}
+  server-domain: ${SERVER_DOMAIN}

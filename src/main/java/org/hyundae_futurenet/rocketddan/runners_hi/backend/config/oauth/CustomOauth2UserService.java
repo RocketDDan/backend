@@ -3,7 +3,8 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.config.oauth;
 import java.util.Collections;
 import java.util.Map;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.exception.auth.OAuth2AuthException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.OAuth2AuthException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -45,7 +46,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
 		if (registrationId.equals("kakao")) {
 			oAuth2UserInfo = new KakaoOAuth2UserInfo(oAuth2User.getAttributes());
 		} else {
-			throw new OAuth2AuthException("해당 OAuth 서비스는 제공하지 않습니다.");
+			throw new OAuth2AuthException(ErrorCode.NOT_SUPPORTED_OAUTH2_SERVICE);
 		}
 		return oAuth2UserInfo;
 	}

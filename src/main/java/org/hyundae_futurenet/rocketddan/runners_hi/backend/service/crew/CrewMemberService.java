@@ -19,7 +19,7 @@ public interface CrewMemberService {
 	Optional<CrewMemberDetailResponse> selectCrewMember(long memberId, long crewId);
 
 	// 크루 멤버 생성
-	void insertCrewMember(long loginMemberId, long memberId, long crewId);
+	void insertCrewMember(long loginMemberId, long memberId, long crewId, boolean isLeader);
 
 	// 크루 멤버 탈퇴
 	void deleteCrewMember(long loginMemberId, long crewMemberId);

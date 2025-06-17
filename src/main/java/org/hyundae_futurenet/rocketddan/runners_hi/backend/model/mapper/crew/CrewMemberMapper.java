@@ -31,7 +31,8 @@ public interface CrewMemberMapper {
 	void insertCrewMember(
 		@Param("loginMemberId") long loginMemberId,
 		@Param("memberId") long memberId,
-		@Param("crewId") long crewId);
+		@Param("crewId") long crewId,
+		@Param("isLeader") boolean isLeader);
 
 	void deleteCrewMember(@Param("crewMemberId") long crewMemberId);
 

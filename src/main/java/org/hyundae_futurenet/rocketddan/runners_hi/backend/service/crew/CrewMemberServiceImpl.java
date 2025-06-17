@@ -45,10 +45,10 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 	}
 
 	@Override
-	public void insertCrewMember(long loginMemberId, long memberId, long crewId) {
+	public void insertCrewMember(long loginMemberId, long memberId, long crewId, boolean isLeader) {
 
 		log.info("CrewMemberService :: insertCrewMember, memberId = {}, crewId = {}", memberId, crewId);
-		crewMemberMapper.insertCrewMember(loginMemberId, memberId, crewId);
+		crewMemberMapper.insertCrewMember(loginMemberId, memberId, crewId, isLeader);
 	}
 
 	@Override
