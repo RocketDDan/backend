@@ -1,19 +1,23 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.CommentDetailResponseConverter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.FeedListResponseConverter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.CommentDetailResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedLikeService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.pay.KakaoPayService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.payment.KakaoPayUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,11 +38,15 @@ public class FeedFacadeImpl implements FeedFacade {
 
 	private final FeedLikeService feedLikeService;
 
+	private final KakaoPayService kakaoPayService;
+
 	private final FeedListResponseConverter feedListResponseConverter;
 
 	private final CommentDetailResponseConverter commentDetailResponseConverter;
 
 	private final S3FileUtil s3FileUtil;
+
+	private final KakaoPayUtil kakaoPayUtil;
 
 	@Override
 	public List<FeedListResponse> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter) {
@@ -60,6 +68,37 @@ public class FeedFacadeImpl implements FeedFacade {
 		List<String> uploadedfilePathList = s3FileUtil.uploadFeedFile(fileList, feedId);
 		// feed_file 테이블에 피드 파일 정보 저장
 		feedFileService.save(loginMemberId, feedId, uploadedfilePathList);
+	}
+
+	@Override
+	@Transactional
+	public KakaoPayReadyResponse uploadFeedByCompany(
+		long loginMemberId,
+		String content,
+		Double lat, Double lng,
+		List<MultipartFile> fileList,
+		int payAmount
+	) {
+
+		// feed 테이블에 피드 정보 저장 (STATUS: WAIT)
+		long feedId = feedService.saveWithStatusWait(loginMemberId, content, lat, lng);
+		// s3 파일 저장소에 피드 파일 저장
+		List<String> uploadedfilePathList = s3FileUtil.uploadFeedFile(fileList, feedId);
+		// feed_file 테이블에 피드 파일 정보 저장
+		feedFileService.save(loginMemberId, feedId, uploadedfilePathList);
+
+		// 결제 요청 및 결제 요청 정보 저장
+		String partnerOrderId = "feed_" + feedId + "_" + UUID.randomUUID();
+		KakaoPayReadyResponse response = kakaoPayUtil.kakaoPayReady(
+			partnerOrderId,  // 주문번호 (생성 필요)
+			String.valueOf(loginMemberId),
+			"홍보피드결제",
+			payAmount
+		);
+		// 클라이언트에게 주기 위해 response에 추가해서 넣어주기
+		response.setPartner_order_id(partnerOrderId);
+		kakaoPayService.save(feedId, response.getTid(), partnerOrderId, loginMemberId);
+		return response;
 	}
 
 	@Override

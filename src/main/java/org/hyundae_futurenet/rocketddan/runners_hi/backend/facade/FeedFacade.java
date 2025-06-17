@@ -3,8 +3,9 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.CommentDetailResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.CommentDetailResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FeedFacade {
@@ -12,6 +13,9 @@ public interface FeedFacade {
 	List<FeedListResponse> searchFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter);
 
 	void uploadFeed(long loginMemberId, String content, Double lat, Double lng, List<MultipartFile> fileList);
+
+	KakaoPayReadyResponse uploadFeedByCompany(long loginMemberId, String content, Double lat, Double lng,
+		List<MultipartFile> fileList, int payAmount);
 
 	void deleteFeed(long loginMemberId, long feedId);
 
@@ -29,4 +33,5 @@ public interface FeedFacade {
 
 	void updateFeed(long loginMemberId, long feedId, String newContent, Double newLat, Double newLng,
 		List<MultipartFile> newfileList);
+
 }

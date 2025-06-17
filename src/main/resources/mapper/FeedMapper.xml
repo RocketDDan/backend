@@ -97,11 +97,8 @@
                     F.CREATED_BY = #{loginMemberId}
                 </when>
             </choose>
+            AND F.STATUS = 'APPROVED'
         </where>
-        <where>
-            AND STATUS = 'APPROVED'
-        </where>
-
         <choose>
             <when test="feedSearchFilter.order.name() == 'LATEST'">
                 ORDER BY F.CREATED_AT DESC

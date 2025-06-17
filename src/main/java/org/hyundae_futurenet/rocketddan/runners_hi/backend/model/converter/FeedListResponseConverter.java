@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse.CommentThumbnail;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.FeedListResponse.FeedFileUrl;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse.CommentThumbnail;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse.FeedFileUrl;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.CloudFrontFileUtil;
 import org.springframework.stereotype.Component;
 

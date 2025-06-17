@@ -40,6 +40,25 @@ public interface FeedMapper {
 		@Param("lat") Double lat,
 		@Param("lng") Double lng);
 
+	@Insert("""
+		INSERT INTO FEED (
+		        FEED_ID,
+		        CONTENT,
+				LAT,
+				LNG,
+		        STATUS,
+		        CREATED_BY
+		    ) VALUES (
+		        #{feedId},
+		        #{content},
+		        #{lat, jdbcType=NUMERIC},
+		        #{lng, jdbcType=NUMERIC},
+		        'WAIT',
+		        #{loginMemberId}
+		    )
+		""")
+	void insertFeedWithStatusWait(long feedId, long loginMemberId, String content, Double lat, Double lng);
+
 	@Delete("""
 		DELETE FROM FEED
 		WHERE FEED_ID = #{feedId}
