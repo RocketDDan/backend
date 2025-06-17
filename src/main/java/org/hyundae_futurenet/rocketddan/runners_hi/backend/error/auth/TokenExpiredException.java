@@ -5,8 +5,8 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 
 public class TokenExpiredException extends CustomException {
 
-	public TokenExpiredException() {
+	public TokenExpiredException(ErrorCode errorCode) {
 
-		super(ErrorCode.TOKEN_EXPIRED);
+		super(errorCode);
 	}
 }

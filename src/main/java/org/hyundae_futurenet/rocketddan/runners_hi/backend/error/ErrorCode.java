@@ -28,7 +28,10 @@ public enum ErrorCode {
 	NOT_ALLOWED_CREW_LEADER_RESIGN("크루장은 탈퇴할 수 없습니다.", HttpStatus.BAD_REQUEST, "크루장을 넘기고 탈퇴해야 합니다."),
 	// 인증
 	INVALID_TOKEN("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
-	TOKEN_EXPIRED("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED, "토큰 재발행이 필요합니다."),
+	TOKEN_EXPIRED("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	ACCESS_TOKEN_EXPIRED("만료된 엑세스 토큰입니다.", HttpStatus.UNAUTHORIZED, "엑세스 토큰 재발행이 필요합니다."),
+	REFRESH_TOKEN_EXPIRED("만료된 리프레시 토큰입니다.", HttpStatus.UNAUTHORIZED, "재로그인이 필요합니다."),
+	SIGNUP_TOKEN_EXPIRED("만료된 회원가입용 인증 토큰입니다.", HttpStatus.UNAUTHORIZED, "소셜 로그인을 다시 수행하고, 회원가입을 시도해주세요."),
 	INVALID_AUTHORITY("해당 요청에 대한 접근 권한이 없습니다.", HttpStatus.FORBIDDEN, "해당 요청에 대한 접근 권한이 없습니다."),
 	NOT_SUPPORTED_OAUTH2_SERVICE("지원하지 않는 OAuth2 서비스입니다.", HttpStatus.BAD_REQUEST, "지원하지 않는 OAuth2 서비스입니다.");
 
