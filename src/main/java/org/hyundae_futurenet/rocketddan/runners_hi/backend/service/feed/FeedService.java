@@ -11,7 +11,7 @@ public interface FeedService {
 
 	long save(long loginMemberId, String content, Double lat, Double lng);
 
-	long saveWithStatusWait(long loginMemberId, String content, Double lat, Double lng);
+	long saveAdvertiseFeedWithStatusWait(long loginMemberId, String content, Double lat, Double lng);
 
 	void delete(long feedId);
 

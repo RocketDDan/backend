@@ -47,6 +47,7 @@ public interface FeedMapper {
 				LAT,
 				LNG,
 		        STATUS,
+		        TYPE,
 		        CREATED_BY
 		    ) VALUES (
 		        #{feedId},
@@ -54,10 +55,11 @@ public interface FeedMapper {
 		        #{lat, jdbcType=NUMERIC},
 		        #{lng, jdbcType=NUMERIC},
 		        'WAIT',
+			  	'ADVERTISE',
 		        #{loginMemberId}
 		    )
 		""")
-	void insertFeedWithStatusWait(long feedId, long loginMemberId, String content, Double lat, Double lng);
+	void insertAdvertiseFeedWithStatusWait(long feedId, long loginMemberId, String content, Double lat, Double lng);
 
 	@Delete("""
 		DELETE FROM FEED

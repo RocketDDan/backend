@@ -15,6 +15,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedComm
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedLikeService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.MemberWalletService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.pay.KakaoPayService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.payment.KakaoPayUtil;
@@ -40,6 +41,8 @@ public class FeedFacadeImpl implements FeedFacade {
 
 	private final KakaoPayService kakaoPayService;
 
+	private final MemberWalletService memberWalletService;
+
 	private final FeedListResponseConverter feedListResponseConverter;
 
 	private final CommentDetailResponseConverter commentDetailResponseConverter;
@@ -61,7 +64,11 @@ public class FeedFacadeImpl implements FeedFacade {
 	@Override
 	@Transactional
 	// TODO: feed_file 테이블에 피드 파일 정보 저장에서 에러 시 S3에는 파일이 올라감
-	public void uploadFeed(long loginMemberId, String content, Double lat, Double lng, List<MultipartFile> fileList) {
+	public void uploadFeed(
+		long loginMemberId,
+		String content,
+		Double lat, Double lng,
+		List<MultipartFile> fileList) {
 		// feed 테이블에 피드 정보 저장
 		long feedId = feedService.save(loginMemberId, content, lat, lng);
 		// s3 파일 저장소에 피드 파일 저장
@@ -81,12 +88,11 @@ public class FeedFacadeImpl implements FeedFacade {
 	) {
 
 		// feed 테이블에 피드 정보 저장 (STATUS: WAIT)
-		long feedId = feedService.saveWithStatusWait(loginMemberId, content, lat, lng);
+		long feedId = feedService.saveAdvertiseFeedWithStatusWait(loginMemberId, content, lat, lng);
 		// s3 파일 저장소에 피드 파일 저장
 		List<String> uploadedfilePathList = s3FileUtil.uploadFeedFile(fileList, feedId);
 		// feed_file 테이블에 피드 파일 정보 저장
 		feedFileService.save(loginMemberId, feedId, uploadedfilePathList);
-
 		// 결제 요청 및 결제 요청 정보 저장
 		String partnerOrderId = "feed_" + feedId + "_" + UUID.randomUUID();
 		KakaoPayReadyResponse response = kakaoPayUtil.kakaoPayReady(
@@ -95,9 +101,11 @@ public class FeedFacadeImpl implements FeedFacade {
 			"홍보피드결제",
 			payAmount
 		);
+
 		// 클라이언트에게 주기 위해 response에 추가해서 넣어주기
 		response.setPartner_order_id(partnerOrderId);
 		kakaoPayService.save(feedId, response.getTid(), partnerOrderId, loginMemberId);
+		memberWalletService.setCharge(loginMemberId, feedId, payAmount);
 		return response;
 	}
 
