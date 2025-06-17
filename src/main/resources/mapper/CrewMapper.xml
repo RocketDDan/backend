@@ -56,13 +56,13 @@
         </where>
         <choose>
             <when test="req.order.name() == 'LATEST'">
-                ORDER BY c.created_at DESC
+                ORDER BY c.created_at DESC, c.crew_id DESC
             </when>
             <when test="req.order.name() == 'OLDEST'">
-                ORDER BY c.created_at ASC
+                ORDER BY c.created_at ASC, c.crew_id DESC
             </when>
             <when test="req.order.name() == 'MEMBER_CNT'">
-                ORDER BY totalMemberCnt DESC, c.created_at DESC
+                ORDER BY totalMemberCnt DESC, c.created_at DESC, c.crew_id DESC
             </when>
         </choose>
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
