@@ -1,11 +1,16 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 
+import java.util.Objects;
+
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.MemberFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberProfileResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +30,8 @@ public class MemberController {
 
 	private final MemberFacade memberFacade;
 
+	private final CrewFacade crewFacade;
+
 	@Operation(summary = "로그인한 회원 정보 조회", description = "로그인한 회원의 정보를 조회한다.")
 	@NotGuest
 	@GetMapping("/personal-info")
@@ -34,14 +41,26 @@ public class MemberController {
 		return ResponseEntity.ok(memberResponse);
 	}
 
-	@Operation(summary = "특정 회원 정보 조회", description = "특정 회원의 정보를 조회한다.")
-	@GetMapping("/{memberId}")
-	public ResponseEntity<MemberResponse> findMemberById(
+	@Operation(summary = "특정 회원 프로필 조회", description = "특정 회원의 프로필 정보를 조회한다.")
+	@GetMapping("/{memberId}/profile")
+	public ResponseEntity<MemberProfileResponse> findMemberProfileByMemberId(
 		@PathVariable("memberId") final Long memberId
 	) {
 
 		final MemberResponse memberResponse = memberFacade.findMember(memberId);
-		return ResponseEntity.ok(memberResponse);
+		Long crewId = crewFacade.selectMyCrew(memberId);
+		CrewDetailResponse crewDetailResponse = null;
+		if (Objects.nonNull(crewId)) {
+			crewDetailResponse = crewFacade.selectCrewByCrewId(memberId, crewId);
+		}
+		MemberProfileResponse memberProfileResponse = MemberProfileResponse.builder()
+			.email(memberResponse.getEmail())
+			.nickname(memberResponse.getNickname())
+			.profileImageUrl(memberResponse.getProfileImageUrl())
+			.crewName(Objects.nonNull(crewId) ? crewDetailResponse.getCrewName() : null)
+			.isLeader(Objects.nonNull(crewId) && crewDetailResponse.isLeader())
+			.build();
+		return ResponseEntity.ok(memberProfileResponse);
 	}
 
 	@Operation(summary = "닉네임 중복 확인", description = "닉네임 중복 여부를 확인한다.")
