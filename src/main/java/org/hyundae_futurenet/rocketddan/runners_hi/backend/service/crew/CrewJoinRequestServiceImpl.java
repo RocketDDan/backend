@@ -95,6 +95,13 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 		crewJoinRequestMapper.deleteCrewJoinRequest(loginMemberId, crewId);
 	}
 
+	@Override
+	public String selectEmailByCrewJoinRequestId(long crewJoinRequestId) {
+
+		log.info("CrewJoinRequestService :: selectEmailByCrewJoinRequestId");
+		return crewJoinRequestMapper.selectEmailByCrewJoinRequestId(crewJoinRequestId);
+	}
+
 	// Status String으로 반환
 	private static String getStatus(CrewJoinRequestStatus crewJoinRequestStatus) {
 

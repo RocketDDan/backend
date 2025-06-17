@@ -52,4 +52,9 @@ public interface CrewJoinRequestMapper {
 	// 가입 요청 정보 조회
 	Optional<CrewJoinRequestSource> selectCrewJoinRequestByCrewJoinRequestId(
 		@Param("crewJoinRequestId") long crewJoinRequestId);
+
+	// 가입 요청자의 이메일 가져오기
+	String selectEmailByCrewJoinRequestId(@Param("crewJoinRequestId") long crewJoinRequestId);
+
+	void deleteCrewJoinRequestByMemberId(@Param("loginMemberId") long loginMemberId);
 }

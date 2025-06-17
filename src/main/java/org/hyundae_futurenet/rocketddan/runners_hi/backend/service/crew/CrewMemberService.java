@@ -32,5 +32,7 @@ public interface CrewMemberService {
 
 	// 크루장 여부 변경
 	void updateCrewMemberIsLeader(long loginMemberId, long crewMemberId, boolean isLeader);
+	
+	Long selectCrewLeaderIdByCrewId(long crewId);
 }
 

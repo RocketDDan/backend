@@ -29,6 +29,13 @@
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </select>
 
+    <!-- 크루 가입 요청 id에 해당하는 멤버의 이메일 가져오기-->
+    <select id="selectEmailByCrewJoinRequestId" resultType="string">
+        SELECT m.EMAIL
+        FROM crew_join_request cjr
+                 JOIN member m on cjr.member_id = m.MEMBER_ID
+        WHERE crew_join_request_id = #{crewJoinRequestId}
+    </select>
     <!-- 가입 요청 생성 -->
     <insert id="insertCrewJoinRequest">
         INSERT INTO crew_join_request
@@ -61,6 +68,11 @@
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </update>
 
+    <update id="deleteCrewJoinRequestByMemberId">
+        DELETE
+        FROM crew_join_request
+        WHERE member_id = #{loginMemberId}
+    </update>
     <!-- 가입 요청 삭제  -->
     <delete id="deleteCrewJoinRequest">
         DELETE
