@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MyWalletListResponse {
 
+	@Schema(description = "회사 사용자가 작성한 피드별 수익 정보 목록")
 	private List<MyWalletResponse> feeds;
 
+	@Schema(description = "전체 피드 수", example = "25")
 	private int totalCount;
 }
