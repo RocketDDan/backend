@@ -212,8 +212,8 @@ CREATE TABLE ACTIVITY_LOG
     ACTIVITY_LOG_ID   NUMBER PRIMARY KEY,
     TARGET_TABLE_NAME VARCHAR2(50) CHECK ( TARGET_TABLE_NAME IN
                                            ('MEMBER', 'CREW', 'CREW_MEMBER', 'CREW_JOIN_REQUEST', 'ANNOUNCEMENT',
-                                            'FEED', 'FEED_URL', 'FEED_COMMENT', 'FEED_LIKE', 'FEED_FILE',
-                                            'ANNOUNCEMENT_FILE', 'FOLLOW', 'URL_CLICK_LOG')),
+                                            'FEED', 'MEMBER_WALLET', 'FEED_COMMENT', 'FEED_LIKE', 'FEED_FILE',
+                                            'ANNOUNCEMENT_FILE', 'FOLLOW', 'URL_CLICK_LOG', 'KAKAO_PAY')),
     ACTION            VARCHAR2(100) CHECK ( ACTION IN
                                             ('POST', 'UPDATE', 'DELETE')),
     REFERENCE_ID      NUMBER,
