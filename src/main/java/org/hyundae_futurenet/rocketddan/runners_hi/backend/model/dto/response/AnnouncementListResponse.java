@@ -25,4 +25,7 @@ public class AnnouncementListResponse {
 
 	@Schema(description = "공지 작성 일시 (yyyy-MM-dd HH:mm:ss)", example = "2025-06-17 09:00:00")
 	private String createdAt;
+
+	@Schema(description = "공지 작성자", example = "1")
+	private Long createdBy;
 }
