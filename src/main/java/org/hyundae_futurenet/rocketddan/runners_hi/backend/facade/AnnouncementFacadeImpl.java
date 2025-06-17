@@ -182,10 +182,11 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		}
 		// scope가 존재하지 않는다면 role에 따라 조회
 		if (!params.containsKey("scope")) {
-			// ADMIN이거나 COMPANY일 경우에는 전체 공지사항 조회
+			// ADMIN일경우 전체 공지사항
 			if ("ADMIN".equals(role)) {
 				params.put("scope", "ALL_AND_CREW");
 			} else if ("COMPANY".equals(role)) {
+				// COMPANY일 경우 관리자 공지사항만 확인 가능
 				params.put("scope", "ALL");
 			} else if ("USER".equals(role)) {
 				// USER이고, 크루 멤버일 경우
