@@ -29,6 +29,8 @@ public class FeedListSource {
 
 	private boolean isLike;
 
+	private String type;
+
 	private int commentCount;
 
 	private int likeCount;

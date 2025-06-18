@@ -29,6 +29,7 @@
         <result property="viewCount" column="viewCount"/>
         <result javaType="boolean" property="isMine" column="isMine"/>
         <result javaType="boolean" property="isLike" column="isLike"/>
+        <result property="type" column="type"/>
         <result property="commentCount" column="commentCount"/>
         <result property="likeCount" column="likeCount"/>
         <result property="lat" column="lat"/>
@@ -68,6 +69,7 @@
         THEN 1
         ELSE 0
         END AS isLike,
+        F.TYPE AS type,
         (SELECT COUNT(*)
         FROM FEED_COMMENT FC
         WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
