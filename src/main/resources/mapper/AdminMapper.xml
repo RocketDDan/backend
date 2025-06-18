@@ -58,6 +58,9 @@
         LEFT JOIN CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
         LEFT JOIN CREW C ON CM.CREW_ID = C.CREW_ID
         WHERE M.ROLE != 'ADMIN'
+        <if test="params.role != null and params.role != ''">
+            AND M.ROLE = #{params.role}
+        </if>
         <if test="params.keyword != null and params.keyword != ''">
             AND (
             M.nickname LIKE '%' || #{params.keyword} || '%'
@@ -68,12 +71,16 @@
         OFFSET #{params.offset} ROWS FETCH NEXT #{params.perPage} ROWS ONLY
     </select>
 
+
     <select id="countAdminMembers" resultType="int">
         SELECT COUNT(*)
         FROM MEMBER M
         LEFT JOIN CREW_MEMBER CM ON M.MEMBER_ID = CM.MEMBER_ID
         LEFT JOIN CREW C ON CM.CREW_ID = C.CREW_ID
         WHERE M.ROLE != 'ADMIN'
+        <if test="params.role != null and params.role != ''">
+            AND M.ROLE = #{params.role}
+        </if>
         <if test="params.keyword != null and params.keyword != ''">
             AND (
             M.nickname LIKE '%' || #{params.keyword} || '%'
@@ -81,6 +88,7 @@
             )
         </if>
     </select>
+
 
     <!--  통계 : 일자별 클릭 수  -->
     <select id="selectDailyViews"

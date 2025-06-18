@@ -3,7 +3,6 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyAdminOnly;
@@ -24,12 +23,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @Tag(name = "관리자 및 회사 API", description = "관리자 및 회사 전용 API")
 @RestController
 @RequestMapping("/admin")
@@ -43,14 +44,20 @@ public class AdminController {
 	@AdminOnly
 	public ResponseEntity<AdminMemberListResponse> getAdminMembers(
 		@Auth final Accessor accessor,
-		@Parameter(description = "검색 키워드 (닉네임, 이메일)") @RequestParam(required = false) String keyword,
+		@Parameter(description = "검색 키워드 (닉네임, 이메일, 크루 이름)") @RequestParam(required = false) String keyword,
 		@Parameter(description = "페이지 번호") @RequestParam(required = false, defaultValue = "1") int page,
-		@Parameter(description = "페이지 당 항목 수") @RequestParam(required = false, defaultValue = "6") int perPage
+		@Parameter(description = "페이지 당 항목 수") @RequestParam(required = false, defaultValue = "6") int perPage,
+		@Parameter(description = "역할 필터 (COMPANY 등)") @RequestParam(required = false) String role
+
 	) {
 
+		log.info("role={}", role);
 		Map<String, Object> params = new HashMap<>();
 		if (keyword != null && !keyword.isEmpty()) {
 			params.put("keyword", keyword);
+		}
+		if (role != null && !role.isEmpty()) {
+			params.put("role", role);
 		}
 		params.put("offset", (page - 1) * perPage);
 		params.put("perPage", perPage);
@@ -140,7 +147,6 @@ public class AdminController {
 		@Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목수") @RequestParam(defaultValue = "6") int perPage
 	) {
-
 		return ResponseEntity.ok(adminFacade.getMyWalletList(accessor.getMemberId(), page, perPage));
 	}
 
