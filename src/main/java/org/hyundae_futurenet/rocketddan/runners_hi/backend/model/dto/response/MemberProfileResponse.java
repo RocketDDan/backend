@@ -16,4 +16,6 @@ public class MemberProfileResponse {
 	private String crewName;
 
 	private boolean isLeader;
+
+	private Long crewId;
 }

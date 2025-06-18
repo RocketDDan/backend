@@ -59,6 +59,7 @@ public class MemberController {
 			.profileImageUrl(memberResponse.getProfileImageUrl())
 			.crewName(Objects.nonNull(crewId) ? crewDetailResponse.getCrewName() : null)
 			.isLeader(Objects.nonNull(crewId) && crewDetailResponse.isLeader())
+			.crewId(crewId)
 			.build();
 		return ResponseEntity.ok(memberProfileResponse);
 	}
