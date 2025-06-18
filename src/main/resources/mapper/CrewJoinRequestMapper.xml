@@ -81,6 +81,7 @@
           AND member_id = #{memberId}
     </delete>
 
+    <!-- 상태별 가입 요청 목록 리스트 조회 -->
     <select id="selectCrewJoinRequestsByStatus"
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewJoinRequestListResponse">
         SELECT cjr.crew_join_request_id as crewJoinRequestId,
@@ -109,26 +110,15 @@
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
-    <select id="isExistNextPage" resultType="boolean">
-        SELECT CASE WHEN EXISTS (
-        SELECT 1
+    <select id="selectTotalCount" resultType="int">
+        SELECT count(*)
         FROM crew_join_request cjr
         JOIN member m ON cjr.member_id = m.member_id
         WHERE cjr.status = #{status}
-        <if test="req.nickname != null and req.nickname.trim() != ''">
-            AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{req.nickname}, ' ', '') || '%'
+        AND cjr.crew_id = #{crewId}
+        <if test="nickname != null and nickname.trim() != ''">
+            AND REPLACE(m.nickname, ' ', '') LIKE '%' || REPLACE(#{nickname}, ' ', '') || '%'
         </if>
-        <choose>
-            <when test="req.order.name() == 'LATEST'">
-                ORDER BY cjr.created_at DESC
-            </when>
-            <when test="req.order.name() == 'OLDEST'">
-                ORDER BY cjr.created_at ASC
-            </when>
-        </choose>
-        OFFSET #{offset} ROWS FETCH NEXT 1 ROWS ONLY
-        ) THEN 1 ELSE 0 END
-        FROM dual
     </select>
 
 </mapper>

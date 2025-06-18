@@ -43,11 +43,11 @@ public interface CrewJoinRequestMapper {
 		@Param("offset") int offset,
 		@Param("limit") int limit);
 
-	// 다음 페이지 존재 여부 조회
-	boolean isExistNextPage(
-		@Param("req") CrewJoinRequestSearchFilter requestSearchFilter,
+	// 가입 요청 상태별 전체 수 조회
+	int selectTotalCount(
+		@Param("crewId") long crewId,
 		@Param("status") String status,
-		@Param("offset") int offset);
+		@Param("nickname") String nickname);
 
 	// 가입 요청 정보 조회
 	Optional<CrewJoinRequestSource> selectCrewJoinRequestByCrewJoinRequestId(
