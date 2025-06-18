@@ -270,7 +270,6 @@ public class CrewController {
 
 	@Operation(summary = "크루 이름 중복 조회", description = "크루 이름 중복 여부 조회")
 	@GetMapping("/duplicate")
-	@NotGuest
 	public ResponseEntity<Boolean> selectDuplicateCrew(@RequestParam("crewName") String crewName) {
 
 		if (crewName == null || crewName.isBlank()) {

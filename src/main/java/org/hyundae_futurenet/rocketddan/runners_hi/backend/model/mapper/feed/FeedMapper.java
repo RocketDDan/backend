@@ -14,7 +14,9 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Fee
 @Mapper
 public interface FeedMapper {
 
-	List<FeedListSource> selectFeedsByFilter(long loginMemberId, FeedSearchFilter feedSearchFilter);
+	List<FeedListSource> selectFeedsByFilter(
+		@Param("loginMemberId") long loginMemberId,
+		@Param("feedSearchFilter") FeedSearchFilter feedSearchFilter);
 
 	@Select("SELECT SEQ_FEED.NEXTVAL FROM DUAL")
 	long getNextFeedId();
