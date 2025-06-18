@@ -189,20 +189,21 @@ public class CrewController {
 	@NotGuest
 	public ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
 		@PathVariable("crew-id") Long crewId,
-		@ModelAttribute CrewJoinRequestSearchFilter crewJoinRequestSearchFilter,
+		@ModelAttribute CrewJoinRequestSearchFilter filter,
 		@Auth final Accessor accessor
 	) {
 
-		if (crewJoinRequestSearchFilter == null) {
+		if (filter == null) {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
 
 		List<CrewJoinRequestListResponse> crewJoinRequestList = crewFacade
-			.selectCrewJoinRequestsByStatus(accessor.getMemberId(), crewId, crewJoinRequestSearchFilter);
-		boolean isExistNextPage = crewFacade.isExistNextPage(crewJoinRequestSearchFilter);
+			.selectCrewJoinRequestsByStatus(accessor.getMemberId(), crewId, filter);
+		int totalCount = crewFacade.selectTotalCount(crewId, filter.getStatus().name(), filter.getNickname());
 		Map<String, Object> result = new HashMap<>();
 		result.put("crewJoinRequestList", crewJoinRequestList);
-		result.put("isExistNextPage", isExistNextPage);
+		result.put("totalCount", totalCount);
+
 		return ResponseEntity.ok(result);
 	}
 

@@ -79,13 +79,11 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 	}
 
 	@Override
-	public boolean isExistNextPage(CrewJoinRequestSearchFilter filter) {
+	public int totalCount(long crewId, String status, String nickname) {
 
-		log.info("CrewJoinRequestService :: isExistNextPage");
-		String status = getStatus(filter.getStatus());
-		int limit = filter.getPerPage();
-		int offset = (filter.getPage() - 1) * limit;
-		return crewJoinRequestMapper.isExistNextPage(filter, status, offset + limit);
+		int total = crewJoinRequestMapper.selectTotalCount(crewId, status, nickname);
+		log.info("CrewJoinRequestService :: totalCount = {}", total);
+		return total;
 	}
 
 	@Override

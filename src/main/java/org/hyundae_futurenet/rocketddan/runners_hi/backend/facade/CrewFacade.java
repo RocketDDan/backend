@@ -44,8 +44,8 @@ public interface CrewFacade {
 		long crewId,
 		CrewJoinRequestSearchFilter crewJoinRequestSearchFilter);
 
-	// 다음 페이지 존재 여부 조회
-	boolean isExistNextPage(CrewJoinRequestSearchFilter filter);
+	// 가입 요청 전체 수 조회
+	int selectTotalCount(long crewId, String status, String nickname);
 
 	// 가입 요청 삭제
 	void deleteCrewJoinRequest(long loginMemberId, long crewJoinRequestId);

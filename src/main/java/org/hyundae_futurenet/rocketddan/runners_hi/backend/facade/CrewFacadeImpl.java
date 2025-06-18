@@ -239,9 +239,9 @@ public class CrewFacadeImpl implements CrewFacade {
 	}
 
 	@Override
-	public boolean isExistNextPage(CrewJoinRequestSearchFilter filter) {
+	public int selectTotalCount(long crewId, String status, String nickname) {
 
-		return crewJoinRequestService.isExistNextPage(filter);
+		return crewJoinRequestService.totalCount(crewId, status, nickname);
 	}
 
 	@Override
