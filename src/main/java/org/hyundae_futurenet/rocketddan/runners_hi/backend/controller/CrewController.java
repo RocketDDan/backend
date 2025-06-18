@@ -93,7 +93,8 @@ public class CrewController {
 		@Auth final Accessor accessor
 	) {
 
-		CrewDetailResponse result = crewFacade.selectCrewByCrewId(accessor.getMemberId(), crewId);
+		Long loginMemberId = accessor != null ? accessor.getMemberId() : null;
+		CrewDetailResponse result = crewFacade.selectCrewByCrewId(loginMemberId, crewId);
 		return ResponseEntity.ok(result);
 	}
 
@@ -107,7 +108,8 @@ public class CrewController {
 			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
 		}
 
-		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(accessor.getMemberId(), crewSearchFilter);
+		Long loginMemberId = accessor != null ? accessor.getMemberId() : null;
+		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(loginMemberId, crewSearchFilter);
 		return ResponseEntity.ok(result);
 	}
 
