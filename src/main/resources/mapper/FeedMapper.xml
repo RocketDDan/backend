@@ -87,7 +87,7 @@
                     F.CREATED_BY != #{loginMemberId}
                 </when>
                 <when test="feedSearchFilter.scope.name() == 'MY_CREW'">
-                    F.CREATED_BY IN (
+                    AND F.CREATED_BY IN (
                     SELECT MEMBER_ID
                     FROM CREW_MEMBER
                     WHERE CREW_ID IN (
@@ -96,7 +96,17 @@
                     )
                 </when>
                 <when test="feedSearchFilter.scope.name() == 'ME'">
-                    F.CREATED_BY = #{loginMemberId}
+                    AND F.CREATED_BY = #{loginMemberId}
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'CREW' and feedSearchFilter.crewId != null">
+                    AND F.CREATED_BY IN (
+                    SELECT MEMBER_ID
+                    FROM CREW_MEMBER CM
+                    WHERE CM.CREW_ID = #{feedSearchFilter.crewId}
+                    )
+                </when>
+                <when test="feedSearchFilter.scope.name() == 'MEMBER' and feedSearchFilter.memberId != null">
+                    AND F.CREATED_BY = #{feedSearchFilter.memberId}
                 </when>
             </choose>
             AND F.STATUS = 'APPROVED'

@@ -7,4 +7,5 @@ public enum FeedScope {
 	ALL_EXCEPT_ME,
 	MY_CREW,
 	ME,
+	CREW,
 }
