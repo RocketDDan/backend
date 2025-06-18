@@ -236,7 +236,6 @@ public class CrewController {
 
 	@Operation(summary = "크루원 목록 조회", description = "닉네임 검색 가능합니다. 크루장은 첫번째 고정입니다.")
 	@GetMapping("/{crew-id}/members")
-	@NotGuest
 	public ResponseEntity<List<CrewMemberListResponse>> selectCrewMembers(
 		@PathVariable("crew-id") Long crewId,
 		@ModelAttribute CrewMemberSearchFilter crewMemberSearchFilter,
