@@ -55,7 +55,7 @@ dependencies {
 //    implementation("software.amazon.awscdk:cloudfront:1.204.0") // software.amazon: SDK v2의 그룹 ID
     implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.12.679'// com.amazonaws: SDK v1의 그룹 ID
     // redis
-//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     // AWS ses
     implementation 'com.amazonaws:aws-java-sdk-ses:1.12.664'
     // AWS
