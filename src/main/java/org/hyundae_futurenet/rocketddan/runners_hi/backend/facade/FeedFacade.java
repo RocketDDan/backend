@@ -50,4 +50,6 @@ public interface FeedFacade {
 	List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId);
 
 	void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest);
+
+	void addViewLog(long memberId, long feedId);
 }

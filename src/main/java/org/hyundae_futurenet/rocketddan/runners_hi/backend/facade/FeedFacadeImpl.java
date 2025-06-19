@@ -19,6 +19,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFile
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedLikeService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.MemberWalletService;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.log.FeedViewLogService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.pay.KakaoPayService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file.S3FileUtil;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.util.payment.KakaoPayUtil;
@@ -45,6 +46,8 @@ public class FeedFacadeImpl implements FeedFacade {
 	private final KakaoPayService kakaoPayService;
 
 	private final MemberWalletService memberWalletService;
+
+	private final FeedViewLogService feedViewLogService;
 
 	private final FeedListResponseConverter feedListResponseConverter;
 
@@ -189,6 +192,12 @@ public class FeedFacadeImpl implements FeedFacade {
 
 		// feed의 승인 상태 APPROVED로 수정하기
 		feedService.updateAdvertiseFeedStatusWithApproved(kakaoPaySource.getFeedId());
+	}
+
+	@Override
+	public void addViewLog(long memberId, long feedId) {
+
+		feedViewLogService.addViewLog(memberId, feedId);
 	}
 
 	@Override
