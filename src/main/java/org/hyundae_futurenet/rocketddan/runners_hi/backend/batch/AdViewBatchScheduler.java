@@ -29,8 +29,9 @@ public class AdViewBatchScheduler {
 		log.info("flushAdViews :: start");
 
 		Set<String> keys = redisTemplate.keys("adView:*");
-		if (keys == null || keys.isEmpty())
+		if (keys.isEmpty()) {
 			return;
+		}
 
 		for (String key : keys) {
 			String[] parts = key.split(":");
@@ -60,7 +61,7 @@ public class AdViewBatchScheduler {
 					return operations.exec();
 				}
 			});
-			
+
 			if (result.isEmpty()) {
 				continue;
 			}

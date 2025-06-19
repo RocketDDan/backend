@@ -110,6 +110,16 @@
                 </when>
             </choose>
             AND F.STATUS = 'APPROVED'
+            <!-- 광고일 경우, MEMBER_WALLET.BALANCE > 0 인 경우만 -->
+            AND (
+            F.TYPE != 'ADVERTISE'
+            OR EXISTS (
+            SELECT 1
+            FROM MEMBER_WALLET MW
+            WHERE MW.FEED_ID = F.FEED_ID
+            AND MW.BALANCE > 0
+            )
+            )
         </where>
         <choose>
             <when test="feedSearchFilter.order.name() == 'LATEST'">

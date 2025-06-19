@@ -16,7 +16,9 @@ public class WalletBalanceBatchScheduler {
 
 	// 5분: 300000 | 1분: 60000 | 1초: 1000
 	@Scheduled(fixedRate = 300000)
-	public void flushAdViews() {
+	public void calculateMemberWalletBalances() {
+
+		log.info("calculateMemberWalletBalances :: start");
 
 		memberWalletMapper.calculateMemberWalletBalances();
 	}
