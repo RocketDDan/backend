@@ -14,4 +14,12 @@ public interface FeedViewLogMapper {
 	void save(
 		@Param("feedId") long feedId,
 		@Param("memberId") long memberId);
+
+	@Insert("""
+		INSERT INTO FEED_VIEW_LOG(FEED_VIEW_LOG_ID, FEED_ID, IP)
+		VALUES (SEQ_FEED_VIEW_LOG.nextval, #{feedId}, #{ip})
+		""")
+	void saveIp(
+		@Param("feedId") long feedId,
+		@Param("ip") String ip);
 }

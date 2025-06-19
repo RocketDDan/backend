@@ -52,4 +52,6 @@ public interface FeedFacade {
 	void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest);
 
 	void addViewLog(long memberId, long feedId);
+
+	void addViewLogByIp(String ip, long feedId);
 }
