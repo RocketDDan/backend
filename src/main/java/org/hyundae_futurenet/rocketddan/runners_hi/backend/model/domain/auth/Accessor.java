@@ -6,7 +6,7 @@ import lombok.Getter;
 public class Accessor {
 
 	private final Long memberId;
-	
+
 	private final Authority authority;
 
 	private Accessor(final Long memberId, final Authority authority) {
@@ -33,6 +33,11 @@ public class Accessor {
 	public static Accessor company(final Long memberId) {
 
 		return new Accessor(memberId, Authority.COMPANY);
+	}
+
+	public boolean isGuest() {
+
+		return Authority.GUEST.equals(authority);
 	}
 
 	public boolean isMember() {
