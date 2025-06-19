@@ -264,7 +264,7 @@ public class CrewController {
 	}
 
 	@Operation(summary = "내 크루 조회", description = "내가 속한 크루 반환")
-	@PutMapping("/me")
+	@GetMapping("/me")
 	public ResponseEntity<Long> selectMyCrew(@Auth final Accessor accessor) {
 
 		Long result = crewFacade.selectMyCrew(accessor.getMemberId());
