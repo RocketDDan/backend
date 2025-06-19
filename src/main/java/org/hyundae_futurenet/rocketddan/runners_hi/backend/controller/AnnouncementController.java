@@ -102,7 +102,6 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 목록 조회", description = "사용자의 권한에 따라 조회 가능한 공지 목록을 필터링 및 페이징하여 반환합니다.")
 	@GetMapping
-	@NotGuest
 	public ResponseEntity<AnnouncementListResult> getAnnouncementList(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 범위 필터 (ALL, COMPANY 등)") @RequestParam(required = false) String scope,
@@ -112,9 +111,12 @@ public class AnnouncementController {
 		@Parameter(description = "정렬 순서 (LATEST 등)") @RequestParam(required = false, defaultValue = "LATEST") String order
 	) {
 
+		Long memberId = (accessor != null) ? accessor.getMemberId() : null;
+		String role = (accessor != null) ? accessor.getAuthority().name() : null;
 		log.info("공지 목록 출력");
 		log.info("확인 : {}", accessor.getMemberId());
 		log.info("권한 확인 : {}", accessor.getAuthority().name());
+
 		Map<String, Object> params = new HashMap<>();
 		if (scope != null) {
 			params.put("scope", scope);
@@ -127,10 +129,8 @@ public class AnnouncementController {
 		params.put("perPage", perPage);
 		params.put("order", order);
 
-		List<AnnouncementListResponse> list = announcementFacade.getAnnouncementList(params, accessor.getMemberId(),
-			accessor.getAuthority().name());
-		int totalCount = announcementFacade.getAnnouncementTotalCount(params, accessor.getMemberId(),
-			accessor.getAuthority().name());
+		List<AnnouncementListResponse> list = announcementFacade.getAnnouncementList(params, memberId, role);
+		int totalCount = announcementFacade.getAnnouncementTotalCount(params, memberId, role);
 		AnnouncementListResult result = new AnnouncementListResult(list, totalCount);
 		return ResponseEntity.ok(result);
 	}
@@ -145,6 +145,7 @@ public class AnnouncementController {
 
 		log.info("확인 : {}", accessor.getMemberId());
 		log.info("권한 확인 : {}", accessor.getAuthority().name());
+
 		AnnouncementDetailResponse response = announcementFacade.getAnnouncementDetail(announcementId);
 		log.info("AnnouncementDetail::Controller={}", response);
 		return ResponseEntity.ok(response);
