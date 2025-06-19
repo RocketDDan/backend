@@ -107,7 +107,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		ResponseCookie accessTokenCookie = buildCookie(
 			ACCESS_TOKEN_COOKIE_NAME,
 			accessToken,
-			jwtProperties.getAccessTokenExpirationMinutes(),
+			(jwtProperties.getAccessTokenExpirationMinutes() * 24),
 			"/");
 
 		String refreshToken = jwtTokenProvider.generateRefreshToken(member.getMemberId(), member.getEmail(),

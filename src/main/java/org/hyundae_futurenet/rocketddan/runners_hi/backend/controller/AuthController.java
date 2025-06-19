@@ -95,7 +95,7 @@ public class AuthController {
 		ResponseCookie accessCookie = buildCookie(
 			ACCESS_TOKEN_COOKIE_NAME,
 			newAccessToken,
-			jwtProperties.getAccessTokenExpirationMinutes(),
+			(jwtProperties.getAccessTokenExpirationMinutes() * 24),
 			"/");
 		CookieUtils.deleteCookie(request, response, ACCESS_TOKEN_COOKIE_NAME, "/");
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());

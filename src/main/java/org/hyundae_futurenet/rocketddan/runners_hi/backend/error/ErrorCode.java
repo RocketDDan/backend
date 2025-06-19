@@ -10,7 +10,6 @@ public enum ErrorCode {
 	NOT_FOUND_FEED("피드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND, "해당 피드가 존재하지 않습니다."),
 	NOT_FOUND("존재하지 않는 데이터입니다.", HttpStatus.NOT_FOUND, ""),
 
-	UNAUTHORIZED_ACCESS("접근 권한이 없습니다.", HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
 	INVALID_REQUEST("잘못된 요청입니다.", HttpStatus.BAD_REQUEST, "요청 형식이 유효하지 않습니다."),
 
 	// 회원
@@ -26,7 +25,9 @@ public enum ErrorCode {
 	ALREADY_EXIST_CREW_MEMBER("이미 크루 멤버입니다.", HttpStatus.BAD_REQUEST, "더 이상 크루에 가입할 수 없습니다."),
 	ALREADY_EXIST_CREW_JOIN_REQUEST("이미 크루 가입 요청 이력이 있습니다.", HttpStatus.BAD_REQUEST, "더 이상 가입 요청을 할 수 없습니다."),
 	NOT_ALLOWED_CREW_LEADER_RESIGN("크루장은 탈퇴할 수 없습니다.", HttpStatus.BAD_REQUEST, "크루장을 넘기고 탈퇴해야 합니다."),
-	// 인증
+
+	// 인증, 인가
+	UNAUTHORIZED_ACCESS("인증이 필요한 요청입니다.", HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
 	INVALID_TOKEN("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
 	TOKEN_EXPIRED("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	ACCESS_TOKEN_EXPIRED("만료된 엑세스 토큰입니다.", HttpStatus.UNAUTHORIZED, "엑세스 토큰 재발행이 필요합니다."),
