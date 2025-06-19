@@ -39,4 +39,7 @@ public class AnnouncementDetailResponse {
 
 	@Schema(description = "첨부파일 경로 목록", example = "[\"https://cdn.site.com/notice/abc.pdf\"]")
 	private List<String> attachPaths;
+
+	@Schema(description = "첨부파일 이미지 확장자 판별", example = "true")
+	private List<Boolean> attachIsImageList;
 }

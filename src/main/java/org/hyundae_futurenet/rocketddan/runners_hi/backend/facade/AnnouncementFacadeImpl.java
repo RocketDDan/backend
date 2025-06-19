@@ -223,11 +223,19 @@ public class AnnouncementFacadeImpl implements AnnouncementFacade {
 		// 첨부파일 조회는 따로 처리
 		List<String> filePaths = announcementFileService.findFilePathsByAnnouncementId(announcementId);
 
+		List<Boolean> isImageList = filePaths.stream()
+			.map(path -> {
+				String lower = path.toLowerCase();
+				return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png");
+			})
+			.collect(Collectors.toList());
+
 		List<String> signedUrls = filePaths.stream()
 			.map(this::getSignedUrl)
 			.collect(Collectors.toList());
 
 		detail.setAttachPaths(signedUrls);
+		detail.setAttachIsImageList(isImageList);
 		return detail;
 	}
 
