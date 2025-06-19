@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.config;
 
 import java.util.List;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.auth.JwtAuthFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.oauth.CustomOauth2UserService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.oauth.OAuth2SuccessHandler;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,6 +32,8 @@ public class SecurityConfig {
 	private final CustomOauth2UserService oauth2UserService;
 
 	private final OAuth2SuccessHandler oauth2SuccessHandler;
+
+	private final JwtAuthFilter jwtAuthFilter;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -54,6 +58,8 @@ public class SecurityConfig {
 			.oauth2Login(oauth2 -> oauth2
 				.userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
 				.successHandler(oauth2SuccessHandler))
+
+			.addFilterBefore(jwtAuthFilter, OAuth2LoginAuthenticationFilter.class)
 
 			.cors(Customizer.withDefaults())
 			.build();
