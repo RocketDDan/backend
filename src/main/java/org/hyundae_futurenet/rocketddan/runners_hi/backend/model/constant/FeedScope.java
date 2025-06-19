@@ -8,4 +8,5 @@ public enum FeedScope {
 	MY_CREW,
 	ME,
 	CREW,
+	MEMBER,
 }

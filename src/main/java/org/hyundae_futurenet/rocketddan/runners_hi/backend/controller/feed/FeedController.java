@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "Feed API", description = "Feed")
 @RequiredArgsConstructor
 @RestController
@@ -41,6 +43,8 @@ public class FeedController {
 		@Auth final Accessor accessor,
 		@Validated @ModelAttribute FeedSearchFilter feedSearchFilter) {
 
+		log.info("FeedController.searchFeedList :: scope: {} | memberId: {}", feedSearchFilter.getScope().name(),
+			feedSearchFilter.getMemberId());
 		long loginMemberId = accessor.getMemberId();
 		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(loginMemberId, feedSearchFilter));
 	}

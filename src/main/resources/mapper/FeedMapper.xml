@@ -55,10 +55,12 @@
         M.NICKNAME AS writerNickname,
         M.PROFILE_PATH AS writerProfilePath,
         F.VIEW_COUNT AS viewCount,
+
         CASE
         WHEN F.CREATED_BY = #{loginMemberId} THEN 1
         ELSE 0
         END AS isMine,
+
         CASE
         WHEN EXISTS (
         SELECT 1
@@ -69,16 +71,22 @@
         THEN 1
         ELSE 0
         END AS isLike,
+
         F.TYPE AS type,
+
         (SELECT COUNT(*)
         FROM FEED_COMMENT FC
         WHERE FC.FEED_ID = F.FEED_ID) AS commentCount,
+
         (SELECT COUNT(*)
         FROM FEED_LIKE FL
         WHERE FL.FEED_ID = F.FEED_ID) AS likeCount,
+
         F.LAT AS lat,
         F.LNG AS lng,
+
         TO_CHAR(F.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS "createdAt"
+        
         FROM FEED F
         JOIN MEMBER M ON F.CREATED_BY = M.MEMBER_ID
         <where>
