@@ -201,6 +201,12 @@ public class FeedFacadeImpl implements FeedFacade {
 	}
 
 	@Override
+	public void addViewLogByIp(String ip, long feedId) {
+
+		feedViewLogService.addViewLogByIp(ip, feedId);
+	}
+
+	@Override
 	@Transactional
 	public void updateFeed(long loginMemberId, long feedId, String newContent, Double newLat, Double newLng,
 		List<MultipartFile> newfileList) {

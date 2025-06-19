@@ -20,4 +20,14 @@ public class FeedViewLogServiceImpl implements FeedViewLogService {
 		redisTemplate.opsForSet().add(key, value);      // SADD
 		redisTemplate.expire(key, java.time.Duration.ofSeconds(600));  // EXPIRE 600초
 	}
+
+	@Override
+	public void addViewLogByIp(String ip, long feedId) {
+
+		String key = "adView:" + feedId;
+		String value = "ip_" + ip;
+
+		redisTemplate.opsForSet().add(key, value);      // SADD
+		redisTemplate.expire(key, java.time.Duration.ofSeconds(600));  // EXPIRE 600초
+	}
 }

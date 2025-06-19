@@ -60,17 +60,24 @@ public class AdViewBatchScheduler {
 					return operations.exec();
 				}
 			});
-			if (result == null || result.isEmpty())
+			
+			if (result.isEmpty()) {
 				continue;
+			}
 
 			// 💾 DB에 기록
 			for (Object memberStr : memberSet) {
 				String memberKey = String.valueOf(memberStr); // 예: "member_42"
-				try {
-					Long memberId = Long.parseLong(memberKey.replace("member_", ""));
-					feedViewLogMapper.save(feedId, memberId);
-				} catch (NumberFormatException ignore) {
-					// member_포맷 안 맞으면 무시
+				if (memberKey.startsWith("member_")) {
+					try {
+						Long memberId = Long.parseLong(memberKey.replace("member_", ""));
+						feedViewLogMapper.save(feedId, memberId);
+					} catch (NumberFormatException ignore) {
+						log.warn("Invalid member format: {}", memberKey);
+					}
+				} else if (memberKey.startsWith("ip_")) {
+					String ip = memberKey.replace("ip_", "");
+					feedViewLogMapper.saveIp(feedId, ip);
 				}
 			}
 		}
