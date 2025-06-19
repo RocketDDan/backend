@@ -136,8 +136,9 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루 존재 여부 검증
 		CrewDetailResponse result = crewService.selectCrewByCrewId(loginMemberId, crewId)
 			.orElseThrow(() -> new CrewException(ErrorCode.NOT_FOUND_CREW));
-
 		Optional<CrewMemberDetailResponse> memberDetail = crewMemberService.selectCrewMember(loginMemberId, crewId);
+
+		log.info("loginId: {} crewId : {} member: {}", loginMemberId, crewId, memberDetail.isPresent());
 
 		// 멤버 여부 및 역할 정보, 가입 요청 여부 저장
 		if (memberDetail.isPresent()) {

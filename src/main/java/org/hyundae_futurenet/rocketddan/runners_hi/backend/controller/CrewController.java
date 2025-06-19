@@ -39,11 +39,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/crews")
 @RequiredArgsConstructor
 @Tag(name = "CREW API", description = "Crew")
+@Slf4j
 public class CrewController {
 
 	private final CrewFacade crewFacade;
