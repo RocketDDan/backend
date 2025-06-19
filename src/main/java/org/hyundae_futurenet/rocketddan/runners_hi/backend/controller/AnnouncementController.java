@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberAdminOnly;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.AnnouncementFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.AnnouncementUpdateRequest;
@@ -137,7 +136,6 @@ public class AnnouncementController {
 
 	@Operation(summary = "공지 상세 조회", description = "공지 ID로 상세 정보를 조회합니다.")
 	@GetMapping("/{announcementId}")
-	@NotGuest
 	public ResponseEntity<AnnouncementDetailResponse> getAnnouncementDetail(
 		@Auth final Accessor accessor,
 		@Parameter(description = "공지 ID") @PathVariable Long announcementId
