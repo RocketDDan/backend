@@ -26,8 +26,8 @@ public class FeedSearchFilter {
 	@Schema(example = "1")
 	private int page;
 
-	@Min(value = 10, message = "perPage는 10 이상이어야 합니다.")
-	@Max(value = 50, message = "perPage는 50 이하여야 합니다.")
+	@Min(value = 3, message = "perPage는 10 이상이어야 합니다.")
+	@Max(value = 20, message = "perPage는 50 이하여야 합니다.")
 	@Schema(example = "10")
 	private int perPage;
 
