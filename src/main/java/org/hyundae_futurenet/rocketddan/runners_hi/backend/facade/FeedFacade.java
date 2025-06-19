@@ -3,6 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.KakaoPayApproveRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.CommentDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
@@ -48,4 +49,5 @@ public interface FeedFacade {
 
 	List<CommentDetailResponse> searchCommentList(long loginMemberId, long feedId);
 
+	void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest);
 }

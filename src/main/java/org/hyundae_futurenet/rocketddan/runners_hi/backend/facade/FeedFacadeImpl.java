@@ -7,9 +7,12 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.Comme
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.converter.FeedListResponseConverter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CommentDetailSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.FeedListSource;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.KakaoPaySource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedSearchFilter;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.KakaoPayApproveRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.CommentDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayApproveResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
@@ -168,6 +171,24 @@ public class FeedFacadeImpl implements FeedFacade {
 		return commentDetailSources.stream()
 			.map(commentDetailResponseConverter::toDto)
 			.toList();
+	}
+
+	@Override
+	@Transactional
+	public void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest) {
+
+		// 가져오기
+		KakaoPaySource kakaoPaySource = kakaoPayService.getPaySource(kakaoPayApproveRequest.getPartnerOrderId());
+
+		// 카카오 서버로 요청 보내 카카오 페이 승인
+		KakaoPayApproveResponse kakaoPayApprove = kakaoPayUtil.kakaoPayApprove(
+			kakaoPaySource.getTid(),
+			kakaoPayApproveRequest.getPartnerOrderId(),
+			kakaoPaySource.getPartnerUserId(),
+			kakaoPayApproveRequest.getPgToken());
+
+		// feed의 승인 상태 APPROVED로 수정하기
+		feedService.updateAdvertiseFeedStatusWithApproved(kakaoPaySource.getFeedId());
 	}
 
 	@Override

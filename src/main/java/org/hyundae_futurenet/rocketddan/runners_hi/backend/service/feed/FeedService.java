@@ -18,4 +18,6 @@ public interface FeedService {
 	void assertFeedExists(long loginMemberId, long feedId);
 
 	void update(long feedId, String newContent, Double newLat, Double newLng);
+
+	void updateAdvertiseFeedStatusWithApproved(long feedId);
 }

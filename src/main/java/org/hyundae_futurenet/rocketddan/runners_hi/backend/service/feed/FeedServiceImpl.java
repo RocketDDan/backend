@@ -56,4 +56,10 @@ public class FeedServiceImpl implements FeedService {
 
 		feedMapper.update(feedId, newContent, newLat, newLng);
 	}
+
+	@Override
+	public void updateAdvertiseFeedStatusWithApproved(long feedId) {
+
+		feedMapper.updateStatusToApproved(feedId);
+	}
 }

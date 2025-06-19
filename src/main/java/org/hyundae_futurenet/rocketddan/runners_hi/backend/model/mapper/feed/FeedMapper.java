@@ -95,4 +95,9 @@ public interface FeedMapper {
 		@Param("newLat") Double newLat,
 		@Param("newLng") Double newLng);
 
+	@Update("""
+		UPDATE FEED SET STATUS= 'APPROVED'
+		WHERE FEED_ID = #{feedId}
+		""")
+	void updateStatusToApproved(@Param("feedId") long feedId);
 }

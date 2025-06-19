@@ -3,6 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.feed;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.FeedCommentRequest;
@@ -32,6 +33,7 @@ public class FeedCommentController {
 
 	private final FeedFacade feedFacade;
 
+	@NotGuest
 	@Operation(summary = "Feed에 댓글 달기", description = "Feed에 댓글을 추가합니다.")
 	@PostMapping
 	public ResponseEntity<Void> addComment(
@@ -44,6 +46,7 @@ public class FeedCommentController {
 		return ResponseEntity.ok().build();
 	}
 
+	@NotGuest
 	@Operation(summary = "Feed 댓글 수정", description = "Feed 댓글을 수정합니다.")
 	@PutMapping("/{comment-id}")
 	public ResponseEntity<Void> updateComment(
@@ -58,6 +61,7 @@ public class FeedCommentController {
 		return ResponseEntity.ok().build();
 	}
 
+	@NotGuest
 	@Operation(summary = "Feed 댓글 삭제", description = "Feed 댓글을 삭제합니다.")
 	@DeleteMapping("/{comment-id}")
 	public ResponseEntity<Void> deleteComment(
