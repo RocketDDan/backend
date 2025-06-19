@@ -103,11 +103,6 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루 존재 여부 검증
 		checkCrewExisted(crewId);
 
-		// 크루 이름 중복 검사
-		if (crewMapper.existsByName(crewUpdateRequest.crewName())) {
-			throw new CrewException(ErrorCode.DUPLICATED_CREW_NAME);
-		}
-
 		// 크루장만 변경 가능
 		checkCrewLeader(loginMemberId, crewId);
 
@@ -116,7 +111,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		if (multipartFile != null && !multipartFile.isEmpty()) {
 			profilePath = s3FileUtil.uploadCrewProfile(multipartFile, crewId);
 		}
-
+		log.info("len : {}", profilePath.length());
 		crewService.updateCrew(loginMemberId, crewId, crewUpdateRequest, profilePath);
 	}
 
