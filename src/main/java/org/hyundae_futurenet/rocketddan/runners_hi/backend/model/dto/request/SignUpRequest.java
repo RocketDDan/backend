@@ -24,9 +24,12 @@ public class SignUpRequest {
 	@Email(message = "유효한 이메일을 입력하세요.")
 	private String email;
 
-	@Schema(description = "비밀번호. 영문, 숫자 포함 8~16자", example = "password1234")
+	@Schema(description = "비밀번호. 영문 대소문자, 숫자, 특수문자(@!#?) 포함 8~16자로 입력.", example = "Password123!")
 	@NotBlank(message = "비밀번호가 입력되지 않았습니다.")
-	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).*$", message = "영어와 숫자를 반드시 포함해야합니다.")
+	@Pattern(
+		regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@!#?])[a-zA-Z\\d@!#?]{8,16}$",
+		message = "영문 대소문자, 숫자, 특수문자(@!#?) 포함 8~16자로 입력"
+	)
 	@Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이로 입력해주세요.")
 	private String password;
 
