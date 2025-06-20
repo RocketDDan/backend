@@ -57,4 +57,7 @@ public interface CrewJoinRequestMapper {
 	String selectEmailByCrewJoinRequestId(@Param("crewJoinRequestId") long crewJoinRequestId);
 
 	void deleteCrewJoinRequestByMemberId(@Param("loginMemberId") long loginMemberId);
+
+	// 나의 가입 요청 정보 조회
+	CrewJoinRequestSource selectCrewJoinRequestByMemberId(@Param("memberId") long loginMemberId);
 }

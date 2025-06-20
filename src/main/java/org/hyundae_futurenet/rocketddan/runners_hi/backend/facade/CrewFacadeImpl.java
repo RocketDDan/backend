@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.CrewException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.ErrorCode;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidAuthorityException;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -329,6 +330,16 @@ public class CrewFacadeImpl implements CrewFacade {
 	public boolean existsByCrewName(String crewName) {
 
 		return crewService.existsByCrewName(crewName);
+	}
+
+	@Override
+	public CrewJoinRequestSource selectCrewJoinRequestByMemberId(long loginMemberId, long memberId) {
+
+		if (loginMemberId == memberId) {
+			// 로그인 사용자가 자신의 정보 조회 가능
+			return crewJoinRequestService.selectCrewJoinRequestByMemberId(memberId);
+		}
+		return null;
 	}
 
 	// 크루장이 아닌 경우 예외 처리

@@ -18,4 +18,8 @@ public class MemberProfileResponse {
 	private boolean isLeader;
 
 	private Long crewId;
+
+	private Long requestJoinCrewId;
+
+	private String requestJoinCrewName;
 }

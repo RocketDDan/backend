@@ -121,4 +121,14 @@
         </if>
     </select>
 
+    <select id="selectCrewJoinRequestByMemberId"
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource">
+        SELECT crew_join_request_id, member_id, c.crew_id, c.crew_name
+        FROM crew_join_request cjr
+                 JOIN crew c ON c.crew_id = cjr.crew_id
+        WHERE member_id = #{memberId}
+          AND status = 'REQUEST'
+          AND ROWNUM = 1
+    </select>
+
 </mapper>

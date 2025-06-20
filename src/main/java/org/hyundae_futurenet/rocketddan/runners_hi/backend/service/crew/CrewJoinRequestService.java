@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.crew;
 
 import java.util.List;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewJoinRequestSearchFilter;
@@ -28,4 +29,7 @@ public interface CrewJoinRequestService {
 
 	// 가입 요청자의 이메일 가져오기
 	String selectEmailByCrewJoinRequestId(long crewJoinRequestId);
+
+	// 나의 가입 요청 조회
+	CrewJoinRequestSource selectCrewJoinRequestByMemberId(long crewMemberId);
 }
