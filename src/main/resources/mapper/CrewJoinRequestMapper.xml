@@ -24,8 +24,10 @@
             resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource">
         SELECT crew_join_request_id as crewMemberId,
                member_id            as memberId,
-               crew_id              as crewId
-        FROM crew_join_request
+               c.crew_id            as crewId,
+               c.CREW_NAME          as crewName
+        FROM crew_join_request cjr
+                 JOIN crew c ON c.crew_id = cjr.crew_id
         WHERE crew_join_request_id = #{crewJoinRequestId}
     </select>
 
