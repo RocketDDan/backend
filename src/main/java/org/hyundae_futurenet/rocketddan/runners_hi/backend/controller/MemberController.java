@@ -7,6 +7,7 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.MemberFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberProfileResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.MemberResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.NicknameCheckResponse;
@@ -44,11 +45,20 @@ public class MemberController {
 	@Operation(summary = "특정 회원 프로필 조회", description = "특정 회원의 프로필 정보를 조회한다.")
 	@GetMapping("/{memberId}/profile")
 	public ResponseEntity<MemberProfileResponse> findMemberProfileByMemberId(
+		@Auth final Accessor accessor,
 		@PathVariable("memberId") final Long memberId
 	) {
 
 		final MemberResponse memberResponse = memberFacade.findMember(memberId);
 		Long crewId = crewFacade.selectMyCrew(memberId);
+		CrewJoinRequestSource requestJoinCrew = crewFacade.selectCrewJoinRequestByMemberId(accessor.getMemberId(),
+			memberId);
+		Long requestJoinCrewId = null;
+		String requestJoinCrewName = null;
+		if (requestJoinCrew != null) {
+			requestJoinCrewId = requestJoinCrew.crewId();
+			requestJoinCrewName = requestJoinCrew.crewName();
+		}
 		CrewDetailResponse crewDetailResponse = null;
 		if (Objects.nonNull(crewId)) {
 			crewDetailResponse = crewFacade.selectCrewByCrewId(memberId, crewId);
@@ -60,6 +70,8 @@ public class MemberController {
 			.crewName(Objects.nonNull(crewId) ? crewDetailResponse.getCrewName() : null)
 			.isLeader(Objects.nonNull(crewId) && crewDetailResponse.isLeader())
 			.crewId(crewId)
+			.requestJoinCrewId(requestJoinCrewId)
+			.requestJoinCrewName(requestJoinCrewName)
 			.build();
 		return ResponseEntity.ok(memberProfileResponse);
 	}

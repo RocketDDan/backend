@@ -2,6 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.facade;
 
 import java.util.List;
 
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.CrewJoinRequestSource;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
@@ -76,5 +77,8 @@ public interface CrewFacade {
 
 	// 크루 이름 중복 조회
 	boolean existsByCrewName(String crewName);
+
+	// 가입 요청 정보 조회
+	CrewJoinRequestSource selectCrewJoinRequestByMemberId(long loginMemberId, long memberId);
 }
 

@@ -100,6 +100,13 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 		return crewJoinRequestMapper.selectEmailByCrewJoinRequestId(crewJoinRequestId);
 	}
 
+	@Override
+	public CrewJoinRequestSource selectCrewJoinRequestByMemberId(long memberId) {
+
+		log.info("CrewJoinRequestService :: selectCrewJoinRequestByMemberId");
+		return crewJoinRequestMapper.selectCrewJoinRequestByMemberId(memberId);
+	}
+
 	// Status String으로 반환
 	private static String getStatus(CrewJoinRequestStatus crewJoinRequestStatus) {
 
