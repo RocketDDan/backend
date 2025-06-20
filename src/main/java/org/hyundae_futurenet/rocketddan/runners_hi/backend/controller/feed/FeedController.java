@@ -3,6 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.feed;
 import java.util.List;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.MemberAdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.FeedFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
@@ -49,8 +50,8 @@ public class FeedController {
 		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(loginMemberId, feedSearchFilter));
 	}
 
-	@NotGuest
-	@Operation(summary = "개인의 Feed 업로드", description = "Feed를 파일과 함께 업로드합니다.")
+	@MemberAdminOnly
+	@Operation(summary = "개인 Feed 업로드", description = "Feed를 파일과 함께 업로드합니다.")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> uploadFeed(
 		@Auth final Accessor accessor,
