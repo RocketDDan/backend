@@ -185,7 +185,7 @@ public class CrewFacadeImpl implements CrewFacade {
 		// TODO: 크루장에게 가입 요청 메일 보내기
 		Long leaderId = crewMemberService.selectCrewLeaderIdByCrewId(crewId);
 		String email = memberService.findMemberEmail(leaderId);
-		googleMailUtil.sendCrewJoinRequestMail(email);
+		googleMailUtil.sendCrewJoinRequestMail(email, crewId);
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class CrewFacadeImpl implements CrewFacade {
 
 		// TODO: 크루원에게 가입 완료 메일 보내기
 		String email = crewJoinRequestService.selectEmailByCrewJoinRequestId(crewJoinRequestId);
-		googleMailUtil.sendCrewJoinSuccessMail(email);
+		googleMailUtil.sendCrewJoinSuccessMail(email, crewId);
 	}
 
 	@Override

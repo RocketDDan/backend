@@ -22,7 +22,7 @@ public class GoogleMailUtil {
 
 	@Async
 	/// 크루장에게 보내는 크루 가입 요청 메일
-	public void sendCrewJoinRequestMail(String to) {
+	public void sendCrewJoinRequestMail(String to, long crewId) {
 
 		String subject = "새로운 크루 가입 요청이 도착했습니다!";
 		String html = """
@@ -31,14 +31,14 @@ public class GoogleMailUtil {
 			    <p>새로운 멤버가 크루 가입을 신청했습니다.</p>
 			    <p>가입 요청을 확인하고 승인 여부를 결정해 주세요.</p>
 			    <br/>
-			    <a href="https://www.runners-hi.shop" 
+			    <a href="https://www.runners-hi.shop/crew/%d" 
 			       style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
 			       가입 요청 확인하기
 			    </a>
 			    <br/><br/>
 			    <p>감사합니다.<br/>Runners Hi 드림</p>
 			</div>
-			""";
+			""".formatted(crewId);
 
 		try {
 			sendHtmlMail(to, subject, html);
@@ -49,7 +49,7 @@ public class GoogleMailUtil {
 
 	@Async
 	/// 크루원이 된 멤버에게 보내는 크루 가입 완료 메일
-	public void sendCrewJoinSuccessMail(String to) {
+	public void sendCrewJoinSuccessMail(String to, long crewId) {
 
 		String subject = "크루 가입이 완료되었습니다!";
 		String html = """
@@ -58,14 +58,14 @@ public class GoogleMailUtil {
 			    <p>회원님의 크루 가입이 성공적으로 완료되었습니다.</p>
 			    <p>이제부터 다양한 활동에 참여하실 수 있습니다. 즐거운 크루 활동 되시길 바랍니다!</p>
 			    <br/>
-			    <a href="https://www.runners-hi.shop" 
+			    <a href="https://www.runners-hi.shop/crew/%d"
 			       style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
 			       서비스 바로가기
 			    </a>
 			    <br/><br/>
 			    <p>감사합니다.<br/>Runners Hi 드림</p>
 			</div>
-			""";
+			""".formatted(crewId);
 
 		try {
 			sendHtmlMail(to, subject, html);

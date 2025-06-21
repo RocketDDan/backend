@@ -13,12 +13,12 @@ class GoogleMailUtilTest {
 	@Test
 	void sendCrewJoinRequestMail() {
 
-		googleMailUtil.sendCrewJoinRequestMail("hanol98@naver.com");
+		googleMailUtil.sendCrewJoinRequestMail("hanol98@naver.com", 1);
 	}
 
 	@Test
 	void sendCrewJoinSuccessMail() {
 
-		googleMailUtil.sendCrewJoinSuccessMail("hanol98@naver.com");
+		googleMailUtil.sendCrewJoinSuccessMail("hanol98@naver.com", 1);
 	}
 }
