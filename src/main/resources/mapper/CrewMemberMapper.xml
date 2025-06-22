@@ -133,7 +133,7 @@
         </where>
         ORDER BY
         CASE WHEN cm.IS_LEADER = 'Y' THEN 0 ELSE 1 END, -- 리더를 먼저
-        CASE WHEN cm.IS_LEADER = 'N' THEN cm.created_by END DESC -- 리더가 아닌 경우에만 생성일 기준 정렬
+        CASE WHEN cm.IS_LEADER = 'N' THEN cm.created_at END DESC -- 리더가 아닌 경우에만 생성일 기준 정렬
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
