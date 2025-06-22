@@ -107,12 +107,12 @@ public class CrewFacadeImpl implements CrewFacade {
 		// 크루장만 변경 가능
 		checkCrewLeader(loginMemberId, crewId);
 
-		String profilePath = crewUpdateRequest.profilePath();
+		String profilePath = null;
 		// 프로필 새로 업로드하는 경우
 		if (multipartFile != null && !multipartFile.isEmpty()) {
 			profilePath = s3FileUtil.uploadCrewProfile(multipartFile, crewId);
 		}
-		log.info("len : {}", profilePath.length());
+		log.info("profilePath : {}", profilePath);
 		crewService.updateCrew(loginMemberId, crewId, crewUpdateRequest, profilePath);
 	}
 
