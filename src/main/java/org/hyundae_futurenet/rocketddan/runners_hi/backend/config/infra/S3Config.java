@@ -1,4 +1,4 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.config;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.config.infra;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

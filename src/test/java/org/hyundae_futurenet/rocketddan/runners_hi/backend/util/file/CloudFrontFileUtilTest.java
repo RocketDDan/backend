@@ -2,7 +2,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.util.file;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.CloudFrontProperties;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.infra.CloudFrontProperties;
 import org.junit.jupiter.api.Test;
 
 class CloudFrontFileUtilTest {

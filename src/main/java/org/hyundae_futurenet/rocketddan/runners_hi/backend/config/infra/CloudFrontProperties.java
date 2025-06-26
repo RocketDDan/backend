@@ -1,9 +1,10 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.config;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.config.infra;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
@@ -11,9 +12,9 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "cloudfront")
 public class CloudFrontProperties {
 
-    private String distributionDomain;
+	private String distributionDomain;
 
-    private String keyPairId;
-    
-    private String privateKeyPath;
+	private String keyPairId;
+
+	private String privateKeyPath;
 }

@@ -1,6 +1,6 @@
 package org.hyundae_futurenet.rocketddan.runners_hi.backend.util.mail;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.AwsSesConfig;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.infra.AwsSesConfig;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.MailSendRequest;
 import org.springframework.stereotype.Component;
 

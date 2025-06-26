@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.CloudFrontProperties;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.config.infra.CloudFrontProperties;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.cloudfront.CloudFrontUrlSigner;
