@@ -44,8 +44,6 @@ public class FeedController {
 		@Auth final Accessor accessor,
 		@Validated @ModelAttribute FeedSearchFilter feedSearchFilter) {
 
-		log.info("FeedController.searchFeedList :: scope: {} | memberId: {}", feedSearchFilter.getScope().name(),
-			feedSearchFilter.getMemberId());
 		long loginMemberId = accessor.getMemberId();
 		return ResponseEntity.ok(feedFacade.searchFeedsByFilter(loginMemberId, feedSearchFilter));
 	}
