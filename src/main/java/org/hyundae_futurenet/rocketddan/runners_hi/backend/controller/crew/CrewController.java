@@ -1,22 +1,16 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.crew;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.NotGuest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.CrewFacade;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.domain.auth.Accessor;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewCreateRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewJoinRequestStatus;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.CrewUpdateRequest;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewJoinRequestSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewMemberSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.crew.filter.CrewSearchFilter;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewDetailResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewJoinRequestListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewListResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.crew.CrewMemberListResponse;
 import org.springframework.http.MediaType;
@@ -27,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -35,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -112,102 +104,6 @@ public class CrewController {
 
 		Long loginMemberId = accessor != null ? accessor.getMemberId() : null;
 		List<CrewListResponse> result = crewFacade.selectCrewsByFilter(loginMemberId, crewSearchFilter);
-		return ResponseEntity.ok(result);
-	}
-
-	@Operation(summary = "크루 지역 추천", description = "지역 기반 크루 랜덤 추천")
-	@GetMapping("/recommend")
-	public ResponseEntity<List<CrewListResponse>> recommendCrews(
-		@Parameter(
-			name = "perPage",
-			description = "한 페이지에 보여줄 크루의 개수 (기본값 9)",
-			required = false
-		)
-		@RequestParam(value = "perPage", defaultValue = "9") int perPage,
-
-		@Parameter(
-			name = "region",
-			description = "추천받을 지역",
-			example = "서울특별시 강남구",
-			required = false
-		)
-		@RequestParam(value = "region", required = false) String region) {
-
-		List<CrewListResponse> result = crewFacade.recommendCrewsByRegion(perPage, region);
-		return ResponseEntity.ok(result);
-	}
-
-	@Operation(summary = "크루 가입 요청", description = "크루에 가입을 요청합니다.")
-	@PostMapping("/{crew-id}/join-requests")
-	@NotGuest
-	public ResponseEntity<Void> insertCrewJoinRequest(
-		@PathVariable("crew-id") Long crewId,
-		@Valid @RequestBody CrewJoinRequest crewJoinRequest,
-		@Auth final Accessor accessor
-	) {
-
-		crewFacade.insertCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequest);
-		return ResponseEntity.ok().build();
-	}
-
-	@Operation(summary = "크루 가입 요청 승인", description = "크루 가입 요청의 상태를 승인으로 변경합니다.")
-	@PutMapping("/{crew-id}/join-requests/{request-id}/accept")
-	@NotGuest
-	public ResponseEntity<Void> acceptCrewJoinRequest(
-		@PathVariable("crew-id") Long crewId,
-		@PathVariable("request-id") Long crewJoinRequestId,
-		@Auth final Accessor accessor
-	) {
-
-		crewFacade.updateCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequestId,
-			CrewJoinRequestStatus.ACCEPT);
-		return ResponseEntity.ok().build();
-	}
-
-	@Operation(summary = "크루 가입 요청 거절", description = "크루 가입 요청의 상태를 거절로 변경합니다.")
-	@PutMapping("/{crew-id}/join-requests/{request-id}/deny")
-	@NotGuest
-	public ResponseEntity<Void> denyCrewJoinRequest(
-		@PathVariable("crew-id") Long crewId,
-		@PathVariable("request-id") Long crewJoinRequestId,
-		@Auth final Accessor accessor
-	) {
-
-		crewFacade.updateCrewJoinRequest(accessor.getMemberId(), crewId, crewJoinRequestId, CrewJoinRequestStatus.DENY);
-		return ResponseEntity.ok().build();
-	}
-
-	@Operation(summary = "크루 가입 요청 삭제", description = "크루 가입 요청을 취소합니다.")
-	@DeleteMapping("/{crew-id}/join-requests")
-	@NotGuest
-	public ResponseEntity<Void> deleteCrewJoinRequests(
-		@PathVariable("crew-id") Long crewId,
-		@Auth final Accessor accessor) {
-
-		crewFacade.deleteCrewJoinRequest(accessor.getMemberId(), crewId);
-		return ResponseEntity.ok().build();
-	}
-
-	@Operation(summary = "크루 가입 요청 목록 조회", description = "크루의 가입 요청 목록을 조회합니다.")
-	@GetMapping("/{crew-id}/join-requests")
-	@NotGuest
-	public ResponseEntity<Map<String, Object>> selectCrewJoinRequests(
-		@PathVariable("crew-id") Long crewId,
-		@ModelAttribute CrewJoinRequestSearchFilter filter,
-		@Auth final Accessor accessor
-	) {
-
-		if (filter == null) {
-			throw new IllegalArgumentException("조회 옵션은 필수입니다.");
-		}
-
-		List<CrewJoinRequestListResponse> crewJoinRequestList = crewFacade
-			.selectCrewJoinRequestsByStatus(accessor.getMemberId(), crewId, filter);
-		int totalCount = crewFacade.selectTotalCount(crewId, filter.getStatus().name(), filter.getNickname());
-		Map<String, Object> result = new HashMap<>();
-		result.put("crewJoinRequestList", crewJoinRequestList);
-		result.put("totalCount", totalCount);
-
 		return ResponseEntity.ok(result);
 	}
 

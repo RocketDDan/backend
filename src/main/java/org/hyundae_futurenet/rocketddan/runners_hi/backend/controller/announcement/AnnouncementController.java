@@ -1,4 +1,4 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.announcement;
 
 import java.util.HashMap;
 import java.util.List;

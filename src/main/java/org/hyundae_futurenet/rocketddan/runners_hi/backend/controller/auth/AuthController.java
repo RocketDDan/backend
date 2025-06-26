@@ -1,4 +1,4 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.auth;
 
 import static org.hyundae_futurenet.rocketddan.runners_hi.backend.util.CookieUtils.*;
 import static org.hyundae_futurenet.rocketddan.runners_hi.backend.util.auth.JwtTokenProvider.*;

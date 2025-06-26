@@ -1,8 +1,9 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.admin;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.AdminOnly;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.Auth;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.auth.CompanyAdminOnly;
@@ -23,12 +24,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @Tag(name = "관리자 및 회사 API", description = "관리자 및 회사 전용 API")
@@ -147,6 +148,7 @@ public class AdminController {
 		@Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목수") @RequestParam(defaultValue = "6") int perPage
 	) {
+
 		return ResponseEntity.ok(adminFacade.getMyWalletList(accessor.getMemberId(), page, perPage));
 	}
 

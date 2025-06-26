@@ -1,4 +1,4 @@
-package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller;
+package org.hyundae_futurenet.rocketddan.runners_hi.backend.controller.auth;
 
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.error.auth.InvalidTokenException;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.facade.OAuth2Facade;
