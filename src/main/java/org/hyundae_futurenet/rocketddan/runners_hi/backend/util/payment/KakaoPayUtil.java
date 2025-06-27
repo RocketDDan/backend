@@ -81,7 +81,7 @@ public class KakaoPayUtil {
 	public KakaoPayApproveResponse kakaoPayApprove(
 		String tid,
 		String partnerOrderId,
-		String partnerUserId,
+		long partnerUserId,
 		String pgToken) {
 
 		String url = HOST + "/online/v1/payment/approve";
@@ -90,7 +90,7 @@ public class KakaoPayUtil {
 		params.put("cid", CID);
 		params.put("tid", tid);
 		params.put("partner_order_id", partnerOrderId);
-		params.put("partner_user_id", partnerUserId);
+		params.put("partner_user_id", String.valueOf(partnerUserId));
 		params.put("pg_token", pgToken);
 
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(params, getHeader());

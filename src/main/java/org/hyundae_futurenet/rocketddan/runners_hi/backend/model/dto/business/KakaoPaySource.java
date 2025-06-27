@@ -13,9 +13,11 @@ public class KakaoPaySource {
 
 	private String partnerOrderId;
 
-	private String partnerUserId;
+	private long partnerUserId;
 
-	private String createdAt;
+	private long chargeAmount;
 
-	private String createdBy;
+	private long createdAt;
+
+	private long createdBy;
 }

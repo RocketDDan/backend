@@ -16,6 +16,7 @@ public interface KakaoPayMapper {
 							  TID,
 							  PARTNER_ORDER_ID,
 							  PARTNER_USER_ID,
+		                      CHARGE_AMOUNT,
 							  CREATED_BY
 		 )
 		VALUES (
@@ -24,6 +25,7 @@ public interface KakaoPayMapper {
 							#{tid},
 							#{partnerOrderId},
 							#{partnerUserId},
+		        			#{chargeAmount},
 							#{partnerUserId}
 		)
 		""")
@@ -31,7 +33,8 @@ public interface KakaoPayMapper {
 		@Param("feedId") long feedId,
 		@Param("tid") String tid,
 		@Param("partnerOrderId") String partnerOrderId,
-		@Param("partnerUserId") long partnerUserId);
+		@Param("partnerUserId") long partnerUserId,
+		@Param("chargeAmount") long chargeAmount);
 
 	@Select("""
 		SELECT
@@ -40,6 +43,7 @@ public interface KakaoPayMapper {
 			TID AS tid,
 			PARTNER_ORDER_ID AS partnerOrderId,
 			PARTNER_USER_ID AS partnerUserId,
+			CHARGE_AMOUNT AS chargeAmount,
 			CREATED_AT AS createdAt,
 			CREATED_BY AS createdBy
 		    FROM KAKAO_PAY

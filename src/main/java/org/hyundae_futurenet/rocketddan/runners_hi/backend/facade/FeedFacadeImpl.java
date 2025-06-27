@@ -12,7 +12,6 @@ import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.Fee
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.request.KakaoPayApproveRequest;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.CommentDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.feed.FeedListResponse;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayApproveResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.external_dto.response.KakaoPayReadyResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedCommentService;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.service.feed.FeedFileService;
@@ -110,8 +109,7 @@ public class FeedFacadeImpl implements FeedFacade {
 
 		// 클라이언트에게 주기 위해 response에 추가해서 넣어주기
 		response.setPartner_order_id(partnerOrderId);
-		kakaoPayService.save(feedId, response.getTid(), partnerOrderId, loginMemberId);
-		memberWalletService.setCharge(loginMemberId, feedId, payAmount);
+		kakaoPayService.save(feedId, response.getTid(), partnerOrderId, loginMemberId, payAmount);
 		return response;
 	}
 
@@ -180,11 +178,11 @@ public class FeedFacadeImpl implements FeedFacade {
 	@Transactional
 	public void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest) {
 
-		// 가져오기
+		// DB에서 결제 요청 정보 가져오기
 		KakaoPaySource kakaoPaySource = kakaoPayService.getPaySource(kakaoPayApproveRequest.getPartnerOrderId());
 
 		// 카카오 서버로 요청 보내 카카오 페이 승인
-		KakaoPayApproveResponse kakaoPayApprove = kakaoPayUtil.kakaoPayApprove(
+		kakaoPayUtil.kakaoPayApprove(
 			kakaoPaySource.getTid(),
 			kakaoPayApproveRequest.getPartnerOrderId(),
 			kakaoPaySource.getPartnerUserId(),
@@ -192,6 +190,12 @@ public class FeedFacadeImpl implements FeedFacade {
 
 		// feed의 승인 상태 APPROVED로 수정하기
 		feedService.updateAdvertiseFeedStatusWithApproved(kakaoPaySource.getFeedId());
+
+		// 충전/잔여 금액 세팅
+		memberWalletService.setCharge(
+			kakaoPaySource.getPartnerUserId(),
+			kakaoPaySource.getFeedId(),
+			kakaoPaySource.getChargeAmount());
 	}
 
 	@Override

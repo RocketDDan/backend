@@ -16,9 +16,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	private final KakaoPayMapper kakaoPayMapper;
 
 	@Override
-	public void save(long feedId, String tid, String partnerOrderId, long partnerUserId) {
+	public void save(long feedId, String tid, String partnerOrderId, long partnerUserId, long chargeAmount) {
 
-		kakaoPayMapper.save(feedId, tid, partnerOrderId, partnerUserId);
+		kakaoPayMapper.save(feedId, tid, partnerOrderId, partnerUserId, chargeAmount);
 	}
 
 	/// db 에서 kakao pay 정보 가져오기
