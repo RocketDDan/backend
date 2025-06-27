@@ -7,7 +7,7 @@
 
     <!--  공지 등록  -->
     <insert id="insertAnnouncement"
-            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate">
         <selectKey keyProperty="announcementId" resultType="long" order="BEFORE">
             SELECT SEQ_ANNOUNCEMENT.NEXTVAL FROM DUAL
         </selectKey>
@@ -35,33 +35,31 @@
 
     <!--  공지 수정 / updated_by 에는 수정한 member_id를 삽입 -->
     <update id="updateAnnouncement"
-            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate">
         UPDATE announcement
-        SET title = #{title},
-        content = #{content},
-        updated_at = SYSDATE,
-        updated_by = #{createdBy}
+        SET title      = #{title},
+            content    = #{content},
+            updated_at = SYSDATE,
+            updated_by = #{createdBy}
         WHERE announcement_id = #{announcementId}
     </update>
 
     <!-- 공지 조회 -->
     <select id="findById"
-            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate">
-        SELECT
-        announcement_id,
-        announcement_type,
-        title,
-        content,
-        created_by as createdBy
-        FROM
-        announcement
-        WHERE
-        announcement_id = #{announcementId}
+            resultType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate">
+        SELECT announcement_id,
+               announcement_type,
+               title,
+               content,
+               created_by as createdBy
+        FROM announcement
+        WHERE announcement_id = #{announcementId}
     </select>
 
     <!--  공지사항 삭제  -->
     <delete id="deleteAnnouncement" parameterType="long">
-        DELETE FROM announcement
+        DELETE
+        FROM announcement
         WHERE announcement_id = #{announcementId}
     </delete>
 
@@ -151,19 +149,16 @@
 
     <select id="findDetailById"
             resultMap="AnnouncementDetailMap">
-        SELECT
-        A.announcement_id,
-        A.created_by,
-        A.title,
-        A.content,
-        TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
-        TO_CHAR(A.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-        M.nickname
-        FROM
-        announcement A
-        JOIN member M ON A.created_by = M.member_id
-        WHERE
-        A.announcement_id = #{announcementId}
+        SELECT A.announcement_id,
+               A.created_by,
+               A.title,
+               A.content,
+               TO_CHAR(A.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+               TO_CHAR(A.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+               M.nickname
+        FROM announcement A
+                 JOIN member M ON A.created_by = M.member_id
+        WHERE A.announcement_id = #{announcementId}
     </select>
 
     <select id="countAnnouncements" resultType="int">

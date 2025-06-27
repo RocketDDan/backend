@@ -3,7 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.service.announcement
 import java.util.List;
 import java.util.Map;
 
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementCreate;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementDetailResponse;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.response.AnnouncementListResponse;
 

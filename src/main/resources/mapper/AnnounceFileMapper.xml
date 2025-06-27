@@ -6,7 +6,7 @@
 <mapper namespace="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announcement.AnnouncementFileMapper">
 
     <insert id="insertAnnouncementFile"
-            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementFileCreate">
         <selectKey keyProperty="announcementFileId" resultType="long" order="BEFORE">
             SELECT SEQ_ANNOUNCEMENT_FILE.NEXTVAL FROM DUAL
         </selectKey>
@@ -39,7 +39,7 @@
 
     <!-- 첨부파일 수정 (filePath 있을 때만 수정) -->
     <update id="updateAnnouncementFile"
-            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate">
+            parameterType="org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementFileCreate">
         UPDATE ANNOUNCEMENT_FILE
         <set>
             <if test="filePath != null and filePath != ''">

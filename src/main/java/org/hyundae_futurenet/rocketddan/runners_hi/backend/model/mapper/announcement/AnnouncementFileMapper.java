@@ -3,7 +3,7 @@ package org.hyundae_futurenet.rocketddan.runners_hi.backend.model.mapper.announc
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.bussiness.AnnouncementFileCreate;
+import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.AnnouncementFileCreate;
 
 @Mapper
 public interface AnnouncementFileMapper {
