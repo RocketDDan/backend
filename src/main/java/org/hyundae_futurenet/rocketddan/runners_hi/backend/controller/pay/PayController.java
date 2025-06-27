@@ -25,8 +25,6 @@ public class PayController {
 		@RequestBody KakaoPayApproveRequest kakaoPayApproveRequest
 	) {
 
-		log.info("[결제 승인] : pgToken: {} | partnerOrderId: {}", kakaoPayApproveRequest.getPgToken(),
-			kakaoPayApproveRequest.getPartnerOrderId());
 		feedFacade.approveFeedPay(kakaoPayApproveRequest);
 		return ResponseEntity.ok("success");
 	}

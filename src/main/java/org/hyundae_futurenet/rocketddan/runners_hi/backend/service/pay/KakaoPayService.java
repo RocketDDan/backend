@@ -7,4 +7,6 @@ public interface KakaoPayService {
 	void save(long feedId, String tid, String partnerOrderId, long loginMemberId, long chargeAmount);
 
 	KakaoPaySource getPaySource(String partnerOrderId);
+
+	void updateStatus(String tid, String status);
 }

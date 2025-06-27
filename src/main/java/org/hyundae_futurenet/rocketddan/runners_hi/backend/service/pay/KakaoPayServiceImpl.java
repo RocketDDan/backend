@@ -27,4 +27,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
 		return kakaoPayMapper.selectByPartnerOrderId(partnerOrderId);
 	}
+
+	@Override
+	public void updateStatus(String tid, String status) {
+
+		kakaoPayMapper.updateStatus(tid, status);
+	}
 }

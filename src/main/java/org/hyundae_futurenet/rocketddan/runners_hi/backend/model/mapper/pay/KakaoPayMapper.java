@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.hyundae_futurenet.rocketddan.runners_hi.backend.model.dto.business.KakaoPaySource;
 
 @Mapper
@@ -51,4 +52,11 @@ public interface KakaoPayMapper {
 		    PARTNER_ORDER_ID=#{partnerOrderId}
 		""")
 	KakaoPaySource selectByPartnerOrderId(@Param("partnerOrderId") String partnerOrderId);
+
+	@Update("""
+		UPDATE KAKAO_PAY
+		SET STATUS = #{status}
+		WHERE TID  = #{tid}
+		""")
+	void updateStatus(String tid, String status);
 }

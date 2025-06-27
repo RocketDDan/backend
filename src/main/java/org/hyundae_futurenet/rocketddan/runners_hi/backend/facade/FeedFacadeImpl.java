@@ -178,7 +178,7 @@ public class FeedFacadeImpl implements FeedFacade {
 	@Transactional
 	public void approveFeedPay(KakaoPayApproveRequest kakaoPayApproveRequest) {
 
-		// DB에서 결제 요청 정보 가져오기
+		// DB 에서 결제 요청 정보 가져오기
 		KakaoPaySource kakaoPaySource = kakaoPayService.getPaySource(kakaoPayApproveRequest.getPartnerOrderId());
 
 		// 카카오 서버로 요청 보내 카카오 페이 승인
@@ -190,6 +190,9 @@ public class FeedFacadeImpl implements FeedFacade {
 
 		// feed의 승인 상태 APPROVED로 수정하기
 		feedService.updateAdvertiseFeedStatusWithApproved(kakaoPaySource.getFeedId());
+
+		// KAKAO PAY Status 수정
+		kakaoPayService.updateStatus(kakaoPaySource.getTid(), "SUCCESS");
 
 		// 충전/잔여 금액 세팅
 		memberWalletService.setCharge(
