@@ -44,7 +44,7 @@ public class AdminController {
 	@GetMapping("/members")
 	@AdminOnly
 	public ResponseEntity<AdminMemberListResponse> getAdminMembers(
-		// @Auth final Accessor accessor,
+		@Auth final Accessor accessor,
 		@Parameter(description = "검색 키워드 (닉네임, 이메일, 크루 이름)") @RequestParam(required = false) String keyword,
 		@Parameter(description = "페이지 번호") @RequestParam(required = false, defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목 수") @RequestParam(required = false, defaultValue = "6") int perPage,
@@ -73,7 +73,7 @@ public class AdminController {
 	@GetMapping("/rewards")
 	@AdminOnly
 	public ResponseEntity<AdminFeedListResponse> getAdminFeeds(
-		// @Auth final Accessor accessor,
+		@Auth final Accessor accessor,
 		@Parameter(description = "검색 키워드") @RequestParam(required = false) String keyword,
 		@Parameter(description = "페이지 번호") @RequestParam(required = false, defaultValue = "1") int page,
 		@Parameter(description = "페이지 당 항목 수") @RequestParam(required = false, defaultValue = "6") int perPage,
@@ -119,7 +119,7 @@ public class AdminController {
 	@GetMapping("/feeds/{id}/views/hourly")
 	@CompanyAdminOnly
 	public ResponseEntity<List<FeedHourlyViewResponse>> getHourlyViews(
-		// @Auth final Accessor accessor,
+		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
 		@Parameter(description = "조회 일자 (YYYY-MM-DD)") @RequestParam String targetDate) {
 
@@ -131,7 +131,7 @@ public class AdminController {
 	@GetMapping("/feeds/{id}/views/summary")
 	@CompanyAdminOnly
 	public ResponseEntity<FeedViewSummaryResponse> getViewSummary(
-		// @Auth final Accessor accessor,
+		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
 		@Parameter(description = "시작일 (YYYY-MM-DD)") @RequestParam String startDate,
 		@Parameter(description = "종료일 (YYYY-MM-DD)") @RequestParam String endDate) {
