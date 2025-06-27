@@ -106,7 +106,7 @@ public class AdminController {
 	@GetMapping("/feeds/{id}/views/daily")
 	@CompanyAdminOnly
 	public ResponseEntity<List<FeedDailyViewResponse>> getDailyViews(
-		// @Auth final Accessor accessor,
+		@Auth final Accessor accessor,
 		@Parameter(description = "피드 ID") @PathVariable("id") Long feedId,
 		@Parameter(description = "시작일 (YYYY-MM-DD)") @RequestParam String startDate,
 		@Parameter(description = "종료일 (YYYY-MM-DD)") @RequestParam String endDate) {
