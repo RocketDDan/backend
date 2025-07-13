@@ -1,0 +1,19 @@
+services:
+  backend:
+    image: hanol98/runners-hi-backend:latest
+    env_file:
+      - .env
+    volumes:
+      - /home/ec2-user/jenkins_home/wallet:/app/wallet # OCI oracle db 연결을 위한 wallet 연결
+      - /home/ec2-user/jenkins_home/aws-cloudfront:/app/aws-cloudfront
+    container_name: backend
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    external: true # 외부 네트워크 사용
