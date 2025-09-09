@@ -2,6 +2,7 @@
 .DS_Store
 *.env
 
+/src/main/resources/sql/freeze/*
 ### ========================
 HELP.md
 .gradle
