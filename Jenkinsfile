@@ -5,6 +5,7 @@ pipeline {
         gradle 'gradle 8.14'
         jdk 'jdk-21'
     }
+
     environment {
         REPOSITORY_NAME = 'backend'
     }
@@ -18,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-		            sh '''
+		        sh '''
                 ./gradlew build -x test
                 '''
             }
